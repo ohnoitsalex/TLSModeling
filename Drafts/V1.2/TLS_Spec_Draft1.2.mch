@@ -10,7 +10,7 @@ MACHINE TLS_specification
  */
 
 DEFINITIONS
-    TLS1_2VersionNumber == "0x0303
+    TLS1_2VersionNumber == "0x0303";
     EmptyValue == {};
     EmptyString == "";
     RandomValue == "randomStringValue";
@@ -505,7 +505,7 @@ OPERATIONS
        ocsp_status : INTEGER & 
        certificate_authorities : CERTIFICATE_AUTHORITIES &
        session_state = SENDCLIENTCERTIFICATEREQUEST_SUCCEEDED or //Not mandatory as client certificate request is optional
-       session_state = session_state = SENDENCRYPTEDEXTENSIONS_SUCCEEDED
+       session_state = SENDENCRYPTEDEXTENSIONS_SUCCEEDED
     THEN
        server_raw_public_key_certificate := raw_public_key_certificate ||
        server_certificate_type := certificate_type ||
@@ -546,8 +546,8 @@ OPERATIONS
        /* Client should recheck the received information from the server to make sure it is correct. Code may be duplicated for this step */
        IF (server_raw_public_key_certificate = "" or
            server_signed_certificate_timestamp = "" or 
-           ocsp_status < 1 or
-           server_certificate_authorities ∉ CERTIFICATE_ATUHORITIES or
+           server_ocsp_status < 1 or
+           server_certificate_authorities ∉ CERTIFICATE_AUTHORITIES or
            server_certificate_type /= X509) //Here we focus on X509 certificates that us digital signatures and public keys for authentification. 99% Used in TLS 1.3
            THEN
               alert_message := HANDSHAKE_FAILURE ||
@@ -555,6 +555,7 @@ OPERATIONS
               session_state := RECEIVESERVERCERTIFICATE_FAILED
        ELSE
        session_state := RECEIVESERVERCERTIFICATE_SUCCEEDED
+       END
     END;
     
     TerminateSession = 
@@ -615,5 +616,4 @@ OPERATIONS
         client_certificate_authorities := ENTRUST ||
         client_certificate_request_context := EmptyString /*Supposed to match the certificate_request_context from the certificate request coming from the server */
     END
-
 END
