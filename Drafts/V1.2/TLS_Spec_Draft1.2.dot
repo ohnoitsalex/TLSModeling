@@ -1,0 +1,80 @@
+digraph g {
+rankdir=RL;
+    Noderoot [label="&and;\nfalse", shape="rect", fillcolor="tomato", style="filled,rounded"]
+    Node1 [label="&not;\ntrue\n&not;(session_state &#8712; \{RECEIVEHELLORETRYREQU\nEST_SUCCEEDED,SESSION_CLOSED\})", shape="rect", fillcolor="olivedrab2", style="filled,rounded"]
+        Node1 -> Noderoot;
+    Node2 [label="&#8712;\nfalse\nsession_state &#8712; \{RECEIVEHELLORETRYREQUES\nT_SUCCEEDED,SESSION_CLOSED\}", shape="rect", fillcolor="tomato", style="filled,rounded"]
+        Node2 -> Node1;
+    Node3 [label="session_state|SENDHELLORETRYREQUEST_FAILED", shape="record", fillcolor="white", style="filled"]
+        Node3 -> Node2;
+    Node4 [label="\{RECEIVEHELLORETRYREQUEST_SUCCEEDED,SESS\nION_CLOSED\}|\{RECEIVEHELLORETRYREQUEST_SUCCEEDED,SESS\nION_CLOSED\}", shape="record", fillcolor="white", style="filled"]
+        Node4 -> Node2;
+    Node5 [label="&not;\ntrue\n&not;(session_state = SENDCLIENTHELLO_SUCCEE\nDED)", shape="rect", fillcolor="olivedrab2", style="filled,rounded"]
+        Node5 -> Noderoot;
+    Node6 [label="=\nfalse\nsession_state = SENDCLIENTHELLO_SUCCEEDE\nD", shape="rect", fillcolor="tomato", style="filled,rounded"]
+        Node6 -> Node5;
+    Node7 [label="session_state|SENDHELLORETRYREQUEST_FAILED", shape="record", fillcolor="white", style="filled"]
+        Node7 -> Node6;
+    Node8 [label="SENDCLIENTHELLO_SUCCEEDED", shape="record", fillcolor="white", style="filled"]
+        Node8 -> Node6;
+    Node9 [label="&not;\ntrue\n&not;(session_state &#8712; \{SENDHELLORETRYREQUEST\n,SENDHELLORETRYREQUEST_SUCCEEDED\})", shape="rect", fillcolor="olivedrab2", style="filled,rounded"]
+        Node9 -> Noderoot;
+    Node10 [label="&#8712;\nfalse\nsession_state &#8712; \{SENDHELLORETRYREQUEST,S\nENDHELLORETRYREQUEST_SUCCEEDED\}", shape="rect", fillcolor="tomato", style="filled,rounded"]
+        Node10 -> Node9;
+    Node11 [label="session_state|SENDHELLORETRYREQUEST_FAILED", shape="record", fillcolor="white", style="filled"]
+        Node11 -> Node10;
+    Node12 [label="\{SENDHELLORETRYREQUEST,SENDHELLORETRYREQ\nUEST_SUCCEEDED\}|\{SENDHELLORETRYREQUEST,SENDHELLORETRYREQ\nUEST_SUCCEEDED\}", shape="record", fillcolor="white", style="filled"]
+        Node12 -> Node10;
+    Node13 [label="&not;\ntrue\n&not;(session_state = SENDHELLORETRYREQUEST_\nSUCCEEDED)", shape="rect", fillcolor="olivedrab2", style="filled,rounded"]
+        Node13 -> Noderoot;
+    Node14 [label="=\nfalse\nsession_state = SENDHELLORETRYREQUEST_SU\nCCEEDED", shape="rect", fillcolor="tomato", style="filled,rounded"]
+        Node14 -> Node13;
+    Node15 [label="session_state|SENDHELLORETRYREQUEST_FAILED", shape="record", fillcolor="white", style="filled"]
+        Node15 -> Node14;
+    Node16 [label="SENDHELLORETRYREQUEST_SUCCEEDED", shape="record", fillcolor="white", style="filled"]
+        Node16 -> Node14;
+    Node17 [label="&not;\ntrue\n&not;(session_state = RECEIVECLIENTHELLO_SUC\nCEEDED)", shape="rect", fillcolor="olivedrab2", style="filled,rounded"]
+        Node17 -> Noderoot;
+    Node18 [label="=\nfalse\nsession_state = RECEIVECLIENTHELLO_SUCCE\nEDED", shape="rect", fillcolor="tomato", style="filled,rounded"]
+        Node18 -> Node17;
+    Node19 [label="session_state|SENDHELLORETRYREQUEST_FAILED", shape="record", fillcolor="white", style="filled"]
+        Node19 -> Node18;
+    Node20 [label="RECEIVECLIENTHELLO_SUCCEEDED", shape="record", fillcolor="white", style="filled"]
+        Node20 -> Node18;
+    Node21 [label="&not;\ntrue\n&not;(session_state = SENDSERVERHELLO_SUCCEE\nDED)", shape="rect", fillcolor="olivedrab2", style="filled,rounded"]
+        Node21 -> Noderoot;
+    Node22 [label="=\nfalse\nsession_state = SENDSERVERHELLO_SUCCEEDE\nD", shape="rect", fillcolor="tomato", style="filled,rounded"]
+        Node22 -> Node21;
+    Node23 [label="session_state|SENDHELLORETRYREQUEST_FAILED", shape="record", fillcolor="white", style="filled"]
+        Node23 -> Node22;
+    Node24 [label="SENDSERVERHELLO_SUCCEEDED", shape="record", fillcolor="white", style="filled"]
+        Node24 -> Node22;
+    Node25 [label="&not;\nfalse\n&not;(session_state &#8712; \{SENDCLIENTHELLO_FAILE\nD,SENDSERVERHELLO_FAILED\} &or; session_stat\ne = SENDHELLORETRYREQUEST_FAILED &or; sessi\non_state = RECEIVEHELLORETRYREQUEST_FAIL\nED &or; session_state = SENDENCRYPTEDEXTENS\nIONS_FAILED)", shape="rect", fillcolor="tomato", style="filled,rounded"]
+        Node25 -> Noderoot;
+    Node26 [label="&or;\ntrue\nsession_state &#8712; \{SENDCLIENTHELLO_FAILED,\nSENDSERVERHELLO_FAILED\} &or; session_state \n= SENDHELLORETRYREQUEST_FAILED &or; session\n_state = RECEIVEHELLORETRYREQUEST_FAILED\n &or; session_state = SENDENCRYPTEDEXTENSIO\nNS_FAILED", shape="rect", fillcolor="olivedrab2", style="filled,rounded"]
+        Node26 -> Node25;
+    Node27 [label="&#8712;\nfalse\nsession_state &#8712; \{SENDCLIENTHELLO_FAILED,\nSENDSERVERHELLO_FAILED\}", shape="rect", fillcolor="tomato", style="filled,rounded"]
+        Node27 -> Node26;
+    Node28 [label="session_state|SENDHELLORETRYREQUEST_FAILED", shape="record", fillcolor="white", style="filled"]
+        Node28 -> Node27;
+    Node29 [label="\{SENDCLIENTHELLO_FAILED,SENDSERVERHELLO_\nFAILED\}|\{SENDCLIENTHELLO_FAILED,SENDSERVERHELLO_\nFAILED\}", shape="record", fillcolor="white", style="filled"]
+        Node29 -> Node27;
+    Node30 [label="=\ntrue\nsession_state = SENDHELLORETRYREQUEST_FA\nILED", shape="rect", fillcolor="olivedrab2", style="filled,rounded"]
+        Node30 -> Node26;
+    Node31 [label="session_state|SENDHELLORETRYREQUEST_FAILED", shape="record", fillcolor="white", style="filled"]
+        Node31 -> Node30;
+    Node32 [label="SENDHELLORETRYREQUEST_FAILED", shape="record", fillcolor="white", style="filled"]
+        Node32 -> Node30;
+    Node33 [label="=\nfalse\nsession_state = RECEIVEHELLORETRYREQUEST\n_FAILED", shape="rect", fillcolor="tomato", style="filled,rounded"]
+        Node33 -> Node26;
+    Node34 [label="session_state|SENDHELLORETRYREQUEST_FAILED", shape="record", fillcolor="white", style="filled"]
+        Node34 -> Node33;
+    Node35 [label="RECEIVEHELLORETRYREQUEST_FAILED", shape="record", fillcolor="white", style="filled"]
+        Node35 -> Node33;
+    Node36 [label="=\nfalse\nsession_state = SENDENCRYPTEDEXTENSIONS_\nFAILED", shape="rect", fillcolor="tomato", style="filled,rounded"]
+        Node36 -> Node26;
+    Node37 [label="session_state|SENDHELLORETRYREQUEST_FAILED", shape="record", fillcolor="white", style="filled"]
+        Node37 -> Node36;
+    Node38 [label="SENDENCRYPTEDEXTENSIONS_FAILED", shape="record", fillcolor="white", style="filled"]
+        Node38 -> Node36;
+}
