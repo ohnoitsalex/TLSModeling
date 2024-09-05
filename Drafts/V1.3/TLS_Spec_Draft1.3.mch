@@ -542,7 +542,7 @@ OPERATIONS
        (session_machine'State = SENDENCRYPTEDEXTENSIONS & session_machine'Status = SUCCEEDED)
     THEN
        server_certificate := rec(CertificateType : certificate_type, CertificateAuthority : certificate_authorities, CertificatePublicKey : raw_public_key_certificate,
-                              CertificateTimestamp : signed_certificate_timestamp, OCSPStatus : ocsp_status, CertificateRequestContext : A1) ||
+                              CertificateTimestamp : signed_certificate_timestamp, OCSPStatus : ocsp_status, CertificateRequestContext : A1);
        IF not (server_certificate'OCSPStatus = 1)
            THEN 
               alert_message := rec (Message : ILLEGAL_PARAMETER, AlertLevel : FATAL) ||
@@ -640,7 +640,7 @@ OPERATIONS
        (session_machine'State = RECEIVECLIENTCERTIFICATEREQUEST & session_machine'Status = SUCCEEDED) //Request Must've been sent bby server before
     THEN
        client_certificate := rec(CertificateType : certificate_type, CertificateAuthority : certificate_authorities, CertificatePublicKey : raw_public_key_certificate,
-                              CertificateTimestamp : signed_certificate_timestamp, OCSPStatus : ocsp_status, CertificateRequestContext : A1) ||
+                              CertificateTimestamp : signed_certificate_timestamp, OCSPStatus : ocsp_status, CertificateRequestContext : A1);
        IF(client_certificate'OCSPStatus < 1)
            THEN 
               alert_message := rec (Message : ILLEGAL_PARAMETER, AlertLevel : FATAL) ||
