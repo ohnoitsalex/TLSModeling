@@ -110,6 +110,7 @@ SETS
                      SENDENCRYPTEDEXTENSIONS, RECEIVEENCRYPTEDEXTENSIONS,
                      SENDSERVERCERTIFICATE,RECEIVESERVERCERTIFICATE,
                      SENDCLIENTCERTIFICATEREQUEST, RECEIVECLIENTCERTIFICATEREQUEST,
+                     SENDCLIENTCERTIFICATE, RECEIVECLIENTCERTIFICATE,
                      SESSION_CLOSED};
 
     SESSION_STATUS = {SUCCEEDED, FAILED, IN_PROGRESS};
@@ -167,7 +168,7 @@ VARIABLES
 
 PROPERTIES
 
-    ocsp_status_constant = 0..3 &
+    ocsp_status_constant = 0..1 &
     compression_method_constant = 0..1
 
 INVARIANT
@@ -542,9 +543,7 @@ OPERATIONS
     THEN
        server_certificate := rec(CertificateType : certificate_type, CertificateAuthority : certificate_authorities, CertificatePublicKey : raw_public_key_certificate,
                               CertificateTimestamp : signed_certificate_timestamp, OCSPStatus : ocsp_status, CertificateRequestContext : A1) ||
-       IF (server_certificate'CertificatePublicKey ∉ KEYS) or
-          (server_certificate'CertificateTimestamp ∉ TIMESTAMP) or 
-          (server_certificate'OCSPStatus < 1)
+       IF not (server_certificate'OCSPStatus = 1)
            THEN 
               alert_message := rec (Message : ILLEGAL_PARAMETER, AlertLevel : FATAL) ||
               session_machine := rec(State : SENDSERVERCERTIFICATE, Status : FAILED)
@@ -553,10 +552,36 @@ OPERATIONS
        END
     END;
 
+   /* Client needs to double check too that everything receive is compliant*/
+   ReceiveServerHello =
+   PRE 
+       (session_machine'State = SENDSERVERCERTIFICATE & session_machine'Status = SUCCEEDED)
+   THEN
+        IF not (server_legacy_version = TLS1_2VersionNumber) or // If not equal to 0x0303
+           not (client_legacy_session_id_echo = server_legacy_session_id_echo) or  //A client which receives a legacy_session_id_echo field that does not match whatit sen
+                                                                                   //in the ClientHello MUST abort the handshake with an "illegal_parameter" alert.
+           not (server_cipher_suite : client_cipher_suites) or  //A client which receives a cipher suite that was not offered MUST abort the handshake with an
+                                                                  //"illegal_parameter" alert.
+           not (server_legacy_compression_methods = 0) or 
+           not (server_key_share : POW(KEYS) or server_pre_shared_key : POW(KEYS))
+            THEN
+                alert_message := rec (Message : ILLEGAL_PARAMETER, AlertLevel : FATAL) ||
+                session_machine := rec(State : RECEIVESERVERHELLO, Status : FAILED)
+        ELSE IF (client_supported_versions /\ server_supported_versions = {})
+            THEN
+                alert_message := rec (Message : PROTOCOL_VERSION, AlertLevel : FATAL) ||
+                session_machine := rec(State : RECEIVESERVERHELLO, Status : FAILED)
+        ELSE //If everything is ok
+           session_machine := rec(State : RECEIVESERVERHELLO, Status : SUCCEEDED)
+        END
+        END  
+   END;
+
+
     /*Client Receives Encrypted Extensions From Server */
     ReceiveEncryptedExtensions =
     PRE
-        (session_machine'State = SENDSERVERCERTIFICATE & session_machine'Status = SUCCEEDED)
+        (session_machine'State = RECEIVESERVERHELLO & session_machine'Status = SUCCEEDED)
     THEN
        IF (server_signature_algorithm : client_signature_algorithms or
           server_supported_group : client_supported_groups)
@@ -585,6 +610,62 @@ OPERATIONS
               session_machine := rec(State : RECEIVESERVERCERTIFICATE, Status : FAILED)
        ELSE
        session_machine := rec(State : RECEIVESERVERCERTIFICATE, Status : SUCCEEDED)
+       END
+    END;
+
+    ReceiveServerCertificateRequest =
+    PRE
+       session_machine'State = RECEIVESERVERCERTIFICATE & session_machine'Status = SUCCEEDED &
+       client_certificate_request_bool = TRUE
+    THEN
+       IF (certificate_request_signature_algorithm ∉  SIGNATURE_ALGORITHMS) or 
+          (certificate_request_context ∉ RANDOM_VALUE)
+          THEN
+              alert_message := rec (Message : ILLEGAL_PARAMETER, AlertLevel : FATAL) ||
+              session_machine := rec(State : RECEIVECLIENTCERTIFICATEREQUEST, Status : FAILED)
+       ELSE
+          session_machine := rec(State : RECEIVECLIENTCERTIFICATEREQUEST, Status : SUCCEEDED)
+       END
+    END;
+ 
+    /*If server request a client certificate -> Client sends its won certificate */
+    SendClientCertificate (raw_public_key_certificate, certificate_type, signed_certificate_timestamp, ocsp_status, certificate_authorities, server_ertificate_request_context)  =
+    PRE
+       raw_public_key_certificate : KEYS &
+       certificate_type : CERTIFICATE_TYPE & 
+       signed_certificate_timestamp : TIMESTAMP &
+       ocsp_status : ocsp_status_constant & 
+       certificate_authorities : CERTIFICATE_AUTHORITIES &
+       server_ertificate_request_context : RANDOM_VALUE &
+       (session_machine'State = RECEIVECLIENTCERTIFICATEREQUEST & session_machine'Status = SUCCEEDED) //Request Must've been sent bby server before
+    THEN
+       client_certificate := rec(CertificateType : certificate_type, CertificateAuthority : certificate_authorities, CertificatePublicKey : raw_public_key_certificate,
+                              CertificateTimestamp : signed_certificate_timestamp, OCSPStatus : ocsp_status, CertificateRequestContext : A1) ||
+       IF(client_certificate'OCSPStatus < 1)
+           THEN 
+              alert_message := rec (Message : ILLEGAL_PARAMETER, AlertLevel : FATAL) ||
+              session_machine := rec(State : SENDCLIENTCERTIFICATE, Status : FAILED)
+       ELSE
+           session_machine := rec(State : SENDCLIENTCERTIFICATE, Status : SUCCEEDED)
+       END
+    END;
+
+    ReceiveClientCertificate =
+    PRE
+       (session_machine'State = SENDCLIENTCERTIFICATE & session_machine'Status = SUCCEEDED)
+    THEN 
+       /* Client should recheck the received information from the client to make sure it is correct. Code may be duplicated for this step */
+       //Reverifying by server just in case - YES, I know .. It's cide duplication but the rfc says so...
+       IF (client_certificate'CertificatePublicKey ∉ KEYS or
+           client_certificate'CertificateTimestamp ∉ TIMESTAMP or 
+           client_certificate'OCSPStatus < 1 or 
+           client_certificate'CertificateAuthority ∉ CERTIFICATE_AUTHORITIES or
+           client_certificate'CertificateType /= X509) //Here we focus on X509 certificates that us digital signatures and public keys for authentification. 99% Used in TLS 1.3
+           THEN
+              alert_message := rec(Message : HANDSHAKE_FAILURE, AlertLevel : FATAL) ||
+              session_machine := rec(State : RECEIVECLIENTCERTIFICATE, Status : FAILED)
+       ELSE
+       session_machine := rec(State : RECEIVECLIENTCERTIFICATE, Status : SUCCEEDED)
        END
     END;
 
