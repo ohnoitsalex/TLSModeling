@@ -10,7 +10,12 @@ MACHINE TLS_specification
  */
 CONSTANTS
     ocsp_status_constant,
-    compression_method_constant
+    compression_method_constant,
+    certificate_serial_number,
+    crl_revocation_list,
+    default_certificate_timestamp,
+    verify_server_certificate_with_ocsp,
+    verify_client_certificate_with_ocsp
 
 DEFINITIONS
     NoLegacyVersionNumber == NO_VERSION;
@@ -29,7 +34,7 @@ DEFINITIONS
 
     SESSION_MACHINE == struct(State : SESSION_STATE, Status : SESSION_STATUS);
     CERTIFICATE == struct(CertificateType : CERTIFICATE_TYPE, CertificateAuthority : CERTIFICATE_AUTHORITIES, CertificatePublicKey : KEYS, CertificateTimestamp : TIMESTAMP,
-                          OCSPStatus : ocsp_status_constant, CertificateRequestContext : RANDOM_VALUE);
+                          OCSPStatus : ocsp_status_constant, CertificateRequestContext : RANDOM_VALUE, SerialNumber : certificate_serial_number);
     MESSAGE_ALERT == struct(Message : ALERT_MESSAGE, AlertLevel : ALERT_LEVEL);
 
 SETS
@@ -40,7 +45,8 @@ SETS
     TIMESTAMP = {
     D20231231,
     D20241231,
-    D20251231};
+    D20251231,
+    D20261231};
 
     KEYS = {
     A1B1C1,
@@ -111,11 +117,13 @@ SETS
                      SENDSERVERCERTIFICATE,RECEIVESERVERCERTIFICATE,
                      SENDCLIENTCERTIFICATEREQUEST, RECEIVECLIENTCERTIFICATEREQUEST,
                      SENDCLIENTCERTIFICATE, RECEIVECLIENTCERTIFICATE,
+                     VERIFYSERVERCERTIFICATECRL, VERIFYCLIENTCERTIFICATECRL,
+                     VERIFYSERVERCERTIFICATEOCSP, VERIFYCLIENTCERTIFICATEOCSP,
                      SESSION_CLOSED};
 
     SESSION_STATUS = {SUCCEEDED, FAILED, IN_PROGRESS};
 
-    ALERT_MESSAGE = {NONE, PROTOCOL_VERSION, ILLEGAL_PARAMETER, HANDSHAKE_FAILURE, UNEXPECTED_MESSAGE};
+    ALERT_MESSAGE = {NONE, PROTOCOL_VERSION, ILLEGAL_PARAMETER, HANDSHAKE_FAILURE, UNEXPECTED_MESSAGE, CERTIFICATE_REVOKED, CERTIFICATE_EXPIRED, UNKNOWN_CA};
 
     ALERT_LEVEL = {WARNING, FATAL, OTHER};
 
@@ -169,7 +177,13 @@ VARIABLES
 PROPERTIES
 
     ocsp_status_constant = 0..1 &
-    compression_method_constant = 0..1
+    compression_method_constant = 0..1 &
+    certificate_serial_number = 0..5 &
+    crl_revocation_list = {1,2,4} &
+    default_certificate_timestamp = {D20231231, D20241231,D20251231} & /* Should contain just a number, but it is hard to compare in this format. Hence, we chose a list and if the
+                                                                         timestamp isn't part of the list, it becomes expired*/
+    verify_server_certificate_with_ocsp = TRUE &  /*Initialized value which will determine if a OCSP verification will occur or not for the server certificate*/
+    verify_client_certificate_with_ocsp = TRUE    /*Initialized value which will determine if a OCSP verification will occur or not */
 
 INVARIANT
 
@@ -231,9 +245,9 @@ INITIALISATION
     
     /*DEFAULT VALUES FOR CERTIFICATES*/
     server_certificate := rec(CertificateType : X509, CertificateAuthority : ENTRUST, CertificatePublicKey : A1B1C1, CertificateTimestamp : D20251231, OCSPStatus : 0,
-                              CertificateRequestContext : A1) ||
+                              CertificateRequestContext : A1, SerialNumber : 2) || /*Serial Number is revoked for set up */
     client_certificate := rec(CertificateType : X509, CertificateAuthority : ENTRUST, CertificatePublicKey : A2B2C2, CertificateTimestamp : D20241231, OCSPStatus : 0,
-                              CertificateRequestContext : B1) ||
+                              CertificateRequestContext : B1, SerialNumber : 2) || /*Serial Number is revoked for set up */
 
     /*HELLO RETRY INIT*/
     hello_retry_request_count := 0 ||       
@@ -345,7 +359,6 @@ OPERATIONS
         IF not(TLS_1_3 : client_supported_versions) or 
 	   (client_signature_algorithms = {}) or
            (client_supported_groups = {}) or
-           (client_cipher_suites = {}) or 
            (client_legacy_compression_methods /= 0) or
            (client_supported_versions /\ server_supported_versions = {})
 	   THEN
@@ -530,7 +543,8 @@ OPERATIONS
     END;
 
     /*Server Sends it own certificate */
-    SendServerCertificate (raw_public_key_certificate, certificate_type, signed_certificate_timestamp, ocsp_status, certificate_authorities, server_ertificate_request_context)  =
+    SendServerCertificate (raw_public_key_certificate, certificate_type, signed_certificate_timestamp, ocsp_status, certificate_authorities, server_ertificate_request_context,
+                           serial_number)  =
     PRE
        raw_public_key_certificate : KEYS &
        certificate_type : CERTIFICATE_TYPE & 
@@ -538,11 +552,12 @@ OPERATIONS
        ocsp_status : ocsp_status_constant & 
        certificate_authorities : CERTIFICATE_AUTHORITIES &
        server_ertificate_request_context : RANDOM_VALUE &
+       serial_number : certificate_serial_number &
        (session_machine'State = SENDCLIENTCERTIFICATEREQUEST & session_machine'Status = SUCCEEDED) or //Not mandatory as client certificate request is optional
        (session_machine'State = SENDENCRYPTEDEXTENSIONS & session_machine'Status = SUCCEEDED)
     THEN
        server_certificate := rec(CertificateType : certificate_type, CertificateAuthority : certificate_authorities, CertificatePublicKey : raw_public_key_certificate,
-                              CertificateTimestamp : signed_certificate_timestamp, OCSPStatus : ocsp_status, CertificateRequestContext : A1);
+                              CertificateTimestamp : signed_certificate_timestamp, OCSPStatus : ocsp_status, CertificateRequestContext : A1, SerialNumber : serial_number);
        IF not (server_certificate'OCSPStatus = 1)
            THEN 
               alert_message := rec (Message : ILLEGAL_PARAMETER, AlertLevel : FATAL) ||
@@ -629,18 +644,20 @@ OPERATIONS
     END;
  
     /*If server request a client certificate -> Client sends its won certificate */
-    SendClientCertificate (raw_public_key_certificate, certificate_type, signed_certificate_timestamp, ocsp_status, certificate_authorities, server_ertificate_request_context)  =
+    SendClientCertificate (raw_public_key_certificate, certificate_type, signed_certificate_timestamp, ocsp_status, certificate_authorities, server_certificate_request_context,
+                           serial_number)  =
     PRE
        raw_public_key_certificate : KEYS &
        certificate_type : CERTIFICATE_TYPE & 
        signed_certificate_timestamp : TIMESTAMP &
        ocsp_status : ocsp_status_constant & 
        certificate_authorities : CERTIFICATE_AUTHORITIES &
-       server_ertificate_request_context : RANDOM_VALUE &
+       server_certificate_request_context : RANDOM_VALUE &
+       serial_number : certificate_serial_number&
        (session_machine'State = RECEIVECLIENTCERTIFICATEREQUEST & session_machine'Status = SUCCEEDED) //Request Must've been sent bby server before
     THEN
        client_certificate := rec(CertificateType : certificate_type, CertificateAuthority : certificate_authorities, CertificatePublicKey : raw_public_key_certificate,
-                              CertificateTimestamp : signed_certificate_timestamp, OCSPStatus : ocsp_status, CertificateRequestContext : A1);
+                              CertificateTimestamp : signed_certificate_timestamp, OCSPStatus : ocsp_status, CertificateRequestContext : A1, SerialNumber : serial_number);
        IF(client_certificate'OCSPStatus < 1)
            THEN 
               alert_message := rec (Message : ILLEGAL_PARAMETER, AlertLevel : FATAL) ||
@@ -669,6 +686,55 @@ OPERATIONS
        END
     END;
 
+    /*In this case, we are mocking the CRL list */
+    VerifiyServerCertificateWithCRL = 
+    PRE 
+    (session_machine'State = RECEIVECLIENTCERTIFICATE & session_machine'Status = SUCCEEDED) or
+    (session_machine'State = RECEIVESERVERCERTIFICATE & session_machine'Status = SUCCEEDED)
+    THEN
+        IF (server_certificate'SerialNumber : crl_revocation_list)
+           THEN
+              alert_message := rec(Message : CERTIFICATE_REVOKED, AlertLevel : FATAL) ||
+              session_machine := rec(State : VERIFYSERVERCERTIFICATECRL, Status : FAILED)
+        ELSE IF (server_certificate'CertificateTimestamp ∉  default_certificate_timestamp) /*Instead of compare a specific date, the timestamp contains a list of valid dates...simpler to verify */
+           THEN
+              alert_message := rec(Message : CERTIFICATE_EXPIRED, AlertLevel : FATAL) ||
+              session_machine := rec(State : VERIFYSERVERCERTIFICATECRL, Status : FAILED)
+        ELSE IF (verify_server_certificate_with_ocsp = TRUE)
+           THEN
+             session_machine := rec(State : VERIFYSERVERCERTIFICATECRL, Status : IN_PROGRESS) /*Verifiy with ocsp now to make sure - in case crl list isn't updated or something... */
+        ELSE
+           session_machine := rec(State : VERIFYSERVERCERTIFICATECRL, Status : SUCCEEDED)
+        END
+        END
+        END
+    END;
+
+    /*In this case, we are mocking the CRL list */
+    VerifiyClientCertificateWithCRL = 
+    PRE 
+    session_machine'State = VERIFYSERVERCERTIFICATEOCSP & session_machine'Status = SUCCEEDED &
+    client_certificate_request_bool = TRUE
+    THEN
+        IF (client_certificate'SerialNumber : crl_revocation_list)
+           THEN
+              alert_message := rec(Message : CERTIFICATE_REVOKED, AlertLevel : FATAL) ||
+              session_machine := rec(State : VERIFYCLIENTCERTIFICATECRL, Status : FAILED)
+        ELSE IF (client_certificate'CertificateTimestamp ∉  default_certificate_timestamp) /*Instead of compare a specific date, the timestamp contains a list of valid dates...simpler to verify */
+           THEN
+              alert_message := rec(Message : CERTIFICATE_EXPIRED, AlertLevel : FATAL) ||
+              session_machine := rec(State : VERIFYCLIENTCERTIFICATECRL, Status : FAILED)
+        ELSE IF (verify_client_certificate_with_ocsp = TRUE)
+           THEN
+             session_machine := rec(State : VERIFYCLIENTCERTIFICATECRL, Status : IN_PROGRESS) /*Verifiy with ocsp now to make sure - in case crl list isn't updated or something... */
+        ELSE
+           session_machine := rec(State : VERIFYCLIENTCERTIFICATECRL, Status : SUCCEEDED)
+        END
+        END
+        END
+    END;
+
+
     /*Operation Used for Temrinating a session and reinitiaizing everything from scratch for new session to be established */
     TerminateSession = 
     PRE
@@ -684,9 +750,9 @@ OPERATIONS
     	certificate_request_context :=  RandomValue||
     	certificate_request_signature_algorithm := private_use ||//Will need to be changed to empty value
     	server_certificate := rec(CertificateType : X509, CertificateAuthority : ENTRUST, CertificatePublicKey : A1B1C1, CertificateTimestamp : D20251231, OCSPStatus : 0,
-                              CertificateRequestContext : A1) ||
+                              CertificateRequestContext : A1, SerialNumber : 2) ||
     	client_certificate := rec(CertificateType : X509, CertificateAuthority : ENTRUST, CertificatePublicKey : A2B2C2, CertificateTimestamp : D20241231, OCSPStatus : 0,
-                              CertificateRequestContext : B1) ||
+                              CertificateRequestContext : B1, SerialNumber : 2) ||
 
     	/*HELLO RETRY INIT*/
     	hello_retry_request_count := 0 ||       
@@ -708,7 +774,7 @@ OPERATIONS
 
     	/*Server params initialisation */
     	server_random := RandomValue || 
-    	server_legacy_session_id_echo := TLS1_2VersionNumber || /*Must be set to this value which referenciates the TLS version 1.2 -> used after helloretryrequest to check i                                                               f it matchthe legacy_session_id*/
+    	server_legacy_session_id_echo := TLS1_2VersionNumber || /*Must be set to this value which referenciates the TLS version 1.2 -> used after helloretryrequest to check i                                                                            f it matchthe legacy_session_id*/
     	server_cipher_suite := TLS_AES_128_GCM_SHA256 ||
     	server_legacy_compression_methods := 0 ||
     	server_supported_versions := ServerSupportedVersions ||
