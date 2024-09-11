@@ -137,6 +137,8 @@ VARIABLES
 
     /* BOOLEANS */
     client_certificate_request_bool,
+    server_certificate_authenticated,
+    client_certificate_authenticated,
    
     /*SERVER PARAMS */
     server_certificate,
@@ -193,6 +195,8 @@ INVARIANT
 
     /*BOOLEANS */
     client_certificate_request_bool : BOOL &
+    server_certificate_authenticated : BOOL &
+    client_certificate_authenticated : BOOL &
 
     /*Certificate Invariants */
     server_certificate : CERTIFICATE &
@@ -238,6 +242,8 @@ INITIALISATION
 
     /*BOOLEANS INIT */
     client_certificate_request_bool := FALSE ||
+    server_certificate_authenticated := FALSE ||
+    client_certificate_authenticated := FALSE ||
 
     /*CERTIFICATE INIT */
     certificate_request_context :=  RandomValue||
@@ -702,11 +708,33 @@ OPERATIONS
               session_machine := rec(State : VERIFYSERVERCERTIFICATECRL, Status : FAILED)
         ELSE IF (verify_server_certificate_with_ocsp = TRUE)
            THEN
-             session_machine := rec(State : VERIFYSERVERCERTIFICATECRL, Status : IN_PROGRESS) /*Verifiy with ocsp now to make sure - in case crl list isn't updated or something... */
+              session_machine := rec(State : VERIFYSERVERCERTIFICATECRL, Status : IN_PROGRESS) /*Verifiy with ocsp now to make sure - in case crl list isn't updated or something... */
         ELSE
-           session_machine := rec(State : VERIFYSERVERCERTIFICATECRL, Status : SUCCEEDED)
+           session_machine := rec(State : VERIFYSERVERCERTIFICATECRL, Status : SUCCEEDED) ||
+           server_certificate_authenticated := TRUE
         END
         END
+        END
+    END;
+
+    /*Here we will create a non-deterministic value that will determine if the certificate passes or not through OCSP. 
+      A boolean value will be responsible for handling it. If true -> Certificate is valid. If False -> certificate is invalid and the session will be terminated */
+    VerifyServerCertificateWithOCSP =
+    PRE
+        (session_machine'State = VERIFYSERVERCERTIFICATECRL & session_machine'Status = IN_PROGRESS)
+    THEN
+        /* 50% chance the OCSP verification passes */
+        ANY non_deterministic_value WHERE
+           non_deterministic_value : BOOL
+           THEN
+               IF (non_deterministic_value = TRUE)
+                  THEN
+                     session_machine := rec(State : VERIFYSERVERCERTIFICATEOCSP, Status : SUCCEEDED)
+               ELSE
+                  alert_message := rec(Message : CERTIFICATE_REVOKED, AlertLevel : FATAL) || /*Lets supposed if the OCSP return an invalid response, this means the certificate is expired */
+                  session_machine := rec(State : VERIFYSERVERCERTIFICATEOCSP, Status : FAILED) ||
+                  server_certificate_authenticated := TRUE
+               END
         END
     END;
 
@@ -714,7 +742,7 @@ OPERATIONS
     VerifiyClientCertificateWithCRL = 
     PRE 
     session_machine'State = VERIFYSERVERCERTIFICATEOCSP & session_machine'Status = SUCCEEDED &
-    client_certificate_request_bool = TRUE
+    client_certificate_request_bool = TRUE & server_certificate_authenticated = TRUE
     THEN
         IF (client_certificate'SerialNumber : crl_revocation_list)
            THEN
@@ -728,9 +756,32 @@ OPERATIONS
            THEN
              session_machine := rec(State : VERIFYCLIENTCERTIFICATECRL, Status : IN_PROGRESS) /*Verifiy with ocsp now to make sure - in case crl list isn't updated or something... */
         ELSE
-           session_machine := rec(State : VERIFYCLIENTCERTIFICATECRL, Status : SUCCEEDED)
+           session_machine := rec(State : VERIFYCLIENTCERTIFICATECRL, Status : SUCCEEDED) ||
+           client_certificate_authenticated := TRUE
         END
         END
+        END
+    END;
+
+    /*Here we will create a non-deterministic value that will determine if the certificate passes or not through OCSP. 
+      A boolean value will be responsible for handling it. If true -> Certificate is valid. If False -> certificate is invalid and the session will be terminated */
+    VerifyClientCertificateWithOCSP =
+    PRE
+        (session_machine'State = VERIFYCLIENTCERTIFICATECRL & session_machine'Status = IN_PROGRESS) &
+        client_certificate_request_bool = TRUE & server_certificate_authenticated = TRUE
+    THEN
+        /* 50% chance the OCSP verification passes */
+        ANY non_deterministic_value WHERE
+           non_deterministic_value : BOOL
+           THEN
+               IF (non_deterministic_value = TRUE)
+                  THEN
+                     session_machine := rec(State : VERIFYCLIENTCERTIFICATEOCSP, Status : SUCCEEDED) ||
+                     client_certificate_authenticated := TRUE
+               ELSE
+                  alert_message := rec(Message : CERTIFICATE_REVOKED, AlertLevel : FATAL) || /*Lets supposed if the OCSP return an invalid response, this means the certificate is expired */
+                  session_machine := rec(State : VERIFYCLIENTCERTIFICATEOCSP, Status : FAILED) 
+               END
         END
     END;
 
@@ -745,6 +796,8 @@ OPERATIONS
 
         /*BOOLEANS INIT */
         client_certificate_request_bool := FALSE ||
+        server_certificate_authenticated := FALSE ||
+        client_certificate_authenticated := FALSE ||
     
     	/*CERTIFICATE INIT */
     	certificate_request_context :=  RandomValue||
