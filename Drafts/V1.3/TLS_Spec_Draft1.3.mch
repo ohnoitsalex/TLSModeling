@@ -15,7 +15,9 @@ CONSTANTS
     crl_revocation_list,
     default_certificate_timestamp,
     verify_server_certificate_with_ocsp,
-    verify_client_certificate_with_ocsp
+    verify_client_certificate_with_ocsp,
+    post_calculation_server_symmetric_key,
+    post_calculation_client_symmetric_key
 
 DEFINITIONS
     NoLegacyVersionNumber == NO_VERSION;
@@ -52,6 +54,9 @@ SETS
     A1B1C1,
     A2B2C2,
     A3B3C3};
+
+    SYMMETRIC_KEYS = {SYMMETRIC_DEFAULT, SYMMETRIC1, SYMMETRIC2};
+  
 
     RANDOM_VALUE = {
         A1,
@@ -119,7 +124,9 @@ SETS
                      SENDCLIENTCERTIFICATE, RECEIVECLIENTCERTIFICATE,
                      VERIFYSERVERCERTIFICATECRL, VERIFYCLIENTCERTIFICATECRL,
                      VERIFYSERVERCERTIFICATEOCSP, VERIFYCLIENTCERTIFICATEOCSP,
-                     SESSION_CLOSED};
+                     CALCULATESERVERSYMMETRICKEY, CALCULATECLIENTSYMMETRICKEY,
+                     SERVERFINISHED, CLIENTFINISHED,
+                     DATATRANSFER, SESSION_CLOSED};
 
     SESSION_STATUS = {SUCCEEDED, FAILED, IN_PROGRESS};
 
@@ -163,6 +170,7 @@ VARIABLES
     client_signature_algorithms,  /* Client Extension containing list of supported signature algorithms*/
     client_supported_groups,      /* Client Extension containing list of supported kems*/
     client_supported_versions,    /* Client List of supported versions */
+    client_calculated_symmetric_key, /*Symmetric Key calculated by client*/
 
     /* SERVER PARAMS*/
     server_random,                /* Server Random value */
@@ -174,7 +182,8 @@ VARIABLES
     server_pre_shared_key,        /* Server List of symmetric key identifies known to the client*/
     server_legacy_version,        /* Legacy version. Needs to be set to 0x0303 by default for TLS 1.3 to work. This means the server will be using the supported_versions                                                   extensions */
     server_supported_group,       /* Server Extension containing one of supported kems*/   
-    server_signature_algorithm   /* Server Extension containing one of supported signature algorithms*/
+    server_signature_algorithm,   /* Server Extension containing one of supported signature algorithms*/
+    server_calculated_symmetric_key /*Symmetric Key calculated by server*/
 
 PROPERTIES
 
@@ -184,6 +193,8 @@ PROPERTIES
     crl_revocation_list = {1,2,4} &
     default_certificate_timestamp = {D20231231, D20241231,D20251231} & /* Should contain just a number, but it is hard to compare in this format. Hence, we chose a list and if the
                                                                          timestamp isn't part of the list, it becomes expired*/
+    post_calculation_server_symmetric_key = SYMMETRIC1 &
+    post_calculation_client_symmetric_key = SYMMETRIC2 &
     verify_server_certificate_with_ocsp = TRUE &  /*Initialized value which will determine if a OCSP verification will occur or not for the server certificate*/
     verify_client_certificate_with_ocsp = TRUE    /*Initialized value which will determine if a OCSP verification will occur or not */
 
@@ -221,6 +232,8 @@ INVARIANT
     client_signature_algorithms <: SIGNATURE_ALGORITHMS &
     client_supported_groups <: SUPPORTED_GROUPS  &
     client_supported_versions <: VERSION  &
+    client_calculated_symmetric_key : SYMMETRIC_KEYS &
+
 
     /* Sever Invariants*/
     server_random : RANDOM_VALUE & //In our case, the random number will be formatted under string value
@@ -232,7 +245,8 @@ INVARIANT
     server_pre_shared_key <: KEYS  &
     server_legacy_version : VERSION_NUMBERS &
     server_supported_group : SUPPORTED_GROUPS &
-    server_signature_algorithm : SIGNATURE_ALGORITHMS 
+    server_signature_algorithm : SIGNATURE_ALGORITHMS &
+    server_calculated_symmetric_key : SYMMETRIC_KEYS
 
 INITIALISATION
 
@@ -272,6 +286,7 @@ INITIALISATION
     client_signature_algorithms := EmptyValue ||
     client_supported_groups := EmptyValue ||
     client_supported_versions := EmptyValue ||
+    client_calculated_symmetric_key := SYMMETRIC_DEFAULT ||
 
     /*Server params initialisation */
     server_random := RandomValue || 
@@ -284,7 +299,9 @@ INITIALISATION
     server_pre_shared_key := KeyShare ||
     server_legacy_version := NoLegacyVersionNumber ||
     server_supported_group := X448 ||  //Will need to be changed to empty value
-    server_signature_algorithm := private_use //Will need to be changed to empty value
+    server_signature_algorithm := private_use ||//Will need to be changed to empty value
+    server_calculated_symmetric_key := SYMMETRIC_DEFAULT
+
 
 OPERATIONS
 
@@ -785,6 +802,66 @@ OPERATIONS
         END
     END;
 
+    /*No calculation will be made in this case. Here we only mock the client symmetric key calculation with a random value. As in DCHE caclulation, the client and the server each do on their own side the symmetric key 
+      calculation without communication with eachother and then at the very end make sure they have the same key by encrypting and decrypting a default message */
+    CalculateClientSymmetricKey =
+    PRE  
+     /*All 4 possible preceeding states */
+    (session_machine'State = VERIFYSERVERCERTIFICATECRL & session_machine'Status = SUCCEEDED) or
+    (session_machine'State = VERIFYSERVERCERTIFICATEOCSP & session_machine'Status = SUCCEEDED) or
+    (session_machine'State = VERIFYCLIENTCERTIFICATECRL & session_machine'Status = SUCCEEDED) or
+    (session_machine'State = VERIFYCLIENTCERTIFICATEOCSP & session_machine'Status = SUCCEEDED)
+    THEN
+       /*In general both sides should arrive at the same symmetric key by calculations. This means we will assign a symmetric key to the client that will be the same as the servers
+         This can be changed to a non-deterministic approach. Meaning if the client and the server arrive at the same symmetric key, then the handshake is completed - But it will not be implemented this way in this case*/
+         client_calculated_symmetric_key := post_calculation_client_symmetric_key ||
+         session_machine := rec(State : CALCULATECLIENTSYMMETRICKEY, Status : SUCCEEDED) 
+   END;
+
+    /*No calculation will be made in this case. Here we only mock the client symmetric key calculation with a random value. As in DCHE caclulation, the client and the server each do on their own side the symmetric key 
+      calculation without communication with eachother and then at the very end make sure they have the same key by encrypting and decrypting a default message */
+    CalculateServerSymmetricKey =
+    PRE  
+     /*All 4 possible preceeding states */
+    (session_machine'State = CALCULATECLIENTSYMMETRICKEY & session_machine'Status = SUCCEEDED)
+    THEN
+       /*In general both sides should arrive at the same symmetric key by calculations. This means we will assign a symmetric key to the client that will be the same as the servers
+         This can be changed to a non-deterministic approach. Meaning if the client and the server arrive at the same symmetric key, then the handshake is completed - But it will not be implemented this way in this case*/
+         server_calculated_symmetric_key := post_calculation_server_symmetric_key ||
+         session_machine := rec(State : CALCULATESERVERSYMMETRICKEY, Status : SUCCEEDED) 
+   END;
+
+   /*Simple message that the server send to the client to tell him that he finished calculating the symmetric key - Doesn't really do any calculations for now. Simply transfers machine state*/
+   ServerFinished =
+   PRE
+      (session_machine'State = CALCULATESERVERSYMMETRICKEY & session_machine'Status = SUCCEEDED)
+   THEN
+      session_machine := rec(State : SERVERFINISHED, Status : SUCCEEDED) 
+   END;
+
+   /*Simple message that the server send to the client to tell him that he finished calculating the symmetric key - Doesn't really do any calculations for now. Simply transfers machine state*/
+   ClientFinished =
+   PRE
+      (session_machine'State = SERVERFINISHED & session_machine'Status = SUCCEEDED)
+   THEN
+      session_machine := rec(State : CLIENTFINISHED, Status : SUCCEEDED) 
+   END;
+ 
+   /*Server and client exchange a simple encrypted string with the symmetric key. If the decryption corresponds to the correct default value, then the handshake is completed. If not it's failed. In this case, we only check if 
+     both symmetric keys that were calculated are the same. We ignore any encryption or whatsoever. Simply black box method */ 
+   ConfirmHandShake =
+   PRE
+      (session_machine'State = CLIENTFINISHED & session_machine'Status = SUCCEEDED) &
+      (server_calculated_symmetric_key /= SYMMETRIC_DEFAULT & client_calculated_symmetric_key /= SYMMETRIC_DEFAULT)
+   THEN
+      IF (server_calculated_symmetric_key = client_calculated_symmetric_key)
+         THEN
+            session_machine := rec(State : DATATRANSFER, Status : SUCCEEDED) 
+      ELSE
+         session_machine := rec(State : DATATRANSFER, Status : FAILED) 
+      END
+   END;
+   
 
     /*Operation Used for Temrinating a session and reinitiaizing everything from scratch for new session to be established */
     TerminateSession = 
@@ -817,7 +894,7 @@ OPERATIONS
     	client_legacy_version := NoLegacyVersionNumber ||
     	client_version := CurrentTLSVersion ||
     	client_legacy_session_id := TLS1_2VersionNumber || /*Must be set to this value which referenciates the TLS version 1.2*/
-    	client_legacy_session_id_echo := TLS1_2VersionNumber || /*Must be set to this value which referenciates the TLS version 1.2 -> used after helloretryrequest to check i                                                               f it match the legacy_session_id*/
+    	client_legacy_session_id_echo := TLS1_2VersionNumber || /*Must be set to this value which referenciates the TLS version 1.2 -> used after helloretryrequest to check if it match the legacy_session_id*/
     	client_legacy_compression_methods := 0 ||
     	client_cipher_suites := EmptyValue ||
     	client_key_share := KeyShare ||
@@ -827,7 +904,7 @@ OPERATIONS
 
     	/*Server params initialisation */
     	server_random := RandomValue || 
-    	server_legacy_session_id_echo := TLS1_2VersionNumber || /*Must be set to this value which referenciates the TLS version 1.2 -> used after helloretryrequest to check i                                                                            f it matchthe legacy_session_id*/
+    	server_legacy_session_id_echo := TLS1_2VersionNumber || /*Must be set to this value which referenciates the TLS version 1.2 -> used after helloretryrequest to check if it matchthe legacy_session_id*/
     	server_cipher_suite := TLS_AES_128_GCM_SHA256 ||
     	server_legacy_compression_methods := 0 ||
     	server_supported_versions := ServerSupportedVersions ||
