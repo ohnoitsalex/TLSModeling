@@ -194,7 +194,7 @@ PROPERTIES
     default_certificate_timestamp = {D20231231, D20241231,D20251231} & /* Should contain just a number, but it is hard to compare in this format. Hence, we chose a list and if the
                                                                          timestamp isn't part of the list, it becomes expired*/
     post_calculation_server_symmetric_key = SYMMETRIC1 &
-    post_calculation_client_symmetric_key = SYMMETRIC2 &
+    post_calculation_client_symmetric_key = SYMMETRIC1 &
     verify_server_certificate_with_ocsp = TRUE &  /*Initialized value which will determine if a OCSP verification will occur or not for the server certificate*/
     verify_client_certificate_with_ocsp = TRUE    /*Initialized value which will determine if a OCSP verification will occur or not */
 
@@ -651,7 +651,7 @@ OPERATIONS
        END
     END;
 
-    ReceiveServerCertificateRequest =
+    ReceiveClientCertificateRequest =
     PRE
        session_machine'State = RECEIVESERVERCERTIFICATE & session_machine'Status = SUCCEEDED &
        client_certificate_request_bool = TRUE
@@ -858,6 +858,7 @@ OPERATIONS
          THEN
             session_machine := rec(State : DATATRANSFER, Status : SUCCEEDED) 
       ELSE
+         alert_message := rec(Message : CERTIFICATE_REVOKED, AlertLevel : FATAL) ||
          session_machine := rec(State : DATATRANSFER, Status : FAILED) 
       END
    END;
