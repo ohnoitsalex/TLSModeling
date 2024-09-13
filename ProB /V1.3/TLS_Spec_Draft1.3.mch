@@ -1,4 +1,4 @@
-/* Library
+/* TLS IMPLEMENTATION MODELING
  * Author Alexander Onofrei
  * Creation date: 08-08-2024
  */
@@ -6,7 +6,7 @@ MACHINE TLS_specification
 /*
   Specification of the TLS protocol
   University of Sherbrooke
-  Draft 1.2
+  Draft 1.3
  */
 CONSTANTS
     ocsp_status_constant,

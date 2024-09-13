@@ -1,0 +1,12 @@
+digraph nfa_to_dfa {
+graph [nodesep=1.5, ranksep=1.5];
+5[id=5, shape=box, color="olivedrab2"];
+4[id=4, shape=box, color="olivedrab2"];
+3[id=3, shape=box, color="olivedrab2"];
+root[id="root", shape=invtriangle, color=green, label=""];
+
+5 -> 4[color=blue, label="TerminateSession()"];
+4 -> 5[color=blue, label="SendClientHello(_,_,_,_,_,_,_)"];
+3 -> 4[color=blue, label="$initialise_machine()"];
+root -> 3[color=black, label="$setup_constants()"];
+}
