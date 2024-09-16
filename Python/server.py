@@ -1,20 +1,67 @@
 # Library
 # Author Alexander Onofrei
 # Creation date: 13-09-2024
-
+from OpenSSL import SSL
+import socket
 import http.server
 import ssl
 
 certificate_path = "/Users/alex/Desktop/School/Masters/Projet de Recherche/Code/ALL CODE/TLSModeling/Ressources/certificates_keys/server.crt"
 keyfile_path = "/Users/alex/Desktop/School/Masters/Projet de Recherche/Code/ALL CODE/TLSModeling/Ressources/certificates_keys/server.key"
 
-def start_HTTPS_server():
-    httpd = http.server.HTTPServer(('localhost', 8443),http.server.SimpleHTTPRequestHandler)
+def start_HTTPS_server_using_ssl_import(host, port):
+    httpd = http.server.HTTPServer((host, port),http.server.SimpleHTTPRequestHandler)
     httpd.socket = ssl.wrap_socket(httpd.socket,certfile=certificate_path,
                                    keyfile=keyfile_path, server_side=True, ssl_version=ssl.PROTOCOL_TLS)
     httpd.serve_forever()
 
-# Press the green button in the gutter to run the script.
+
+# Function to handle client connections
+def handle_client(conn):
+    print("Client connected")
+    while True:
+        try:
+            data = conn.recv(1024)
+            if not data:
+                break
+            print("Received:", data.decode())
+
+            # Proper HTTP response format with headers and content
+            response = (
+                "HTTP/1.1 200 OK\r\n"
+                "Content-Type: text/plain\r\n"
+                "Content-Length: 13\r\n"
+                "\r\n"
+                "Hello, World!"
+            )
+            conn.send(response.encode())
+        except SSL.Error as e:
+            print("SSL error:", e)
+            break
+    conn.sendall(response.encode())
+    print("Client disconnected")
+    conn.shutdown()
+    conn.close()
+
+def start_HTTPS_server_using_openssl_import(host, port):
+    # Set up the SSL context
+    context = SSL.Context(SSL.TLS_METHOD)
+    context.use_privatekey_file(keyfile_path)
+    context.use_certificate_file(certificate_path)
+
+    # Create a TCP/IP socket
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.bind((host, port))
+    sock.listen(5)
+    while True:
+        client_socket, client_addr = sock.accept()
+        print(f"Connection from {client_addr}")
+        # Wrap the client socket with SSL
+        ssl_conn = SSL.Connection(context, client_socket)
+        ssl_conn.set_accept_state()  # Set the connection to server mode
+        handle_client(ssl_conn)
+
 if __name__ == '__main__':
-    start_HTTPS_server()
+    #start_HTTPS_server_using_ssl_import('localhost', 8443)
+    start_HTTPS_server_using_openssl_import('localhost', 8443)
 
