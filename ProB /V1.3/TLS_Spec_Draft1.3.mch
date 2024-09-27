@@ -621,8 +621,8 @@ OPERATIONS
     PRE
         (session_machine'State = RECEIVESERVERHELLO & session_machine'Status = SUCCEEDED)
     THEN
-       IF (server_signature_algorithm : client_signature_algorithms or
-          server_supported_group : client_supported_groups)
+       IF (server_signature_algorithm ∉ client_signature_algorithms or
+          server_supported_group ∉ client_supported_groups)
            THEN
               alert_message := rec(Message : HANDSHAKE_FAILURE, AlertLevel : FATAL) ||
               session_machine := rec(State : RECEIVEENCRYPTEDEXTENSIONS, Status : FAILED)    

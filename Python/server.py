@@ -8,6 +8,13 @@ import ssl
 
 certificate_path = "/Users/alex/Desktop/School/Masters/Projet de Recherche/Code/ALL CODE/TLSModeling/Ressources/certificates_keys/server.crt"
 keyfile_path = "/Users/alex/Desktop/School/Masters/Projet de Recherche/Code/ALL CODE/TLSModeling/Ressources/certificates_keys/server.key"
+response = (
+    "HTTP/1.1 200 OK\r\n"
+    "Content-Type: text/plain\r\n"
+    "Content-Length: 13\r\n"
+    "\r\n"
+    "Hello, World!"
+)
 
 def start_HTTPS_server_using_ssl_import(host, port):
     httpd = http.server.HTTPServer((host, port),http.server.SimpleHTTPRequestHandler)
@@ -25,23 +32,17 @@ def handle_client(conn):
             if not data:
                 break
             print("Received:", data.decode())
-
             # Proper HTTP response format with headers and content
-            response = (
-                "HTTP/1.1 200 OK\r\n"
-                "Content-Type: text/plain\r\n"
-                "Content-Length: 13\r\n"
-                "\r\n"
-                "Hello, World!"
-            )
-            conn.send(response.encode())
+            conn.sendall(response.encode())
         except SSL.Error as e:
             print("SSL error:", e)
             break
-    conn.sendall(response.encode())
-    print("Client disconnected")
-    conn.shutdown()
-    conn.close()
+        finally:
+            if conn:
+                print("Client disconnected")
+                # Close the connection properly
+                conn.shutdown()
+                conn.close()
 
 def start_HTTPS_server_using_openssl_import(host, port):
     # Set up the SSL context
@@ -56,12 +57,12 @@ def start_HTTPS_server_using_openssl_import(host, port):
     while True:
         client_socket, client_addr = sock.accept()
         print(f"Connection from {client_addr}")
-        # Wrap the client socket with SSL
+        # Wrap the socket with SSL/TLS
         ssl_conn = SSL.Connection(context, client_socket)
         ssl_conn.set_accept_state()  # Set the connection to server mode
         handle_client(ssl_conn)
 
 if __name__ == '__main__':
-    #start_HTTPS_server_using_ssl_import('localhost', 8443)
-    start_HTTPS_server_using_openssl_import('localhost', 8443)
+    start_HTTPS_server_using_ssl_import('localhost', 8443)
+    #start_HTTPS_server_using_openssl_import('localhost', 8443)
 

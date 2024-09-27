@@ -1,12 +1,86 @@
-digraph nfa_to_dfa {
-graph [nodesep=1.5, ranksep=1.5];
-5[id=5, shape=box, color="olivedrab2"];
-4[id=4, shape=box, color="olivedrab2"];
-3[id=3, shape=box, color="olivedrab2"];
-root[id="root", shape=invtriangle, color=green, label=""];
-
-5 -> 4[color=blue, label="TerminateSession()"];
-4 -> 5[color=blue, label="SendClientHello(_,_,_,_,_,_,_)"];
-3 -> 4[color=blue, label="$initialise_machine()"];
-root -> 3[color=black, label="$setup_constants()"];
+digraph g {
+rankdir=RL;
+    Noderoot [label="&exist;\ntrue", shape="rect", fillcolor="olivedrab2", style="filled,rounded"]
+    Node1 [label="&and;\ntrue\nlegacy_compression_methods &#8712; compression\n_method_constant &and; (session_machine\'State = RECEIVECLIENTHELLO &and; session_machine\'\nStatus = SUCCEEDED) &and; (legacy_version = \nx0303 &and; legacy_session_id_echo = x0303 &and;\n legacy_compression_methods = 0 &and; suppor\nted_versi...", shape="rect", fillcolor="olivedrab2", style="filled,rounded"]
+        Node1 -> Noderoot;
+    Node2 [label="&#8712;\ntrue\nlegacy_compression_methods &#8712; compression\n_method_constant", shape="rect", fillcolor="olivedrab2", style="filled,rounded"]
+        Node2 -> Node1;
+    Node3 [label="legacy_compression_methods|0", shape="record", fillcolor="white", style="filled"]
+        Node3 -> Node2;
+    Node4 [label="compression_method_constant|\{0,1\}", shape="record", fillcolor="white", style="filled"]
+        Node4 -> Node2;
+    Node5 [label="=\ntrue\nsession_machine\'State = RECEIVECLIENTHELLO", shape="rect", fillcolor="olivedrab2", style="filled,rounded"]
+        Node5 -> Node1;
+    Node6 [label="record_field|RECEIVECLIENTHELLO", shape="record", fillcolor="white", style="filled"]
+        Node6 -> Node5;
+    Node7 [label="session_machine|rec(State:RECEIVECLIENTHELLO,Status:SUCC\nEEDED)", shape="record", fillcolor="white", style="filled"]
+        Node7 -> Node6;
+    Node8 [label="RECEIVECLIENTHELLO", shape="record", fillcolor="white", style="filled"]
+        Node8 -> Node5;
+    Node9 [label="=\ntrue\nsession_machine\'Status = SUCCEEDED", shape="rect", fillcolor="olivedrab2", style="filled,rounded"]
+        Node9 -> Node1;
+    Node10 [label="record_field|SUCCEEDED", shape="record", fillcolor="white", style="filled"]
+        Node10 -> Node9;
+    Node11 [label="session_machine|rec(State:RECEIVECLIENTHELLO,Status:SUCC\nEEDED)", shape="record", fillcolor="white", style="filled"]
+        Node11 -> Node10;
+    Node12 [label="SUCCEEDED", shape="record", fillcolor="white", style="filled"]
+        Node12 -> Node9;
+    Node13 [label="=\ntrue\nlegacy_version = x0303", shape="rect", fillcolor="olivedrab2", style="filled,rounded"]
+        Node13 -> Node1;
+    Node14 [label="legacy_version|x0303", shape="record", fillcolor="white", style="filled"]
+        Node14 -> Node13;
+    Node15 [label="x0303", shape="record", fillcolor="white", style="filled"]
+        Node15 -> Node13;
+    Node16 [label="=\ntrue\nlegacy_session_id_echo = x0303", shape="rect", fillcolor="olivedrab2", style="filled,rounded"]
+        Node16 -> Node1;
+    Node17 [label="legacy_session_id_echo|x0303", shape="record", fillcolor="white", style="filled"]
+        Node17 -> Node16;
+    Node18 [label="x0303", shape="record", fillcolor="white", style="filled"]
+        Node18 -> Node16;
+    Node19 [label="=\ntrue\nlegacy_compression_methods = 0", shape="rect", fillcolor="olivedrab2", style="filled,rounded"]
+        Node19 -> Node1;
+    Node20 [label="legacy_compression_methods|0", shape="record", fillcolor="white", style="filled"]
+        Node20 -> Node19;
+    Node21 [label="0", shape="record", fillcolor="white", style="filled"]
+        Node21 -> Node19;
+    Node22 [label="=\ntrue\nsupported_versions = \{TLS_1_3\}", shape="rect", fillcolor="olivedrab2", style="filled,rounded"]
+        Node22 -> Node1;
+    Node23 [label="supported_versions|\{TLS_1_3\}", shape="record", fillcolor="white", style="filled"]
+        Node23 -> Node22;
+    Node24 [label="\{TLS_1_3\}|\{TLS_1_3\}", shape="record", fillcolor="white", style="filled"]
+        Node24 -> Node22;
+    Node25 [label="=\ntrue\ncipher_suites = TLS_AES_128_GCM_SHA256", shape="rect", fillcolor="olivedrab2", style="filled,rounded"]
+        Node25 -> Node1;
+    Node26 [label="cipher_suites|TLS_AES_128_GCM_SHA256", shape="record", fillcolor="white", style="filled"]
+        Node26 -> Node25;
+    Node27 [label="TLS_AES_128_GCM_SHA256", shape="record", fillcolor="white", style="filled"]
+        Node27 -> Node25;
+    Node28 [label="=\ntrue\npre_shared_key = &empty;", shape="rect", fillcolor="olivedrab2", style="filled,rounded"]
+        Node28 -> Node1;
+    Node29 [label="pre_shared_key|&empty;", shape="record", fillcolor="white", style="filled"]
+        Node29 -> Node28;
+    Node30 [label="&empty;", shape="record", fillcolor="white", style="filled"]
+        Node30 -> Node28;
+    Node31 [label="=\ntrue\nrandom = A1", shape="rect", fillcolor="olivedrab2", style="filled,rounded"]
+        Node31 -> Node1;
+    Node32 [label="random|A1", shape="record", fillcolor="white", style="filled"]
+        Node32 -> Node31;
+    Node33 [label="A1", shape="record", fillcolor="white", style="filled"]
+        Node33 -> Node31;
+    Node34 [label="legacy_version|x0303", shape="record", fillcolor="white", style="filled"]
+        Node34 -> Noderoot;
+    Node35 [label="legacy_session_id_echo|x0303", shape="record", fillcolor="white", style="filled"]
+        Node35 -> Noderoot;
+    Node36 [label="legacy_compression_methods|0", shape="record", fillcolor="white", style="filled"]
+        Node36 -> Noderoot;
+    Node37 [label="supported_versions|\{TLS_1_3\}", shape="record", fillcolor="white", style="filled"]
+        Node37 -> Noderoot;
+    Node38 [label="cipher_suites|TLS_AES_128_GCM_SHA256", shape="record", fillcolor="white", style="filled"]
+        Node38 -> Noderoot;
+    Node39 [label="key_share|&empty;", shape="record", fillcolor="white", style="filled"]
+        Node39 -> Noderoot;
+    Node40 [label="pre_shared_key|&empty;", shape="record", fillcolor="white", style="filled"]
+        Node40 -> Noderoot;
+    Node41 [label="random|A1", shape="record", fillcolor="white", style="filled"]
+        Node41 -> Noderoot;
 }
