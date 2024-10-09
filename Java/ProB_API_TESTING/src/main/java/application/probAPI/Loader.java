@@ -40,7 +40,7 @@ public class Loader {
 
         traceExecuter.createSubscription("session_machine");
         //traceExecuter.generateRandomTrace(10);
-        traceExecuter.findStateSatisfyingPredicate(new ClassicalB("session_machine'State = RECEIVECLIENTHELLO"));
+        traceExecuter.findStateSatisfyingPredicate(new ClassicalB("session_machine'State == RECEIVECLIENTHELLO"));
 
     }
 }
