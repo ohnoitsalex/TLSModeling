@@ -4,8 +4,14 @@ import com.google.inject.Inject;
 import de.prob.animator.domainobjects.ClassicalB;
 import de.prob.statespace.StateSpace;
 import de.prob.statespace.Trace;
+import de.prob.statespace.Transition;
+
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 public class TraceExecuter {
+
 
     private StateSpace model;
     private Trace trace;
@@ -13,6 +19,7 @@ public class TraceExecuter {
     @Inject
     public TraceExecuter (StateSpace model){
         this.model = model;
+        this.trace = new Trace(model);
     }
 
     public void modelInformation(){
@@ -38,12 +45,29 @@ public class TraceExecuter {
     }
 
     public void generateRandomTrace (int steps){
-        Trace trace = new Trace(model);
         for (int i = 0; i < steps; i++){
             trace = trace.anyEvent(null);
         }
         System.out.println("Readable trace information");
         System.out.println(trace);
+    }
+
+    public void findTransition(){
+        // Get all transitions (operations) available from the current state (which might be a Set)
+        LinkedHashSet<Transition> transitionSet = (LinkedHashSet<Transition>) trace.getNextTransitions();  // This might return a Set
+
+        // Convert the Set to a List
+        List<Transition> transitions = new ArrayList<>(transitionSet);
+
+        // Find the specific operation "increment" (or any operation you want to perform)
+        Transition chosenTransition = null;
+        for (Transition transition : transitions) {
+            if (transition.getName().equals("VerifyClientCertificateWithCRL")) {
+                chosenTransition = transition;
+                break;
+            } System.out.println("CurrentTransition: " + transition.getName().toString());
+        }
+        //System.out.println("Found transition:" + chosenTransition.getName().toString());
     }
 
     public StateSpace getModel() {

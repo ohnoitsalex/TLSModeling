@@ -56,19 +56,19 @@ SETS
     A3B3C3};
 
     SYMMETRIC_KEYS = {SYMMETRIC_DEFAULT, SYMMETRIC1, SYMMETRIC2};
-  
+
 
     RANDOM_VALUE = {
         A1,
 	B1,
         C1,
-	CF21AD74E59A6111BE1D8C021E65B891C2A211167ABB8C5E079E09E2C8A8339C}; 
+	CF21AD74E59A6111BE1D8C021E65B891C2A211167ABB8C5E079E09E2C8A8339C};
 
     VERSION = {
 	TLS_1_1,
-	TLS_1_2, 
+	TLS_1_2,
 	TLS_1_3};
-    
+
     VERSION_NUMBERS = {
         x0300,
         x0301,
@@ -77,13 +77,13 @@ SETS
         NO_VERSION};
 
     CIPHER_SUITE = {
-	TLS_AES_128_GCM_SHA256, 
-	TLS_AES_256_GCM_SHA384, 
-	TLS_CHACHA20_POLY1305_SHA256, 
+	TLS_AES_128_GCM_SHA256,
+	TLS_AES_256_GCM_SHA384,
+	TLS_CHACHA20_POLY1305_SHA256,
 	TLS_AES_128_CCM_SHA256,
 	TLS_AES_128_CCM_8_SHA256};
 
-    SIGNATURE_ALGORITHMS = { 
+    SIGNATURE_ALGORITHMS = {
     	/* RSASSA-PKCS1-v1_5 algorithms */
     	rsa_pkcs1_sha25,
     	rsa_pkcs1_sha384,
@@ -146,7 +146,7 @@ VARIABLES
     client_certificate_request_bool,
     server_certificate_authenticated,
     client_certificate_authenticated,
-   
+
     /*SERVER PARAMS */
     server_certificate,
     client_certificate,
@@ -177,11 +177,11 @@ VARIABLES
     server_legacy_session_id_echo,/* Server echo used in hello retry request to see if it matches the legacy_session_id */
     server_cipher_suite,          /* Server Supported cipher suites */
     server_legacy_compression_methods, /* Server Compression methods from TLS 1.2 -- (IGNORED??) IN TLS 1.3*/
-    server_supported_versions,    /* Server List of supported versions */    
+    server_supported_versions,    /* Server List of supported versions */
     server_key_share,             /* Server Key share for TLS 1.3 */
     server_pre_shared_key,        /* Server List of symmetric key identifies known to the client*/
     server_legacy_version,        /* Legacy version. Needs to be set to 0x0303 by default for TLS 1.3 to work. This means the server will be using the supported_versions                                                   extensions */
-    server_supported_group,       /* Server Extension containing one of supported kems*/   
+    server_supported_group,       /* Server Extension containing one of supported kems*/
     server_signature_algorithm,   /* Server Extension containing one of supported signature algorithms*/
     server_calculated_symmetric_key /*Symmetric Key calculated by server*/
 
@@ -213,7 +213,7 @@ INVARIANT
     server_certificate : CERTIFICATE &
     client_certificate : CERTIFICATE &
     certificate_request_context : RANDOM_VALUE &
-    certificate_request_signature_algorithm : SIGNATURE_ALGORITHMS & 
+    certificate_request_signature_algorithm : SIGNATURE_ALGORITHMS &
 
     /*HELLO RETRY PARAMS*/
     hello_retry_request_count : INTEGER &       /* Number of times a hello retry request has been sent -? If more than once, stop handshake */
@@ -262,7 +262,7 @@ INITIALISATION
     /*CERTIFICATE INIT */
     certificate_request_context :=  RandomValue||
     certificate_request_signature_algorithm := private_use ||//Will need to be changed to empty value
-    
+
     /*DEFAULT VALUES FOR CERTIFICATES*/
     server_certificate := rec(CertificateType : X509, CertificateAuthority : ENTRUST, CertificatePublicKey : A1B1C1, CertificateTimestamp : D20251231, OCSPStatus : 0,
                               CertificateRequestContext : A1, SerialNumber : 2) || /*Serial Number is revoked for set up */
@@ -270,8 +270,8 @@ INITIALISATION
                               CertificateRequestContext : B1, SerialNumber : 2) || /*Serial Number is revoked for set up */
 
     /*HELLO RETRY INIT*/
-    hello_retry_request_count := 0 ||       
-    hello_retry_message := NO_CHANGE||       
+    hello_retry_request_count := 0 ||
+    hello_retry_message := NO_CHANGE||
 
     /*Client params initialisation */
     client_pre_shared_key := EmptyValue ||
@@ -289,8 +289,8 @@ INITIALISATION
     client_calculated_symmetric_key := SYMMETRIC_DEFAULT ||
 
     /*Server params initialisation */
-    server_random := RandomValue || 
-    server_legacy_session_id_echo := TLS1_2VersionNumber || /*Must be set to this value which referenciates the TLS version 1.2 -> used after helloretryrequest to check if 
+    server_random := RandomValue ||
+    server_legacy_session_id_echo := TLS1_2VersionNumber || /*Must be set to this value which referenciates the TLS version 1.2 -> used after helloretryrequest to check if
                                                              it matchthe legacy_session_id*/
     server_cipher_suite := TLS_AES_128_GCM_SHA256 ||
     server_legacy_compression_methods := 0 ||
@@ -307,7 +307,7 @@ OPERATIONS
 
     SendClientHello (legacy_version, supported_versions, legacy_compression_methods, pre_shared_key, signature_algorithms, supported_groups, cipher_suites) =
     PRE /*Still need to add the random in the PRE*/
-        session_machine'State = SESSION_CLOSED or 
+        session_machine'State = SESSION_CLOSED or
         (session_machine'State = RECEIVEHELLORETRYREQUEST & session_machine'Status = SUCCEEDED) &
         supported_versions <: VERSION &
         legacy_compression_methods : compression_method_constant &
@@ -329,7 +329,7 @@ OPERATIONS
 	    THEN
                //Supported groups can be empty? -> Server will simply send helloretryrequest if so for Version 1.3 support
                IF (client_signature_algorithms /= {}) &
-                  (client_cipher_suites /= {}) & 
+                  (client_cipher_suites /= {}) &
                   (client_legacy_compression_methods = 0)
                   THEN
                      session_machine := rec(State : SENDCLIENTHELLO, Status : SUCCEEDED) ||
@@ -338,12 +338,12 @@ OPERATIONS
                   /* Determine the specific reason for refusal */
                   IF (client_supported_versions = {})  /*THIS IF CAN BE REMOVED */
 		     THEN
-                         alert_message := rec (Message : PROTOCOL_VERSION, AlertLevel : FATAL) 
+                         alert_message := rec (Message : PROTOCOL_VERSION, AlertLevel : FATAL)
                   /* If the list of cipher_suites is empty, handshake is impossible */
                   /* If the legacy compression method is any other BYTE value other than 0 -> Return Illegal_Parameter alert*/
 		  /* Check if supported signatures algorithms is part of the available signature algorithms */
 		  /* Check if supported groups is part of the available KEM algorithms (supported groups algorithms) */
-                  ELSE IF (client_cipher_suites = {}) or 
+                  ELSE IF (client_cipher_suites = {}) or
                      not (client_legacy_compression_methods = 0) or
                      (client_signature_algorithms = {}) or
                      (client_supported_groups = {}) or
@@ -365,7 +365,7 @@ OPERATIONS
 
    /* Server Receives the ClientHello -> Parameters are not added here because there are considered in the sendclienthello operation */
     ReceiveClientHello =
-    PRE 
+    PRE
         session_machine'State = SENDCLIENTHELLO &
         session_machine'Status = SUCCEEDED
     THEN
@@ -379,7 +379,7 @@ OPERATIONS
          -NO ALERT MESSAGES SHOULD BE SENT?? -> ONLY SEND HELLORETRYREQUEST IF SOMETHING DOESN'T ADD UP
          -Here we considered only empty sents as a invalid value -> Later we can change this to a value that the server does not support
          */
-        IF not(TLS_1_3 : client_supported_versions) or 
+        IF not(TLS_1_3 : client_supported_versions) or
 	   (client_signature_algorithms = {}) or
            (client_supported_groups = {}) or
            (client_legacy_compression_methods /= 0) or
@@ -391,7 +391,7 @@ OPERATIONS
         END
     END;
 
-    /*Hello retry request -> Same format as the serverHello message. This means we will keep the same parameters but will add a message explaining which parameter the 
+    /*Hello retry request -> Same format as the serverHello message. This means we will keep the same parameters but will add a message explaining which parameter the
       client will need to change for the server to accept it. The Client will then have to analyse the HelloRetryRequest comming from the server*/
     SendHelloRetryRequest(legacy_version,legacy_session_id_echo, legacy_compression_methods, supported_versions, cipher_suites, key_share, pre_shared_key,
                           random,signature_algorithm, supported_group, message) =
@@ -421,24 +421,24 @@ OPERATIONS
         server_legacy_session_id_echo := legacy_session_id_echo ||
         server_key_share := key_share ||
         /*It is possible for a server to send a signature algorithm or supported group that the client didnt send in it's clienthello Hence, it is the role of the client             to             adapt to this or send an alert message and terminate the session. This is why it won't be tested in the IF statements */
-        server_signature_algorithm := signature_algorithm || 
+        server_signature_algorithm := signature_algorithm ||
         server_supported_group := supported_group ||
         server_random := random ||
-        hello_retry_request_count := hello_retry_request_count + 1; 
+        hello_retry_request_count := hello_retry_request_count + 1;
 	IF (TLS_1_3 : server_supported_versions)
            THEN
               IF (server_legacy_compression_methods = 0)
                  THEN
                     session_machine := rec(State : SENDHELLORETRYREQUEST, Status : SUCCEEDED)
               ELSE IF not (server_legacy_compression_methods = 0)
-                 THEN 
+                 THEN
                     alert_message := rec (Message : ILLEGAL_PARAMETER, AlertLevel : FATAL) ||
                     session_machine := rec(State : SENDHELLORETRYREQUEST, Status : FAILED)
               /*If Something else is missing */
               ELSE
                  alert_message := rec (Message : HANDSHAKE_FAILURE, AlertLevel : FATAL) ||
                  session_machine := rec(State : SENDHELLORETRYREQUEST, Status : FAILED)
-              END 
+              END
               END
         ELSE
            alert_message := rec (Message : PROTOCOL_VERSION, AlertLevel : FATAL) ||
@@ -457,13 +457,13 @@ OPERATIONS
                                                                                    //in the ClientHello MUST abort the handshake with an "illegal_parameter" alert.
            not (server_cipher_suite : client_cipher_suites) or  //A client which receives a cipher suite that was not offered MUST abort the handshake with an
                                                                   //"illegal_parameter" alert.
-           not (server_legacy_compression_methods = 0) or 
+           not (server_legacy_compression_methods = 0) or
            (client_supported_groups = {}) or
            (server_random /= HelloRetryRandomValue)
             THEN
                 alert_message := rec (Message : ILLEGAL_PARAMETER, AlertLevel : FATAL) ||
                 session_machine := rec(State : RECEIVEHELLORETRYREQUEST, Status : FAILED)
-        //- Check if helloretry request has been sent more than once from the same client hello = abort with unexpected message alert     
+        //- Check if helloretry request has been sent more than once from the same client hello = abort with unexpected message alert
         ELSE IF (hello_retry_request_count > 1)
             THEN
                 alert_message := rec (Message : UNEXPECTED_MESSAGE, AlertLevel : FATAL) ||
@@ -475,9 +475,9 @@ OPERATIONS
         ELSE //IF everything is ok
            session_machine := rec(State : RECEIVEHELLORETRYREQUEST, Status : SUCCEEDED)
         END
-        END 
-        END      
-        /* 
+        END
+        END
+        /*
            - If the new clienthello results in the same clienthello as before - abort with llegal_parameter -> NOT CONSIDERED
            - OTHER CASES ARE PRESENT IN THE TLS SPEC (RFC) BUT WILL NOT BE CONSIDERED
         */
@@ -510,14 +510,14 @@ OPERATIONS
                  THEN
                     session_machine := rec(State : SENDSERVERHELLO, Status : SUCCEEDED)
               ELSE IF not (server_legacy_compression_methods = 0)
-                 THEN 
+                 THEN
                     alert_message := rec (Message : ILLEGAL_PARAMETER, AlertLevel : FATAL) ||
                     session_machine := rec(State : SENDSERVERHELLO, Status : FAILED)
               /*If Something else is missing */
               ELSE
                  alert_message := rec (Message : HANDSHAKE_FAILURE, AlertLevel : FATAL) ||
                  session_machine := rec(State : SENDSERVERHELLO, Status : FAILED)
-              END 
+              END
               END
         ELSE
 	   alert_message := rec (Message : PROTOCOL_VERSION, AlertLevel : FATAL) ||
@@ -551,7 +551,7 @@ OPERATIONS
        request_context : RANDOM_VALUE &
        request_signature_algorithm : SIGNATURE_ALGORITHMS &
        (session_machine'State = SENDENCRYPTEDEXTENSIONS & session_machine'Status = SUCCEEDED)
-    THEN 
+    THEN
        //The request context should be a random value that is unique. Here we consider the set being all random unique values
        certificate_request_context := request_context ||
        certificate_request_signature_algorithm := request_signature_algorithm;
@@ -570,9 +570,9 @@ OPERATIONS
                            serial_number)  =
     PRE
        raw_public_key_certificate : KEYS &
-       certificate_type : CERTIFICATE_TYPE & 
+       certificate_type : CERTIFICATE_TYPE &
        signed_certificate_timestamp : TIMESTAMP &
-       ocsp_status : ocsp_status_constant & 
+       ocsp_status : ocsp_status_constant &
        certificate_authorities : CERTIFICATE_AUTHORITIES &
        server_ertificate_request_context : RANDOM_VALUE &
        serial_number : certificate_serial_number &
@@ -582,7 +582,7 @@ OPERATIONS
        server_certificate := rec(CertificateType : certificate_type, CertificateAuthority : certificate_authorities, CertificatePublicKey : raw_public_key_certificate,
                               CertificateTimestamp : signed_certificate_timestamp, OCSPStatus : ocsp_status, CertificateRequestContext : A1, SerialNumber : serial_number);
        IF not (server_certificate'OCSPStatus = 1)
-           THEN 
+           THEN
               alert_message := rec (Message : ILLEGAL_PARAMETER, AlertLevel : FATAL) ||
               session_machine := rec(State : SENDSERVERCERTIFICATE, Status : FAILED)
        ELSE
@@ -592,7 +592,7 @@ OPERATIONS
 
    /* Client needs to double check too that everything receive is compliant*/
    ReceiveServerHello =
-   PRE 
+   PRE
        (session_machine'State = SENDSERVERCERTIFICATE & session_machine'Status = SUCCEEDED)
    THEN
         IF not (server_legacy_version = TLS1_2VersionNumber) or // If not equal to 0x0303
@@ -600,7 +600,7 @@ OPERATIONS
                                                                                    //in the ClientHello MUST abort the handshake with an "illegal_parameter" alert.
            not (server_cipher_suite : client_cipher_suites) or  //A client which receives a cipher suite that was not offered MUST abort the handshake with an
                                                                   //"illegal_parameter" alert.
-           not (server_legacy_compression_methods = 0) or 
+           not (server_legacy_compression_methods = 0) or
            not (server_key_share : POW(KEYS) or server_pre_shared_key : POW(KEYS))
             THEN
                 alert_message := rec (Message : ILLEGAL_PARAMETER, AlertLevel : FATAL) ||
@@ -612,7 +612,7 @@ OPERATIONS
         ELSE //If everything is ok
            session_machine := rec(State : RECEIVESERVERHELLO, Status : SUCCEEDED)
         END
-        END  
+        END
    END;
 
 
@@ -625,8 +625,8 @@ OPERATIONS
           server_supported_group ∉ client_supported_groups)
            THEN
               alert_message := rec(Message : HANDSHAKE_FAILURE, AlertLevel : FATAL) ||
-              session_machine := rec(State : RECEIVEENCRYPTEDEXTENSIONS, Status : FAILED)    
-       ELSE 
+              session_machine := rec(State : RECEIVEENCRYPTEDEXTENSIONS, Status : FAILED)
+       ELSE
            session_machine := rec(State : RECEIVEENCRYPTEDEXTENSIONS, Status : SUCCEEDED)
        END
     END;
@@ -635,12 +635,12 @@ OPERATIONS
     ReceiveServerCertificate =
     PRE
        (session_machine'State = RECEIVEENCRYPTEDEXTENSIONS & session_machine'Status = SUCCEEDED)
-    THEN 
+    THEN
        /* Client should recheck the received information from the server to make sure it is correct. Code may be duplicated for this step */
        //Reverifying by client just in case - YES, I know .. It's cide duplication but the rfc says so...
        IF (server_certificate'CertificatePublicKey ∉ KEYS or
-           server_certificate'CertificateTimestamp ∉ TIMESTAMP or 
-           server_certificate'OCSPStatus < 1 or 
+           server_certificate'CertificateTimestamp ∉ TIMESTAMP or
+           server_certificate'OCSPStatus < 1 or
            server_certificate'CertificateAuthority ∉ CERTIFICATE_AUTHORITIES or
            server_certificate'CertificateType /= X509) //Here we focus on X509 certificates that us digital signatures and public keys for authentification. 99% Used in TLS 1.3
            THEN
@@ -656,7 +656,7 @@ OPERATIONS
        session_machine'State = RECEIVESERVERCERTIFICATE & session_machine'Status = SUCCEEDED &
        client_certificate_request_bool = TRUE
     THEN
-       IF (certificate_request_signature_algorithm ∉  SIGNATURE_ALGORITHMS) or 
+       IF (certificate_request_signature_algorithm ∉  SIGNATURE_ALGORITHMS) or
           (certificate_request_context ∉ RANDOM_VALUE)
           THEN
               alert_message := rec (Message : ILLEGAL_PARAMETER, AlertLevel : FATAL) ||
@@ -665,15 +665,15 @@ OPERATIONS
           session_machine := rec(State : RECEIVECLIENTCERTIFICATEREQUEST, Status : SUCCEEDED)
        END
     END;
- 
+
     /*If server request a client certificate -> Client sends its won certificate */
     SendClientCertificate (raw_public_key_certificate, certificate_type, signed_certificate_timestamp, ocsp_status, certificate_authorities, server_certificate_request_context,
                            serial_number)  =
     PRE
        raw_public_key_certificate : KEYS &
-       certificate_type : CERTIFICATE_TYPE & 
+       certificate_type : CERTIFICATE_TYPE &
        signed_certificate_timestamp : TIMESTAMP &
-       ocsp_status : ocsp_status_constant & 
+       ocsp_status : ocsp_status_constant &
        certificate_authorities : CERTIFICATE_AUTHORITIES &
        server_certificate_request_context : RANDOM_VALUE &
        serial_number : certificate_serial_number&
@@ -682,7 +682,7 @@ OPERATIONS
        client_certificate := rec(CertificateType : certificate_type, CertificateAuthority : certificate_authorities, CertificatePublicKey : raw_public_key_certificate,
                               CertificateTimestamp : signed_certificate_timestamp, OCSPStatus : ocsp_status, CertificateRequestContext : A1, SerialNumber : serial_number);
        IF(client_certificate'OCSPStatus < 1)
-           THEN 
+           THEN
               alert_message := rec (Message : ILLEGAL_PARAMETER, AlertLevel : FATAL) ||
               session_machine := rec(State : SENDCLIENTCERTIFICATE, Status : FAILED)
        ELSE
@@ -693,12 +693,12 @@ OPERATIONS
     ReceiveClientCertificate =
     PRE
        (session_machine'State = SENDCLIENTCERTIFICATE & session_machine'Status = SUCCEEDED)
-    THEN 
+    THEN
        /* Client should recheck the received information from the client to make sure it is correct. Code may be duplicated for this step */
        //Reverifying by server just in case - YES, I know .. It's cide duplication but the rfc says so...
        IF (client_certificate'CertificatePublicKey ∉ KEYS or
-           client_certificate'CertificateTimestamp ∉ TIMESTAMP or 
-           client_certificate'OCSPStatus < 1 or 
+           client_certificate'CertificateTimestamp ∉ TIMESTAMP or
+           client_certificate'OCSPStatus < 1 or
            client_certificate'CertificateAuthority ∉ CERTIFICATE_AUTHORITIES or
            client_certificate'CertificateType /= X509) //Here we focus on X509 certificates that us digital signatures and public keys for authentification. 99% Used in TLS 1.3
            THEN
@@ -710,8 +710,8 @@ OPERATIONS
     END;
 
     /*In this case, we are mocking the CRL list */
-    VerifiyServerCertificateWithCRL = 
-    PRE 
+    VerifiyServerCertificateWithCRL =
+    PRE
     (session_machine'State = RECEIVECLIENTCERTIFICATE & session_machine'Status = SUCCEEDED) or
     (session_machine'State = RECEIVESERVERCERTIFICATE & session_machine'Status = SUCCEEDED)
     THEN
@@ -734,7 +734,7 @@ OPERATIONS
         END
     END;
 
-    /*Here we will create a non-deterministic value that will determine if the certificate passes or not through OCSP. 
+    /*Here we will create a non-deterministic value that will determine if the certificate passes or not through OCSP.
       A boolean value will be responsible for handling it. If true -> Certificate is valid. If False -> certificate is invalid and the session will be terminated */
     VerifyServerCertificateWithOCSP =
     PRE
@@ -756,8 +756,8 @@ OPERATIONS
     END;
 
     /*In this case, we are mocking the CRL list */
-    VerifyClientCertificateWithCRL = 
-    PRE 
+    VerifyClientCertificateWithCRL =
+    PRE
     session_machine'State = VERIFYSERVERCERTIFICATEOCSP & session_machine'Status = SUCCEEDED &
     client_certificate_request_bool = TRUE & server_certificate_authenticated = TRUE
     THEN
@@ -780,7 +780,7 @@ OPERATIONS
         END
     END;
 
-    /*Here we will create a non-deterministic value that will determine if the certificate passes or not through OCSP. 
+    /*Here we will create a non-deterministic value that will determine if the certificate passes or not through OCSP.
       A boolean value will be responsible for handling it. If true -> Certificate is valid. If False -> certificate is invalid and the session will be terminated */
     VerifyClientCertificateWithOCSP =
     PRE
@@ -797,15 +797,15 @@ OPERATIONS
                      client_certificate_authenticated := TRUE
                ELSE
                   alert_message := rec(Message : CERTIFICATE_REVOKED, AlertLevel : FATAL) || /*Lets supposed if the OCSP return an invalid response, this means the certificate is expired */
-                  session_machine := rec(State : VERIFYCLIENTCERTIFICATEOCSP, Status : FAILED) 
+                  session_machine := rec(State : VERIFYCLIENTCERTIFICATEOCSP, Status : FAILED)
                END
         END
     END;
 
-    /*No calculation will be made in this case. Here we only mock the client symmetric key calculation with a random value. As in DCHE caclulation, the client and the server each do on their own side the symmetric key 
+    /*No calculation will be made in this case. Here we only mock the client symmetric key calculation with a random value. As in DCHE caclulation, the client and the server each do on their own side the symmetric key
       calculation without communication with eachother and then at the very end make sure they have the same key by encrypting and decrypting a default message */
     CalculateClientSymmetricKey =
-    PRE  
+    PRE
      /*All 4 possible preceeding states */
     (session_machine'State = VERIFYSERVERCERTIFICATECRL & session_machine'Status = SUCCEEDED) or
     (session_machine'State = VERIFYSERVERCERTIFICATEOCSP & session_machine'Status = SUCCEEDED) or
@@ -815,20 +815,20 @@ OPERATIONS
        /*In general both sides should arrive at the same symmetric key by calculations. This means we will assign a symmetric key to the client that will be the same as the servers
          This can be changed to a non-deterministic approach. Meaning if the client and the server arrive at the same symmetric key, then the handshake is completed - But it will not be implemented this way in this case*/
          client_calculated_symmetric_key := post_calculation_client_symmetric_key ||
-         session_machine := rec(State : CALCULATECLIENTSYMMETRICKEY, Status : SUCCEEDED) 
+         session_machine := rec(State : CALCULATECLIENTSYMMETRICKEY, Status : SUCCEEDED)
    END;
 
-    /*No calculation will be made in this case. Here we only mock the client symmetric key calculation with a random value. As in DCHE caclulation, the client and the server each do on their own side the symmetric key 
+    /*No calculation will be made in this case. Here we only mock the client symmetric key calculation with a random value. As in DCHE caclulation, the client and the server each do on their own side the symmetric key
       calculation without communication with eachother and then at the very end make sure they have the same key by encrypting and decrypting a default message */
     CalculateServerSymmetricKey =
-    PRE  
+    PRE
      /*All 4 possible preceeding states */
     (session_machine'State = CALCULATECLIENTSYMMETRICKEY & session_machine'Status = SUCCEEDED)
     THEN
        /*In general both sides should arrive at the same symmetric key by calculations. This means we will assign a symmetric key to the client that will be the same as the servers
          This can be changed to a non-deterministic approach. Meaning if the client and the server arrive at the same symmetric key, then the handshake is completed - But it will not be implemented this way in this case*/
          server_calculated_symmetric_key := post_calculation_server_symmetric_key ||
-         session_machine := rec(State : CALCULATESERVERSYMMETRICKEY, Status : SUCCEEDED) 
+         session_machine := rec(State : CALCULATESERVERSYMMETRICKEY, Status : SUCCEEDED)
    END;
 
    /*Simple message that the server send to the client to tell him that he finished calculating the symmetric key - Doesn't really do any calculations for now. Simply transfers machine state*/
@@ -836,7 +836,7 @@ OPERATIONS
    PRE
       (session_machine'State = CALCULATESERVERSYMMETRICKEY & session_machine'Status = SUCCEEDED)
    THEN
-      session_machine := rec(State : SERVERFINISHED, Status : SUCCEEDED) 
+      session_machine := rec(State : SERVERFINISHED, Status : SUCCEEDED)
    END;
 
    /*Simple message that the server send to the client to tell him that he finished calculating the symmetric key - Doesn't really do any calculations for now. Simply transfers machine state*/
@@ -844,11 +844,11 @@ OPERATIONS
    PRE
       (session_machine'State = SERVERFINISHED & session_machine'Status = SUCCEEDED)
    THEN
-      session_machine := rec(State : CLIENTFINISHED, Status : SUCCEEDED) 
+      session_machine := rec(State : CLIENTFINISHED, Status : SUCCEEDED)
    END;
- 
-   /*Server and client exchange a simple encrypted string with the symmetric key. If the decryption corresponds to the correct default value, then the handshake is completed. If not it's failed. In this case, we only check if 
-     both symmetric keys that were calculated are the same. We ignore any encryption or whatsoever. Simply black box method */ 
+
+   /*Server and client exchange a simple encrypted string with the symmetric key. If the decryption corresponds to the correct default value, then the handshake is completed. If not it's failed. In this case, we only check if
+     both symmetric keys that were calculated are the same. We ignore any encryption or whatsoever. Simply black box method */
    ConfirmHandShake =
    PRE
       (session_machine'State = CLIENTFINISHED & session_machine'Status = SUCCEEDED) &
@@ -856,16 +856,16 @@ OPERATIONS
    THEN
       IF (server_calculated_symmetric_key = client_calculated_symmetric_key)
          THEN
-            session_machine := rec(State : DATATRANSFER, Status : SUCCEEDED) 
+            session_machine := rec(State : DATATRANSFER, Status : SUCCEEDED)
       ELSE
          alert_message := rec(Message : CERTIFICATE_REVOKED, AlertLevel : FATAL) ||
-         session_machine := rec(State : DATATRANSFER, Status : FAILED) 
+         session_machine := rec(State : DATATRANSFER, Status : FAILED)
       END
    END;
-   
+
 
     /*Operation Used for Temrinating a session and reinitiaizing everything from scratch for new session to be established */
-    TerminateSession = 
+    TerminateSession =
     PRE
         session_machine'Status = FAILED
     THEN
@@ -876,7 +876,7 @@ OPERATIONS
         client_certificate_request_bool := FALSE ||
         server_certificate_authenticated := FALSE ||
         client_certificate_authenticated := FALSE ||
-    
+
     	/*CERTIFICATE INIT */
     	certificate_request_context :=  RandomValue||
     	certificate_request_signature_algorithm := private_use ||//Will need to be changed to empty value
@@ -886,8 +886,8 @@ OPERATIONS
                               CertificateRequestContext : B1, SerialNumber : 2) ||
 
     	/*HELLO RETRY INIT*/
-    	hello_retry_request_count := 0 ||       
-    	hello_retry_message := NO_CHANGE ||       
+    	hello_retry_request_count := 0 ||
+    	hello_retry_message := NO_CHANGE ||
 
     	/*Client params initialisation */
     	client_pre_shared_key := EmptyValue ||
@@ -904,7 +904,7 @@ OPERATIONS
     	client_supported_versions := EmptyValue ||
 
     	/*Server params initialisation */
-    	server_random := RandomValue || 
+    	server_random := RandomValue ||
     	server_legacy_session_id_echo := TLS1_2VersionNumber || /*Must be set to this value which referenciates the TLS version 1.2 -> used after helloretryrequest to check if it matchthe legacy_session_id*/
     	server_cipher_suite := TLS_AES_128_GCM_SHA256 ||
     	server_legacy_compression_methods := 0 ||

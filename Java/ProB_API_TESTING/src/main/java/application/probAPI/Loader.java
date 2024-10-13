@@ -27,7 +27,7 @@ public class Loader {
     public void loadAndExecuteAPI(String proBModelPath){
         try {
             System.out.println("LOADING B MACHINE (.mch file)");
-            model = api.b_load(proBModelPath);
+            model = api.load(proBModelPath);
             model.execute();
             model.performExtendedStaticChecks();
             traceExecuter = new TraceExecuter(model);
@@ -37,10 +37,10 @@ public class Loader {
     }
 
     public void executeOperation() {
-
         traceExecuter.createSubscription("session_machine");
         //traceExecuter.generateRandomTrace(10);
-        traceExecuter.findStateSatisfyingPredicate(new ClassicalB("session_machine'State == RECEIVECLIENTHELLO"));
+        //traceExecuter.findStateSatisfyingPredicate(new ClassicalB("session_machine'State == RECEIVECLIENTHELLO"));
+        traceExecuter.findTransition();
 
     }
 }

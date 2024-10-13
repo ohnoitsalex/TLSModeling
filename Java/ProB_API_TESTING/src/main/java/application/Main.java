@@ -5,7 +5,7 @@ import application.probAPI.Loader;
 
 public class Main {
     private static final String libraryFilePath = "/Users/alex/Desktop/School/Masters/Projet de Recherche/Code/ALL CODE/TLSModeling/Java/ProB_API_TESTING/src/main/resources/models/Library_Example.mch";
-    private static final String tlsFilePath = "/Users/alex/Desktop/School/Masters/Projet de Recherche/Code/ALL CODE/TLSModeling/ProB /V1.3/TLS_Spec_Draft1.3.mch";
+    private static final String tlsFilePath = "/Users/alex/Desktop/School/Masters/Projet de Recherche/Code/ALL CODE/TLSModeling/Java/ProB_API_TESTING/src/main/resources/models/TLS_specification.mch";
     public static void main(String[] args) {
         loadLibaryExample();
     }
