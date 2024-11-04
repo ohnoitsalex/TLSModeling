@@ -4,7 +4,6 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Stage;
-import de.prob.animator.domainobjects.ClassicalB;
 import de.prob.scripting.Api;
 import de.prob.statespace.StateSpace;
 import application.config.Config;

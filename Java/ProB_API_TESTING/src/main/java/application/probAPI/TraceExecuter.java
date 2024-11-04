@@ -5,13 +5,11 @@ import de.prob.animator.domainobjects.ClassicalB;
 import de.prob.statespace.StateSpace;
 import de.prob.statespace.Trace;
 import de.prob.statespace.Transition;
-
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
 public class TraceExecuter {
-
 
     private StateSpace model;
     private Trace trace;
