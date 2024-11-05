@@ -42,9 +42,10 @@ public class Loader {
         traceExecuter.createSubscription("session_machine");
         //traceExecuter.generateRandomTrace(10);
         //traceExecuter.findStateSatisfyingPredicate(new ClassicalB("session_machine'State == RECEIVECLIENTHELLO"));
-        traceExecuter.generateRandomTrace(3);
+        //traceExecuter.generateRandomTrace(4);
+        traceExecuter.generateSpecificTrace();
         traceExecuter.performSpecificTransition("SendClientHello", paramsSendClientHello);
-        traceExecuter.performSpecificTransition("ReceiveClientHello", paramsReceiveClientHello);
+        //traceExecuter.performSpecificTransition("ReceiveClientHello", paramsReceiveClientHello);
         //traceExecuter.findTransition();
 
     }

@@ -43,6 +43,14 @@ public class TraceExecuter {
         model.subscribe(this, session_machine);
     }
 
+    public void generateSpecificTrace() {
+        for (int i = 0; i < 2; i++){ //Set up constants + initialisation
+            trace = trace.anyEvent(null);
+        }
+        trace = trace.anyEvent("SendClientHello");
+        System.out.println("Readable trace information");
+        System.out.println(trace);
+    }
     public void generateRandomTrace (int steps){
         for (int i = 0; i < steps; i++){
             trace = trace.anyEvent(null);
@@ -53,6 +61,7 @@ public class TraceExecuter {
 
     public void performSpecificTransition(String operation, String[] params){
         trace.anyEvent(null).getCurrent().getCurrentState().perform(operation, params);
+        trace.forward();
     }
 
     public void findTransition(){
