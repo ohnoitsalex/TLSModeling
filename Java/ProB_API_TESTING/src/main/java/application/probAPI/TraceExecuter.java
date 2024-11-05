@@ -20,6 +20,7 @@ public class TraceExecuter {
         this.trace = new Trace(model);
     }
 
+
     public void modelInformation(){
         System.out.println("--------------");
         System.out.println("Machine Constants: " + model.getLoadedMachine().getConstantNames());
@@ -50,8 +51,13 @@ public class TraceExecuter {
         System.out.println(trace);
     }
 
+    public void performSpecificTransition(String operation, String[] params){
+        trace.anyEvent(null).getCurrent().getCurrentState().perform(operation, params);
+    }
+
     public void findTransition(){
         // Get all transitions (operations) available from the current state (which might be a Set)
+
         LinkedHashSet<Transition> transitionSet = (LinkedHashSet<Transition>) trace.getNextTransitions();  // This might return a Set
 
         // Convert the Set to a List
