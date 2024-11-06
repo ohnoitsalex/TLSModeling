@@ -8,6 +8,7 @@ import de.prob.statespace.Transition;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Arrays;
 
 public class TraceExecuter {
 
@@ -44,22 +45,52 @@ public class TraceExecuter {
     }
 
     public void generateSpecificTrace() {
+        List<String> paramsSendClientHello = Arrays.asList(
+                "x0303",
+                "{TLS_1_3}",
+                "0",
+                "{}",
+                "{rsa_pkcs1_sha25}",
+                "{X25519}",
+                "{TLS_AES_128_GCM_SHA256}"
+        );
+        List<String> paramsSendClientHelloTest = Arrays.asList(
+                "x0300",
+                "{TLS_1_3}",
+                "0",
+                "{}",
+                "{rsa_pkcs1_sha25}",
+                "{}",
+                "{}"
+        );
         for (int i = 0; i < 2; i++){ //Set up constants + initialisation
             trace = trace.anyEvent(null);
         }
-        trace = trace.anyEvent("SendClientHello");
-        System.out.println("Readable trace information");
-        System.out.println(trace);
+        System.out.println("Effectuated Transitions:" + trace.getTransitionList());
+        //trace = trace.anyEvent("SendClientHello");
+        System.out.println("Transition param names:" + trace.getCurrentState().getOutTransitions().getFirst().getParameterNames());
+        System.out.println("Transition param values:" + trace.getCurrentState().getOutTransitions().getLast().getParameterValues());
+        //System.out.println("Transition param predicates:" + trace.getCurrentState().getOutTransitions().getFirst().getParameterPredicates());
+        //System.out.println("Transition param predicate:" + trace.getCurrentState().getOutTransitions().getFirst().getParameterPredicate());
+        trace = trace.addTransitionWith("SendClientHello", paramsSendClientHello);
+        //trace = trace.addTransitionWith("SendClientHello", paramsSendClientHelloTest);
+        //trace = trace.anyEvent("ReceiveClientHello");
+        //System.out.println("Readable trace information");
+        //System.out.println(trace.toString());
     }
     public void generateRandomTrace (int steps){
         for (int i = 0; i < steps; i++){
             trace = trace.anyEvent(null);
         }
         System.out.println("Readable trace information");
-        System.out.println(trace);
+        System.out.println(trace.toString());
     }
 
     public void performSpecificTransition(String operation, String[] params){
+        // Check if params is null and replace it with an empty array if it is
+        if (params == null) {
+            params = new String[0];
+        }
         trace.anyEvent(null).getCurrent().getCurrentState().perform(operation, params);
         trace.forward();
     }

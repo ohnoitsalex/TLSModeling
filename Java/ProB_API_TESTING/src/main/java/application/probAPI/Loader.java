@@ -44,7 +44,8 @@ public class Loader {
         //traceExecuter.findStateSatisfyingPredicate(new ClassicalB("session_machine'State == RECEIVECLIENTHELLO"));
         //traceExecuter.generateRandomTrace(4);
         traceExecuter.generateSpecificTrace();
-        traceExecuter.performSpecificTransition("SendClientHello", paramsSendClientHello);
+        //traceExecuter.performSpecificTransition("SendClientHello", paramsSendClientHello);
+        //traceExecuter.performSpecificTransition("ReceiveClientHello",null);
         //traceExecuter.performSpecificTransition("ReceiveClientHello", paramsReceiveClientHello);
         //traceExecuter.findTransition();
 
