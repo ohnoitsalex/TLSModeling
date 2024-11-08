@@ -8,6 +8,8 @@ import de.prob.scripting.Api;
 import de.prob.statespace.StateSpace;
 import application.config.Config;
 
+import java.nio.file.Paths;
+
 public class Loader {
 
     /**
@@ -26,7 +28,7 @@ public class Loader {
     public void loadAndExecuteAPI(String proBModelPath){
         try {
             System.out.println("LOADING B MACHINE (.mch file)");
-            model = api.load(proBModelPath);
+            model = api.load(Paths.get(proBModelPath).toAbsolutePath().toString());
             model.execute();
             model.performExtendedStaticChecks();
             traceExecuter = new TraceExecuter(model);
