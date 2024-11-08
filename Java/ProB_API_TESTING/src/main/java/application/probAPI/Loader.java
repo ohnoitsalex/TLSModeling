@@ -36,10 +36,18 @@ public class Loader {
     }
 
     public void executeOperation() {
+        String[] paramsSendClientHello = {"legacy_version=x0303","supported_versions={TLS_1_3}","legacy_compression_methods=0","pre_shared_key={}", "signature_algorithms={rsa_pkcs1_sha25}",
+        "supported_groups={X25519}", "cipher_suites={TLS_AES_128_GCM_SHA256}"};
+        String[] paramsReceiveClientHello = {};
         traceExecuter.createSubscription("session_machine");
         //traceExecuter.generateRandomTrace(10);
         //traceExecuter.findStateSatisfyingPredicate(new ClassicalB("session_machine'State == RECEIVECLIENTHELLO"));
-        traceExecuter.findTransition();
+        //traceExecuter.generateRandomTrace(4);
+        traceExecuter.generateSpecificTrace();
+        //traceExecuter.performSpecificTransition("SendClientHello", paramsSendClientHello);
+        //traceExecuter.performSpecificTransition("ReceiveClientHello",null);
+        //traceExecuter.performSpecificTransition("ReceiveClientHello", paramsReceiveClientHello);
+        //traceExecuter.findTransition();
 
     }
 }
