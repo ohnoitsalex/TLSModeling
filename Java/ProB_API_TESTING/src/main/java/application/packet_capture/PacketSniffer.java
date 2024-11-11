@@ -11,24 +11,19 @@ public class PacketSniffer {
         //setUpNetworkInterface("lo0","tcp port 1234");
         try {
             // Step 1: Get the network interface
-            System.out.println("HERE 1");
             PcapNetworkInterface networkInterface = getNetworkInterface("lo0");
             if (networkInterface == null) {
                 System.out.println("No network interface found.");
                 return;
             }
-
-            System.out.println("HERE 2");
             // Step 2: Open the network interface for packet capture
             PcapHandle handle = openCaptureHandle(networkInterface);
 
-            System.out.println("HERE 3");
             // Step 3: Set the filter for capturing TCP packets on port 443 (TLS/HTTPS)
             setPacketFilter(handle);
 
             System.out.println("Starting packet capture. Listening for TLS handshake packets on port 1234...");
 
-            System.out.println("HERE 4");
             // Step 4: Start capturing packets
             captureTlsHandshakePackets(handle);
 
@@ -115,7 +110,6 @@ public class PacketSniffer {
             System.out.println("No network interface found.");
             return;
         }
-        System.out.println("HERE 0");
 
         int snapLen = 65536; // Capture all packets, no truncation
         int timeout = 10; // Timeout in milliseconds
@@ -127,29 +121,25 @@ public class PacketSniffer {
         System.out.println("Starting packet capture. Listening for TLS handshake packets on port 1234...");
 
         while (true) {
-            System.out.println("HERE 1");
             Packet packet = handle.getNextPacket();
             if (packet != null && packet.contains(TcpPacket.class)) {
-                System.out.println("HERE 2");
                 TcpPacket tcpPacket = packet.get(TcpPacket.class);
 
                 // Check if the TCP payload contains TLS records
                 if (tcpPacket.getPayload() != null) {
-                    System.out.println("HERE 3");
                     Packet payload = tcpPacket.getPayload();
 
                     // Check if the payload is a raw TLS record (starting with record type 0x16 for Handshake)
                     if (payload.getRawData().length > 0) {
-                        System.out.println("HERE 4");
                         byte[] rawData = payload.getRawData();
                         if (rawData[0] == (byte) 0x16) { // 0x16 indicates a TLS Handshake record
                             System.out.println("Captured a TLS Handshake Packet (0x16):");
 
                             // Output the raw bytes of the packet (this is for diagnostic purposes)
                             System.out.println("Raw TLS Handshake Data: ");
-//                            for (byte b : rawData) {
-//                                System.out.printf("%02x ", b);
-//                            }
+                            for (byte b : rawData) {
+                                System.out.printf("%02x ", b);
+                            }
                             System.out.println("\n");
 
                             // Further parsing logic could go here to decode the Client Hello or Server Hello messages
