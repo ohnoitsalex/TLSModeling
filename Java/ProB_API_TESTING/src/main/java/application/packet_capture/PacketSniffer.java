@@ -1,11 +1,8 @@
-package application.packetcapture;
+package application.packet_capture;
 
 import org.pcap4j.core.*;
 import org.pcap4j.packet.*;
 import org.pcap4j.packet.TcpPacket;
-
-
-import java.util.Arrays;
 
 
 public class PacketSniffer {
@@ -82,7 +79,7 @@ public class PacketSniffer {
                             System.out.println("Captured a TLS Handshake Packet (0x16):");
 
                             // Output the raw bytes of the packet (for diagnostic purposes)
-                            printRawTlsData(payload);
+                            PacketLogger.printRawTlsData(payload);
                         }
                     }
                 }
@@ -97,16 +94,6 @@ public class PacketSniffer {
     private static boolean isTlsHandshakeRecord(Packet payload) {
         byte[] rawData = payload.getRawData();
         return rawData.length > 0 && rawData[0] == (byte) 0x16; // 0x16 indicates a TLS Handshake record
-    }
-
-    // Method to print the raw bytes of the TLS Handshake data
-    private static void printRawTlsData(Packet payload) {
-        byte[] rawData = payload.getRawData();
-        System.out.println("Raw TLS Handshake Data:");
-        for (byte b : rawData) {
-            System.out.printf("%02x ", b);
-        }
-        System.out.println();  // Newline after printing the data
     }
 
     public static void setUpNetworkInterface(String networkInterface, String filterPort) throws PcapNativeException, NotOpenException {
