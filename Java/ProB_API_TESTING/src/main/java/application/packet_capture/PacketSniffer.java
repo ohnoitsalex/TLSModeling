@@ -4,8 +4,13 @@ import org.pcap4j.core.*;
 import org.pcap4j.packet.*;
 import org.pcap4j.packet.TcpPacket;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class PacketSniffer {
+
+    private static List<Packet> TLSPacketList = new ArrayList<>(); // List to store packets
 
     public static void main (String[] args) throws NotOpenException, PcapNativeException {
         //setUpNetworkInterface("lo0","tcp port 1234");
@@ -19,13 +24,16 @@ public class PacketSniffer {
             // Step 2: Open the network interface for packet capture
             PcapHandle handle = openCaptureHandle(networkInterface);
 
-            // Step 3: Set the filter for capturing TCP packets on port 443 (TLS/HTTPS)
+            // Step 3: Set the filter for capturing TCP packets on port 1234 (TLS/HTTPS)
             setPacketFilter(handle);
 
             System.out.println("Starting packet capture. Listening for TLS handshake packets on port 1234...");
 
             // Step 4: Start capturing packets
             captureTlsHandshakePackets(handle);
+
+            // Step 5: Log Packets
+            logPacket();
 
         } catch (PcapNativeException | NotOpenException e) {
             System.err.println("Error opening network interface or capturing packets: " + e.getMessage());
@@ -65,7 +73,12 @@ public class PacketSniffer {
     private static void captureTlsHandshakePackets(PcapHandle handle) {
         System.out.println("Starting TLS Handshake packet capture...");
 
-        while (true) {
+        //Set to 10 seconds of packet capture
+        int captureDuration = 16; // Duration to capture packets in seconds
+        long startTime = System.currentTimeMillis();
+        long endTime = startTime + captureDuration * 1000;
+
+        while (System.currentTimeMillis() < endTime) {
             try {
                 Packet packet = handle.getNextPacket();
                 if (packet == null) {
@@ -74,18 +87,20 @@ public class PacketSniffer {
 
                 // Process TCP packets that may contain TLS data
                 if (packet.contains(TcpPacket.class)) {
-                    TcpPacket tcpPacket = packet.get(TcpPacket.class);
-                    Packet payload = tcpPacket.getPayload();
+                    System.out.println("FOUND TCP PACKET");
+//                    TcpPacket tcpPacket = packet.get(TcpPacket.class);
+//                    Packet payload = tcpPacket.getPayload();
 
                     // Check for a TCP payload that starts with TLS Handshake type (0x16)
-                    if (payload != null && isTlsHandshakeRecord(payload)) {
+                    if (packet.get(TcpPacket.class).getPayload() != null && packet.get(TcpPacket.class).getPayload().getRawData().length > 0 && packet.get(TcpPacket.class).getPayload().getRawData()[0] == (byte) 0x16) {
                         System.out.println("Captured a TLS Handshake Packet:");
-
-                        // Extract header information
-                        String headers = PacketLogger.extractHeaders(packet);
-
-                        // Log headers and raw data to file
-                        PacketLogger.logPacketData(headers, payload, "tls_handshake_data.txt");
+                        TLSPacketList.add(packet);
+//                        // Extract header information
+//                        String headers = PacketLogger.extractHeaders(packet);
+//                        System.out.println("Extracted Headers");
+//
+//                        // Log headers and raw data to file
+//                        PacketLogger.logPacketData(headers, payload, "tls_handshake_data.txt");
                     }
                 }
             } catch (NotOpenException e) {
@@ -97,6 +112,18 @@ public class PacketSniffer {
         }
     }
 
+    private static void logPacket(){
+        for (int i = 0; i < TLSPacketList.size(); i++){
+            Packet currentPacket = TLSPacketList.get(i);
+            String headers = PacketLogger.extractHeaders(currentPacket);
+            System.out.println("Extracted Headers");
+            TcpPacket tcpPacket = currentPacket.get(TcpPacket.class);
+            Packet payload = tcpPacket.getPayload();
+
+            // Log headers and raw data to file
+            PacketLogger.logPacketData(headers, payload, "tls_handshake_data.txt");
+        }
+    }
     // Method to check if the payload represents a TLS Handshake record
     private static boolean isTlsHandshakeRecord(Packet payload) {
         byte[] rawData = payload.getRawData();
