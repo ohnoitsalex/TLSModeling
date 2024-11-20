@@ -66,6 +66,7 @@ public class TraceExecuter {
         for (int i = 0; i < 2; i++){ //Set up constants + initialisation
             trace = trace.anyEvent(null);
         }
+        System.out.println("Finding transitions parameters for SendClientHello: "+ trace.getCurrentState().findTransitions("SendClientHello",Arrays.asList("legacy_version=x0303","supported_versions={TLS_1_3}","legacy_compression_methods=0","pre_shared_key={}","signature_algorithms={rsa_pkcs1_sha25}"),1000));
         System.out.println("Effectuated Transitions:" + trace.getTransitionList());
         //trace = trace.anyEvent("SendClientHello");
         System.out.println("Transition param names:" + trace.getCurrentState().getOutTransitions().getFirst().getParameterNames());
@@ -73,6 +74,12 @@ public class TraceExecuter {
         //System.out.println("Transition param predicates:" + trace.getCurrentState().getOutTransitions().getFirst().getParameterPredicates());
         //System.out.println("Transition param predicate:" + trace.getCurrentState().getOutTransitions().getFirst().getParameterPredicate());
         trace = trace.addTransitionWith("SendClientHello", paramsSendClientHello);
+        System.out.println("Effectuated Transitions:" + trace.getTransitionList());
+        System.out.println("Next Transition param names:" + trace.getCurrentState().getOutTransitions().getFirst());
+        trace.addTransitionWith("ReceiveClientHello",Arrays.asList());
+        System.out.println("Effectuated Transitions:" + trace.getTransitionList());
+        System.out.println("Next Transition param names:" + trace.getCurrentState().getOutTransitions().getFirst());
+
         //trace = trace.addTransitionWith("SendClientHello", paramsSendClientHelloTest);
         //trace = trace.anyEvent("ReceiveClientHello");
         //System.out.println("Readable trace information");
