@@ -4,6 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Stage;
+import de.prob.animator.domainobjects.ClassicalB;
 import de.prob.scripting.Api;
 import de.prob.statespace.StateSpace;
 import application.config.Config;
@@ -53,15 +54,6 @@ public class Loader {
     public void executeRandomTrace(int steps){
         traceExecuter.createSubscription("session_machine");
         traceExecuter.generateRandomTrace(10);
-    }
-
-    public void executeOperation() {
-        //traceExecuter.findStateSatisfyingPredicate(new ClassicalB("session_machine'State == RECEIVECLIENTHELLO"));
-        //traceExecuter.performSpecificTransition("SendClientHello", paramsSendClientHello);
-        //traceExecuter.performSpecificTransition("ReceiveClientHello",null);
-        //traceExecuter.performSpecificTransition("ReceiveClientHello", paramsReceiveClientHello);
-        //traceExecuter.findTransition();
-
     }
 
     public void executeSpecificTrace(){

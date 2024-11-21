@@ -24,18 +24,56 @@ public class TraceExecuter {
             "supported_versions={TLS_1_3}",
             "legacy_compression_methods=0",
             "pre_shared_key={}",
-            "signature_algorithms={rsa_pkcs1_sha25}"
-//            "{X25519}",
-//            "{TLS_AES_128_GCM_SHA256}"
+            "signature_algorithms={rsa_pkcs1_sha25}",
+            "supported_groups={X25519}",
+            "cipher_suites={TLS_AES_128_GCM_SHA256}"
     );
-    private final List<String> paramsSendClientHelloTest = Arrays.asList(
-            "x0300",
-            "{TLS_1_3}",
+
+    private final List<String> paramsFindSendServerHello = Arrays.asList(
+            "legacy_version=x0303",
+            "legacy_session_id_echo=x0303",
+            "legacy_compression_methods=0",
+            "supported_versions={TLS_1_3}",
+            "cipher_suites=TLS_AES_128_GCM_SHA256",
+            "key_share={}",
+            "pre_shared_key={}",
+            "random=A1"
+    );
+
+    private final List<String> paramsSendServerHello = Arrays.asList(
+            "x0303",
+            "x0303",
             "0",
+            "{TLS_1_3}",
+            "TLS_AES_128_GCM_SHA256",
             "{}",
-            "{rsa_pkcs1_sha25}",
             "{}",
-            "{}"
+            "A1"
+    );
+
+    private final List<String> paramsSendEncryptedExtensions = Arrays.asList(
+            "rsa_pkcs1_sha25",
+            "X25519"
+    );
+
+    private final List<String> paramsFindSendServerCertificate = Arrays.asList(
+            "raw_public_key_certificate=A1B1C1",
+            "certificate_type=X509",
+            "signed_certificate_timestamp=D20241231",
+            "ocsp_status=1",
+            "certificate_authorities=ENTRUST",
+            "server_certificate_request_context=C1",
+            "serial_number=0"
+    );
+
+    private final List<String> paramsSendServerCertificate = Arrays.asList(
+           "A1B1C1",
+            "X509",
+            "D20241231",
+            "1",
+            "ENTRUST",
+            "C1",
+            "0"
     );
     private StateSpace model;
     private Trace trace;
@@ -61,7 +99,10 @@ public class TraceExecuter {
     public void generateSpecificTrace() {
         initaliseMachine();
         generateClientHelloMessages();
+        generateServerHelloMessages();
+        //generateServerHelloMessagesWithoutClientCertificateRequest();
         getOutTransitionInformations();
+        System.out.println("Effectuated Transitions:" + trace.getTransitionList());
     }
     public void generateRandomTrace (int steps){
         for (int i = 0; i < steps; i++){
@@ -82,14 +123,21 @@ public class TraceExecuter {
         trace.getCurrentState().findTransitions("SendClientHello",paramsFindSendClientHello,1000);
         trace = trace.addTransitionWith("SendClientHello", paramsSendClientHello);
         trace = trace.addTransitionWith("ReceiveClientHello",Arrays.asList());
-        System.out.println("Effectuated Transitions:" + trace.getTransitionList());
     }
 
     public void generateServerHelloMessages(){
-        trace.getCurrentState().findTransitions("SendClientHello",paramsFindSendClientHello,1000);
-        trace = trace.addTransitionWith("SendClientHello", paramsSendClientHello);
-        trace = trace.addTransitionWith("ReceiveClientHello",Arrays.asList());
-        System.out.println("Effectuated Transitions:" + trace.getTransitionList());
+        trace.getCurrentState().findTransitions("SendServerHello",paramsFindSendServerHello,1000);
+        trace = trace.addTransitionWith("SendServerHello", paramsSendServerHello);
+        trace = trace.addTransitionWith("SendEncryptedExtensions",paramsSendEncryptedExtensions);
+        trace.getCurrentState().findTransitions("SendServerCertificate",paramsFindSendServerCertificate,1000);
+        trace = trace.addTransitionWith("SendServerCertificate", paramsSendServerCertificate);
+    }
+
+    public void generateServerHelloMessagesWithoutClientCertificateRequest(){
+        trace.getCurrentState().findTransitions("SendServerHello",paramsFindSendServerHello,1000);
+        trace = trace.addTransitionWith("SendServerHello", paramsSendServerHello);
+        trace = trace.addTransitionWith("SendEncryptedExtensions",paramsSendEncryptedExtensions);
+        trace = trace.addTransitionWith("SendClientCertificateRequest", Arrays.asList());
     }
     public void performSpecificTransition(String operation, String[] params){
         // Check if params is null and replace it with an empty array if it is
