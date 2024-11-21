@@ -50,19 +50,22 @@ public class Loader {
         System.out.println("--------------");
     }
 
-    public void executeOperation() {
-        String[] paramsSendClientHello = {"legacy_version=x0303","supported_versions={TLS_1_3}","legacy_compression_methods=0","pre_shared_key={}", "signature_algorithms={rsa_pkcs1_sha25}",
-        "supported_groups={X25519}", "cipher_suites={TLS_AES_128_GCM_SHA256}"};
-        String[] paramsReceiveClientHello = {};
+    public void executeRandomTrace(int steps){
         traceExecuter.createSubscription("session_machine");
-        //traceExecuter.generateRandomTrace(10);
+        traceExecuter.generateRandomTrace(10);
+    }
+
+    public void executeOperation() {
         //traceExecuter.findStateSatisfyingPredicate(new ClassicalB("session_machine'State == RECEIVECLIENTHELLO"));
-        //traceExecuter.generateRandomTrace(4);
-        traceExecuter.generateSpecificTrace();
         //traceExecuter.performSpecificTransition("SendClientHello", paramsSendClientHello);
         //traceExecuter.performSpecificTransition("ReceiveClientHello",null);
         //traceExecuter.performSpecificTransition("ReceiveClientHello", paramsReceiveClientHello);
         //traceExecuter.findTransition();
 
+    }
+
+    public void executeSpecificTrace(){
+        traceExecuter.createSubscription("session_machine");
+        traceExecuter.generateSpecificTrace();
     }
 }

@@ -15,13 +15,13 @@ public class Main {
         Loader loader = new Loader(de.prob.Main.getInjector().getInstance(Api.class));
         loader.loadAndExecuteAPI(tlsModelFilePath);
         loader.modelInformation();
-        loader.executeOperation();
+        loader.executeSpecificTrace();
     }
     public static void loadLibaryExample(){
         System.out.println("Testing Library Model...");
         Loader loader = new Loader(de.prob.Main.getInjector().getInstance(Api.class));
         loader.loadAndExecuteAPI(libraryFilePath);
         loader.modelInformation();
-        loader.executeOperation();
+        loader.executeSpecificTrace();
     }
 }

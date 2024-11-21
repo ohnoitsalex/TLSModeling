@@ -4,9 +4,6 @@ import com.google.inject.Inject;
 import de.prob.animator.domainobjects.ClassicalB;
 import de.prob.statespace.StateSpace;
 import de.prob.statespace.Trace;
-import de.prob.statespace.Transition;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Arrays;
 
@@ -20,6 +17,16 @@ public class TraceExecuter {
             "{rsa_pkcs1_sha25}",
             "{X25519}",
             "{TLS_AES_128_GCM_SHA256}"
+    );
+
+    private final List<String> paramsFindSendClientHello = Arrays.asList(
+            "legacy_version=x0303",
+            "supported_versions={TLS_1_3}",
+            "legacy_compression_methods=0",
+            "pre_shared_key={}",
+            "signature_algorithms={rsa_pkcs1_sha25}"
+//            "{X25519}",
+//            "{TLS_AES_128_GCM_SHA256}"
     );
     private final List<String> paramsSendClientHelloTest = Arrays.asList(
             "x0300",
@@ -52,26 +59,9 @@ public class TraceExecuter {
     }
 
     public void generateSpecificTrace() {
-        for (int i = 0; i < 2; i++){ //Set up constants + initialisation
-            trace = trace.anyEvent(null);
-        }
-        System.out.println("Finding transitions parameters for SendClientHello: "+ trace.getCurrentState().findTransitions("SendClientHello",Arrays.asList("legacy_version=x0303","supported_versions={TLS_1_3}","legacy_compression_methods=0","pre_shared_key={}","signature_algorithms={rsa_pkcs1_sha25}"),1000));
-        System.out.println("Effectuated Transitions:" + trace.getTransitionList());
-        //trace = trace.anyEvent("SendClientHello");
-        //System.out.println("Transition param predicates:" + trace.getCurrentState().getOutTransitions().getFirst().getParameterPredicates());
-        //System.out.println("Transition param predicate:" + trace.getCurrentState().getOutTransitions().getFirst().getParameterPredicate());
-        trace = trace.addTransitionWith("SendClientHello", paramsSendClientHello);
-        System.out.println("Effectuated Transitions:" + trace.getTransitionList());
-        System.out.println("Next Transition param names:" + trace.getCurrentState().getOutTransitions().getFirst());
-        //trace = trace.anyEvent(null);
-        trace = trace.addTransitionWith("ReceiveClientHello",Arrays.asList());
-        System.out.println("Effectuated Transitions:" + trace.getTransitionList());
-        System.out.println("Next Transition param names:" + trace.getCurrentState().getOutTransitions().getFirst());
+        initaliseMachine();
+        generateClientHelloMessages();
         getOutTransitionInformations();
-        //trace = trace.addTransitionWith("SendClientHello", paramsSendClientHelloTest);
-        //trace = trace.anyEvent("ReceiveClientHello");
-        //System.out.println("Readable trace information");
-        //System.out.println(trace.toString());
     }
     public void generateRandomTrace (int steps){
         for (int i = 0; i < steps; i++){
@@ -81,6 +71,26 @@ public class TraceExecuter {
         System.out.println(trace.toString());
     }
 
+    public void initaliseMachine(){
+        for (int i = 0; i < 2; i++){ //Set up constants + initialisation
+            trace = trace.anyEvent(null);
+        }
+        System.out.println("Effectuated Transitions:" + trace.getTransitionList());
+    }
+
+    public void generateClientHelloMessages(){
+        trace.getCurrentState().findTransitions("SendClientHello",paramsFindSendClientHello,1000);
+        trace = trace.addTransitionWith("SendClientHello", paramsSendClientHello);
+        trace = trace.addTransitionWith("ReceiveClientHello",Arrays.asList());
+        System.out.println("Effectuated Transitions:" + trace.getTransitionList());
+    }
+
+    public void generateServerHelloMessages(){
+        trace.getCurrentState().findTransitions("SendClientHello",paramsFindSendClientHello,1000);
+        trace = trace.addTransitionWith("SendClientHello", paramsSendClientHello);
+        trace = trace.addTransitionWith("ReceiveClientHello",Arrays.asList());
+        System.out.println("Effectuated Transitions:" + trace.getTransitionList());
+    }
     public void performSpecificTransition(String operation, String[] params){
         // Check if params is null and replace it with an empty array if it is
         if (params == null) {
