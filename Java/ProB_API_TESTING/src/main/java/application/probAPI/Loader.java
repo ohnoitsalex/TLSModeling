@@ -37,6 +37,19 @@ public class Loader {
         }
     }
 
+
+    public void modelInformation(){
+        System.out.println("--------------");
+        System.out.println("Machine Set Names: " + model.getLoadedMachine().getSetNames());
+        System.out.println("--------------");
+        System.out.println("Machine Constant Names: " + model.getLoadedMachine().getConstantNames());
+        System.out.println("--------------");
+        System.out.println("Machine Variable Names: " + model.getLoadedMachine().getVariableNames());
+        System.out.println("--------------");
+        System.out.println("Machine Operations Names: " + model.getLoadedMachine().getOperationNames());
+        System.out.println("--------------");
+    }
+
     public void executeOperation() {
         String[] paramsSendClientHello = {"legacy_version=x0303","supported_versions={TLS_1_3}","legacy_compression_methods=0","pre_shared_key={}", "signature_algorithms={rsa_pkcs1_sha25}",
         "supported_groups={X25519}", "cipher_suites={TLS_AES_128_GCM_SHA256}"};
