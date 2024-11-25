@@ -68,8 +68,8 @@ public class TraceExecuter {
         }
         System.out.println("Effectuated Transitions:" + trace.getTransitionList());
         //trace = trace.anyEvent("SendClientHello");
-        System.out.println("Transition param names:" + trace.getCurrentState().getOutTransitions().getFirst().getParameterNames());
-        System.out.println("Transition param values:" + trace.getCurrentState().getOutTransitions().getLast().getParameterValues());
+        //System.out.println("Transition param names:" + trace.getCurrentState().getOutTransitions().getFirst().getParameterNames());
+        //System.out.println("Transition param values:" + trace.getCurrentState().getOutTransitions().getLast().getParameterValues());
         //System.out.println("Transition param predicates:" + trace.getCurrentState().getOutTransitions().getFirst().getParameterPredicates());
         //System.out.println("Transition param predicate:" + trace.getCurrentState().getOutTransitions().getFirst().getParameterPredicate());
         trace = trace.addTransitionWith("SendClientHello", paramsSendClientHello);
