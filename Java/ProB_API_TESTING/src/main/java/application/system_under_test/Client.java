@@ -9,7 +9,7 @@ import java.security.cert.X509Certificate;
 public class Client {
 
     private static final String SERVER_HOST = "localhost";
-    private static final int SERVER_PORT = 1234;
+    private static final int SERVER_PORT = 1235;
 
     public static void main(String[] args) {
         try {

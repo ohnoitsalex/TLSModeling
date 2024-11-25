@@ -27,7 +27,7 @@ public class PacketSniffer {
             // Step 3: Set the filter for capturing TCP packets on port 1234 (TLS/HTTPS)
             setPacketFilter(handle);
 
-            System.out.println("Starting packet capture. Listening for TLS handshake packets on port 1234...");
+            System.out.println("Starting packet capture. Listening for TLS handshake packets on port 1235...");
 
             // Step 4: Start capturing packets
             captureTlsHandshakePackets(handle);
@@ -60,7 +60,7 @@ public class PacketSniffer {
     // Method to set the packet filter to capture only TCP packets on port 443 (TLS/HTTPS)
     private static void setPacketFilter(PcapHandle handle) throws PcapNativeException {
         try {
-            handle.setFilter("tcp port 1234", BpfProgram.BpfCompileMode.OPTIMIZE);
+            handle.setFilter("tcp port 1235", BpfProgram.BpfCompileMode.OPTIMIZE);
         } catch (PcapNativeException e) {
             System.err.println("Error setting filter: " + e.getMessage());
             throw e;
