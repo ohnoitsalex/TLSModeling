@@ -137,7 +137,23 @@ public class TlsHandshakeParser {
                     break;
                 case 0x0033: // key_share
                     type = "key_share";
-                    //data = parseKeyShareExtension(isClient, extensionData);
+                    data = parseKeyShareExtension(isClient, extensionData);
+                    break;
+                case 0x0005: // status_request
+                    type = "status_request";
+                    data = parseStatusRequestExtension(1, extensionData);
+                    break;
+                case 0x0011: // status_request
+                    type = "status_request_v2";
+                    data = parseStatusRequestExtension(2, extensionData);
+                    break;
+                case 0x000a: // supported_groups
+                    type = "supported_groups";
+                    data = parseSupportedGroupsExtension(extensionData);
+                    break;
+                case 0x000b: // ec_point_formats
+                    type = "ec_point_formats";
+                    //data = parseEcPointFormatsExtension(extensionData);
                     break;
                 default:
                     type = String.format("unknown (0x%04x)", extensionType);
@@ -170,29 +186,88 @@ public class TlsHandshakeParser {
         sb.append("\tKey Share Extension\n");
         int i=0;
         if (isClient) {
-            sb.append("\tClient Key Share Length:"+ data[i]);
-            i++;
+            int keyShareLength = ((data[i] & 0xff) << 8) | (data[i+1] & 0xff);
+            sb.append(String.format("\tClient Key Share Length: %d\n", keyShareLength));
+            i+= 2;
         }
         while (i < data.length) {
             // Group 2 Bytes
             int first = data[i] & 0xff;
             int second = data[i + 1] & 0xff;
             int group = ((first & 0xff) << 8) | (second & 0xff);
-            System.out.printf("Group: 0x%04x\n", group);
+            sb.append(String.format("\t* Group: 0x%04x\n", group));
             i += 2;
 
             // Key exchange length
-            byte[] keyData = Arrays.copyOfRange(data, i, data.length);
-            int keyLength = keyData.length;
-            System.out.printf("Key Exchange Length: %d\n", keyLength);
-            System.out.printf("\tKey: %s\n", bytesToHex(keyData));
+            int keyLength = ((data[i] & 0xff) << 8) | (data[i+1] & 0xff);
+            i += 2;
 
-            //sb.append("\tKey Share Entry:");
+            // Key data
+            byte[] keyData = Arrays.copyOfRange(data, i, i+keyLength);
+            sb.append(String.format("\t\tKey Exchange Length: %d\n", keyLength));
+            sb.append(String.format("\t\tKey: %s\n", bytesToHex(keyData)));
+            i += keyLength;
         }
-
         return sb.toString();
     }
 
+    private static String getCertificateStatusType(int codeType) {
+        return switch (codeType) {
+            case 0x01 -> "OCSP (1)";
+            case 0x02 -> "OCSP Multi (2)";
+            default -> "unknown (" + codeType + ")";
+        };
+    }
+
+    private static String parseSupportedGroupsExtension(byte[] data) {
+        StringBuilder sb = new StringBuilder();
+
+        int listLength = ((data[0] & 0xff) << 8) | (data[1] & 0xff);
+        sb.append(String.format("\tSupported Groups List Length: %d\n", listLength));
+
+        sb.append("\tSupported Groups:\n");
+        int i = 2;
+        while (i < data.length) {
+            int groupId = ((data[i] & 0xff) << 8) | (data[i+1] & 0xff);
+            sb.append(String.format("\t\t* Supported Group: 0x%04x \n", groupId));
+            i += 2;
+        }
+        return sb.toString();
+    }
+
+    private static String parseStatusRequestExtension(int version, byte[] data) {
+        StringBuilder sb = new StringBuilder();
+        int i=0;
+        if (version == 2) {
+            // Certificate Status Length
+            int statusLength = ((data[0] & 0xff) << 8) | (data[1] & 0xff);
+            sb.append(String.format("\tCertificate Status List Length: %d\n", statusLength));
+            i+=2;
+        }
+
+        // Certificate Status Type
+        String statusType = getCertificateStatusType(data[i]);
+        sb.append(String.format("\tCertificate Status Type: %s\n", statusType));
+        i++;
+
+        if (version == 2) {
+            // Certificate Status Length
+            int statusLength = ((data[i] & 0xff) << 8) | (data[i+1] & 0xff);
+            sb.append(String.format("\tCertificate Status Length: %d\n", statusLength));
+            i+=2;
+        }
+
+        // Responder ID list Length
+        int listLength = ((data[i] & 0xff) << 8) | (data[i+1] & 0xff);
+        sb.append(String.format("\tResponder ID list Length: %d\n", listLength));
+        i+=2;
+
+        // Request Extensions Length
+        int extensionsLength = ((data[i] & 0xff) << 8) | (data[i+1] & 0xff);
+        sb.append(String.format("\tRequest Extensions Length: %d\n", extensionsLength));
+
+        return sb.toString();
+    }
     // Helper to identify handshake type
     private static String getHandshakeType(int type) {
         switch (type) {
