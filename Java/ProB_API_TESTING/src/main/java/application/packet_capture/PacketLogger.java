@@ -79,6 +79,7 @@ public class PacketLogger {
             writer.write("=== TLS Handshake Packet ===\n");
             writer.write(headers);  // Write header information
 
+            TlsHandshakeParser.parseTlsHandshakeRecord(payload.getRawData());
             writer.write("Raw TLS Handshake Data:\n");
             for (byte b : payload.getRawData()) {
                 writer.write(String.format("%02x ", b));
