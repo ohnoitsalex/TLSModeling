@@ -205,19 +205,6 @@ public class TlsHandshakeParser {
         }
     }
 
-    // Helper to convert TLS version code to the decimal version
-    private static String getTLSVersionFromHexadecimal(int tlsVersion) {
-        int hex = tlsVersion & 0xFFFF;
-        return switch (tlsVersion) {
-            case 0x0304 -> "TLS 1.3";
-            case 0x0303 -> "TLS 1.2";
-            case 0x0302 -> "TLS 1.1";
-            case 0x0301 -> "TLS 1.0";
-            case 0x0300 -> "SSL 3.0";
-            default -> "Unknown (0x" + String.format("%04x", tlsVersion) + ")";
-        };
-    }
-
     // Helper to convert bytes to hex
     private static String bytesToHex(byte[] bytes) {
         StringBuilder hex = new StringBuilder();
