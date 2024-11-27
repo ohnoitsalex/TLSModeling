@@ -177,9 +177,17 @@ public class TlsHandshakeParser {
                     type = "supported_groups";
                     data = parseSupportedGroupsExtension(extensionData);
                     break;
-                case 0x000b: // ec_point_formats
-                    type = "ec_point_formats";
-                    //data = parseEcPointFormatsExtension(extensionData);
+                case 0x000d: // signature_algorithms
+                    type = "signature_algorithms";
+                    data = parseSignatureAlgorithmsExtension(extensionData);
+                    break;
+                case 0x0032: // signature_algorithms
+                    type = "signature_algorithms_cert";
+                    data = parseSignatureAlgorithmsExtension(extensionData);
+                    break;
+                case 0x002d: // psk_key_exchange_modes
+                    type = "psk_key_exchange_modes";
+                    data = parsePskKeyExchangeModesExtension(extensionData);
                     break;
                 default:
                     type = String.format("unknown (0x%04x)", extensionType);
@@ -239,6 +247,7 @@ public class TlsHandshakeParser {
         return sb.toString();
     }
 
+    // Helper to get
     private static String getCertificateStatusType(int codeType) {
         return switch (codeType) {
             case 0x01 -> "OCSP (1)";
@@ -296,6 +305,66 @@ public class TlsHandshakeParser {
 
         return sb.toString();
     }
+
+    private static String parseSignatureAlgorithmsExtension(byte[] data) {
+        StringBuilder sb = new StringBuilder();
+
+        // Signature Hash Algorithms Length
+        int signatureLength = ((data[0] & 0xff) << 8) | (data[1] & 0xff);
+        sb.append(String.format("\tSignature Hash Algorithms Length: %d\n", signatureLength));
+
+        if (signatureLength > 0) {
+            sb.append(String.format("\tSignature Hash Algorithms (%d algorithms)\n", signatureLength/2));
+        }
+
+        int i = 2;
+        while (i < data.length) {
+
+            int hash = data[i] & 0xff;
+            int signature = data[i+1] & 0xff;
+            int signatureAlgo = (hash << 8) | signature;
+            sb.append(String.format("\t* Signature Algorithm: 0x%04x\n", signatureAlgo));
+            sb.append(String.format("\t\tSignature Hash Algorithm Hash: %s (%d)\n", getHash(hash), hash));
+            sb.append(String.format("\t\tSignature Hash Algorithm Signature: %s (%d)\n", getSignature(signature), signature));
+            i+=2;
+        }
+        return sb.toString();
+    }
+
+    private static String getHash(int id) {
+        return switch (id) {
+            case 1 -> "MD5";
+            case 2 -> "SHA1";
+            case 3 -> "SHA224";
+            case 4 -> "SHA256";
+            case 5 -> "SHA384";
+            case 6 -> "SHA512";
+            default -> "Unknown";
+        };
+    }
+
+    private static String getSignature(int id) {
+        return switch (id) {
+            case 1 -> "RSA";
+            case 2 -> "DSA";
+            case 3 -> "ECDSA";
+            case 4 -> "SM2";
+            default -> "Unknown";
+        };
+    }
+
+    private static String parsePskKeyExchangeModesExtension(byte[] data) {
+        StringBuilder sb = new StringBuilder();
+        int length = data[0] & 0xff;
+        sb.append(String.format("\tPSK Key Exchange Modes Length: %d\n", length));
+        // Mode list
+        for (int i=1; i <= length; i++) {
+            int mode = data[i];
+            sb.append(String.format("\tPSK Key Exchange Mode: 0x%02x\n", mode));
+        }
+        return sb.toString();
+    }
+
     // Helper to identify handshake type
     private static String getHandshakeType(int type) {
         switch (type) {
