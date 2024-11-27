@@ -4,6 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Stage;
+import de.prob.animator.domainobjects.ClassicalB;
 import de.prob.scripting.Api;
 import de.prob.statespace.StateSpace;
 import application.config.Config;
@@ -37,19 +38,26 @@ public class Loader {
         }
     }
 
-    public void executeOperation() {
-        String[] paramsSendClientHello = {"legacy_version=x0303","supported_versions={TLS_1_3}","legacy_compression_methods=0","pre_shared_key={}", "signature_algorithms={rsa_pkcs1_sha25}",
-        "supported_groups={X25519}", "cipher_suites={TLS_AES_128_GCM_SHA256}"};
-        String[] paramsReceiveClientHello = {};
-        traceExecuter.createSubscription("session_machine");
-        //traceExecuter.generateRandomTrace(10);
-        //traceExecuter.findStateSatisfyingPredicate(new ClassicalB("session_machine'State == RECEIVECLIENTHELLO"));
-        //traceExecuter.generateRandomTrace(4);
-        traceExecuter.generateSpecificTrace();
-        //traceExecuter.performSpecificTransition("SendClientHello", paramsSendClientHello);
-        //traceExecuter.performSpecificTransition("ReceiveClientHello",null);
-        //traceExecuter.performSpecificTransition("ReceiveClientHello", paramsReceiveClientHello);
-        //traceExecuter.findTransition();
 
+    public void modelInformation(){
+        System.out.println("--------------");
+        System.out.println("Machine Set Names: " + model.getLoadedMachine().getSetNames());
+        System.out.println("--------------");
+        System.out.println("Machine Constant Names: " + model.getLoadedMachine().getConstantNames());
+        System.out.println("--------------");
+        System.out.println("Machine Variable Names: " + model.getLoadedMachine().getVariableNames());
+        System.out.println("--------------");
+        System.out.println("Machine Operations Names: " + model.getLoadedMachine().getOperationNames());
+        System.out.println("--------------");
+    }
+
+    public void executeRandomTrace(int steps){
+        traceExecuter.createSubscription("session_machine");
+        traceExecuter.generateRandomTrace(10);
+    }
+
+    public void executeSpecificTrace(){
+        traceExecuter.createSubscription("session_machine");
+        traceExecuter.generateSpecificTrace();
     }
 }
