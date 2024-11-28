@@ -157,6 +157,10 @@ public class TlsHandshakeParser {
             String type = "unknown";
             String data = "\tData: "+ bytesToHex(extensionData);
             switch (extensionType) {
+                case 0x0000: // server_name
+                    type = "server_name";
+                    data = parseServerNameExtension(extensionData);
+                    break;
                 case 0x002b: // supported_versions
                     type = "supported_versions";
                     data = parseSupportedVersionsExtension(extensionLength, extensionData);
@@ -199,6 +203,30 @@ public class TlsHandshakeParser {
 
             bytesRead += 4 + extensionLength; // 4 bytes for type + length, plus data
         }
+    }
+
+    private static String parseServerNameExtension(byte[] data) {
+        StringBuilder sb = new StringBuilder();
+        int i= 0;
+        while (i < data.length) {
+            int entryLength = ((data[i] & 0xff) << 8) | (data[i+1] & 0xff);
+            sb.append(String.format("Server Name Entry length: %d\n", entryLength));
+
+            int typeId = data[i+2];
+            String typeName = (typeId == 0) ? ("DNS hostname" ) : ("unknown");
+            sb.append(String.format("\tEntry type: %s\n", typeName));
+
+            int lengthName = ((data[i+3] & 0xff) << 8) | (data[i+4] & 0xff);
+            sb.append(String.format("\tEntry name length: %d\n", lengthName));
+            i+=5;
+
+            byte[] name = Arrays.copyOfRange(data, i, i+lengthName);
+            sb.append(String.format("\tEntry name: %s\n", bytesToHex(name)));
+
+            i+=lengthName;
+
+        }
+        return sb.toString();
     }
 
     private static String parseSupportedVersionsExtension(int dataLength, byte[] data) {
@@ -266,7 +294,7 @@ public class TlsHandshakeParser {
         int i = 2;
         while (i < data.length) {
             int groupId = ((data[i] & 0xff) << 8) | (data[i+1] & 0xff);
-            sb.append(String.format("\t\t* Supported Group: 0x%04x \n", groupId));
+            sb.append(String.format("\t\t* Supported Group: %s\n", getGroupValue(groupId)));
             i += 2;
         }
         return sb.toString();
@@ -386,4 +414,30 @@ public class TlsHandshakeParser {
         return hex.toString().trim();
     }
 
+    private static String getGroupValue(int id) {
+        switch (id) {
+            case 0x001d:
+                return "x25519";
+            case 0x0017:
+                return "secp256r1";
+            case 0x001e:
+                return "x448";
+            case 0x0019:
+                return "secp521r1";
+            case 0x0018:
+                return "secp384r1";
+            case 0x0100:
+                return "ffdhe2048";
+            case 0x0101:
+                return "ffdhe3072";
+            case 0x0102:
+                return "ffdhe4096";
+            case 0x0103:
+                return "ffdhe6144";
+            case 0x0104:
+                return "ffdhe8192";
+            default:
+                return String.format("unknown (0x%04x)", id);
+        }
+    }
 }
