@@ -52,8 +52,8 @@ public class TlsHandshakeParser {
         // Protocol Version (2 bytes)
         int versionMajor = buffer.get() & 0xFF;
         int versionMinor = buffer.get() & 0xFF;
-        writeData("Version: TLS 0" + versionMajor + ".0" + versionMinor, writerFilePath);
-        System.out.printf("Version: TLS 0%d.0%d%n", versionMajor, versionMinor);
+        writeData(String.format("Version: 0%d0%d%n", versionMajor, versionMinor), writerFilePath);
+        System.out.printf("Version: 0%d0%d%n", versionMajor, versionMinor);
 
         // Random (32 bytes)
         byte[] random = new byte[32];
@@ -105,8 +105,8 @@ public class TlsHandshakeParser {
         // Protocol Version (2 bytes)
         int versionMajor = buffer.get() & 0xFF;
         int versionMinor = buffer.get() & 0xFF;
-        writeData("Version: TLS 0" + versionMajor + ".0" + versionMinor, writerFilePath);
-        System.out.printf("Version: TLS 0%d.0%d%n", versionMajor, versionMinor);
+        writeData(String.format("Version: 0%d0%d%n", versionMajor, versionMinor), writerFilePath);
+        System.out.printf("Version: 0%d0%d%n", versionMajor, versionMinor);
 
         // Random (32 bytes)
         byte[] random = new byte[32];
@@ -211,7 +211,7 @@ public class TlsHandshakeParser {
         while (i < dataLength) {
             int versionMajor = data[i] & 0xFF;
             int versionMinor = data[i + 1] & 0xFF;
-            sb.append(String.format("\tVersion: SSL %d.%d%n", versionMajor, versionMinor));
+            sb.append(String.format("\tVersion: 0%d0%d%n", versionMajor, versionMinor));
             i = i+ 2;
         }
         return sb.toString();
