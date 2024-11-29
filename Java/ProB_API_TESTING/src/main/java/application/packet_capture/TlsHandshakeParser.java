@@ -2,6 +2,7 @@
 package application.packet_capture;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -210,18 +211,18 @@ public class TlsHandshakeParser {
         int i= 0;
         while (i < data.length) {
             int entryLength = ((data[i] & 0xff) << 8) | (data[i+1] & 0xff);
-            sb.append(String.format("Server Name Entry length: %d\n", entryLength));
+            sb.append(String.format("\tServer Name Entry length: %d\n", entryLength));
 
             int typeId = data[i+2];
             String typeName = (typeId == 0) ? ("DNS hostname" ) : ("unknown");
-            sb.append(String.format("\tEntry type: %s\n", typeName));
+            sb.append(String.format("\t\tEntry type: %s\n", typeName));
 
             int lengthName = ((data[i+3] & 0xff) << 8) | (data[i+4] & 0xff);
-            sb.append(String.format("\tEntry name length: %d\n", lengthName));
+            sb.append(String.format("\t\tEntry name length: %d\n", lengthName));
             i+=5;
 
             byte[] name = Arrays.copyOfRange(data, i, i+lengthName);
-            sb.append(String.format("\tEntry name: %s\n", bytesToHex(name)));
+            sb.append(String.format("\t\tEntry name: %s\n", new String(name, StandardCharsets.UTF_8)));
 
             i+=lengthName;
 
