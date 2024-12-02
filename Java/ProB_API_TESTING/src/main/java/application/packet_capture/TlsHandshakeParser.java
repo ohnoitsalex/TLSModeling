@@ -73,12 +73,15 @@ public class TlsHandshakeParser {
         int cipherSuitesLength = buffer.getShort() & 0xFFFF;
         writeData("Cipher Suites Length: " + cipherSuitesLength, writerFilePath);
         System.out.println("Cipher Suites Length: " + cipherSuitesLength);
-        List<String> cipherSuites = new ArrayList<>();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("Cipher Suites (%d suites)\n", cipherSuitesLength/2));
         for (int i = 0; i < cipherSuitesLength; i += 2) {
-            cipherSuites.add(String.format("0x%04x", buffer.getShort()));
+            int cipherId = buffer.getShort() & 0xFFFF;
+            sb.append(String.format("\tCipher Suite: %s (0x%04x)\n", getCipherSuite(cipherId), cipherId));
         }
-        writeData("Cipher Suites: " + cipherSuites, writerFilePath);
-        System.out.println("Cipher Suites: " + cipherSuites);
+        writeData(sb.toString(), writerFilePath);
+        System.out.println(sb);
 
         // Compression Methods Length (1 byte) + Compression Methods
         int compressionMethodsLength = buffer.get() & 0xFF;
@@ -126,8 +129,8 @@ public class TlsHandshakeParser {
 
         // Cipher Suite (2 bytes)
         int cipherSuite = buffer.getShort() & 0xFFFF;
-        writeData(String.format("Cipher Suite: 0x%04x%n", cipherSuite), writerFilePath);
-        System.out.printf("Cipher Suite: 0x%04x%n", cipherSuite);
+        writeData(String.format("Cipher Suite: %s%n", getCipherSuite(cipherSuite)), writerFilePath);
+        System.out.printf("Cipher Suite: %s%n", getCipherSuite(cipherSuite));
 
         // Compression Method (1 byte)
         int compressionMethod = buffer.get() & 0xFF;
@@ -352,12 +355,39 @@ public class TlsHandshakeParser {
             int hash = data[i] & 0xff;
             int signature = data[i+1] & 0xff;
             int signatureAlgo = (hash << 8) | signature;
-            sb.append(String.format("\t* Signature Algorithm: 0x%04x\n", signatureAlgo));
+            sb.append(String.format("\t* Signature Algorithm: %s (0x%04x)\n", getAlgorithm(signatureAlgo), signatureAlgo));
             sb.append(String.format("\t\tSignature Hash Algorithm Hash: %s (%d)\n", getHash(hash), hash));
             sb.append(String.format("\t\tSignature Hash Algorithm Signature: %s (%d)\n", getSignature(signature), signature));
             i+=2;
         }
         return sb.toString();
+    }
+
+    private static String getAlgorithm(int id) {
+        return switch (id) {
+            case 0x0403 -> "ecdsa_secp256r1_sha256";
+            case 0x0503 -> "ecdsa_secp384r1_sha384";
+            case 0x0603 -> "ecdsa_secp521r1_sha512";
+            case 0x0807 -> "ed25519";
+            case 0x0808 -> "ed448";
+            case 0x0804 -> "rsa_pss_rsae_sha256";
+            case 0x0805 -> "rsa_pss_rsae_sha384";
+            case 0x0806 -> "rsa_pss_rsae_sha512";
+            case 0x0809 -> "rsa_pss_pss_sha256";
+            case 0x080a -> "rsa_pss_pss_sha384";
+            case 0x080b -> "rsa_pss_pss_sha512";
+            case 0x0401 -> "rsa_pkcs1_sha256";
+            case 0x0501 -> "rsa_pkcs1_sha384";
+            case 0x0601 -> "rsa_pkcs1_sha512";
+            case 0x0402 -> "SHA256 DSA";
+            case 0x0303 -> "SHA224 ECDSA";
+            case 0x0301 -> "SHA224 RSA";
+            case 0x0302 -> "SHA224 DSA";
+            case 0x0203 -> "ecdsa_sha1";
+            case 0x0201 -> "rsa_pkcs1_sha1";
+            case 0x0202 -> "SHA1 DSA";
+            default -> "unknown";
+        };
     }
 
     private static String getHash(int id) {
@@ -439,6 +469,87 @@ public class TlsHandshakeParser {
                 return "ffdhe8192";
             default:
                 return String.format("unknown (0x%04x)", id);
+        }
+    }
+
+    private static String getCipherSuite(int id) {
+        switch (id) {
+            case 0x1301:
+                return "TLS_AES_128_GCM_SHA256";
+            case 0x1302:
+                return "TLS_AES_256_GCM_SHA384";
+            case 0x1303:
+                return "TLS_CHACHA20_POLY1305_SHA256";
+            case 0xc02c:
+                return "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384";
+            case 0xc02b:
+                return "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256";
+            case 0xcca9:
+                return "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256";
+            case 0xc030:
+                return "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384";
+            case 0xcca8:
+                return "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256";
+            case 0xc02f:
+                return "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256";
+            case 0x009f:
+                return "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384";
+            case 0xccaa:
+                return "TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256";
+            case 0x00a3:
+                return "TLS_DHE_DSS_WITH_AES_256_GCM_SHA384";
+            case 0x009e:
+                return "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256";
+            case 0x00a2:
+                return "TLS_DHE_DSS_WITH_AES_128_GCM_SHA256";
+            case 0xc024:
+                return "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384";
+            case 0xc028:
+                return "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384";
+            case 0xc023:
+                return "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256";
+            case 0xc027:
+                return "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256";
+            case 0x006b:
+                return "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256";
+            case 0x006a:
+                return "TLS_DHE_DSS_WITH_AES_256_CBC_SHA256";
+            case 0x0067:
+                return "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256";
+            case 0x0040:
+                return "TLS_DHE_DSS_WITH_AES_128_CBC_SHA256";
+            case 0xc00a:
+                return "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA";
+            case 0xc014:
+                return "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA";
+            case 0xc009:
+                return "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA";
+            case 0xc013:
+                return "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA";
+            case 0x0039:
+                return "TLS_DHE_RSA_WITH_AES_256_CBC_SHA";
+            case 0x0038:
+                return "TLS_DHE_DSS_WITH_AES_256_CBC_SHA";
+            case 0x0033:
+                return "TLS_DHE_RSA_WITH_AES_128_CBC_SHA";
+            case 0x0032:
+                return "TLS_DHE_DSS_WITH_AES_128_CBC_SHA";
+            case 0x009d:
+                return "TLS_RSA_WITH_AES_256_GCM_SHA384";
+            case 0x009c:
+                return "TLS_RSA_WITH_AES_128_GCM_SHA256";
+            case 0x003d:
+                return "TLS_RSA_WITH_AES_256_CBC_SHA256";
+            case 0x003c:
+                return "TLS_RSA_WITH_AES_128_CBC_SHA256";
+            case 0x0035:
+                return "TLS_RSA_WITH_AES_256_CBC_SHA";
+            case 0x002f:
+                return "TLS_RSA_WITH_AES_128_CBC_SHA";
+            case 0x00ff:
+                return "TLS_EMPTY_RENEGOTIATION_INFO_SCSV";
+            default:
+                return "unknown";
         }
     }
 }
