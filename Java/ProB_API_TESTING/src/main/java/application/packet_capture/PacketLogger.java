@@ -43,8 +43,13 @@ public class PacketLogger {
     }
 
     //Method that reformats the raw data in a readable and comparable way. Need to test out the data first before implementing
-    public static void reformatRawData(Packet payload){
-
+    public static void writeData(String data, String filePath){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+            writer.write(data);
+            writer.newLine();
+        } catch (IOException e) {
+            System.err.println("Error writing " + data + " to file: " + filePath);
+        }
     }
 
     // Helper method to extract headers from IP and TCP layers
@@ -78,14 +83,13 @@ public class PacketLogger {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
             writer.write("=== TLS Handshake Packet ===\n");
             writer.write(headers);  // Write header information
-
             writer.write("Raw TLS Handshake Data:\n");
-            for (byte b : payload.getRawData()) {
+            for (byte b : payload.getRawData())
                 writer.write(String.format("%02x ", b));
-            }
             writer.newLine();
             writer.write("===========================\n");
             writer.newLine();
+            TlsHandshakeParser.parseTlsHandshakeRecord(payload.getRawData());
 
             System.out.println("TLS Handshake Packet logged to " + filePath);
 
