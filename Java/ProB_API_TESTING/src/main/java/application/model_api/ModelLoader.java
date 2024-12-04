@@ -1,4 +1,4 @@
-package application.probAPI;
+package application.model_api;
 
 import application.config.Config;
 import com.google.inject.Guice;

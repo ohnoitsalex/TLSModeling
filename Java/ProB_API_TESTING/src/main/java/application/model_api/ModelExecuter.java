@@ -1,4 +1,4 @@
-package application.probAPI;
+package application.model_api;
 
 import com.google.inject.Inject;
 import de.prob.animator.domainobjects.ClassicalB;
