@@ -29,6 +29,7 @@ public class TLSSystemUnderTest extends SystemUnderTest {
         }
 
     }
+
     @Override
     public void startSUT() {
 
@@ -56,6 +57,7 @@ public class TLSSystemUnderTest extends SystemUnderTest {
         thread1.start();
         thread2.start();
     }
+
     @Override
     public void executeSUTOperation() {
 

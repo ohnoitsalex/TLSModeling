@@ -7,10 +7,11 @@ import application.test_examiner.TestExaminer;
 public class Main {
     private static SystemUnderTest tlsSystemUnderTest = new TLSSystemUnderTest();
     private static TestExaminer tlsTestExaminer = new TestExaminer("tls");
+
     public static void main(String[] args) {
 
-        //tlsTestExaminer.loadModel();
-        //tlsTestExaminer.executeModelOperation();
-        tlsTestExaminer.createSUT();
+        tlsTestExaminer.loadModel();
+        tlsTestExaminer.executeModelOperation();
+        //tlsTestExaminer.createSUT();
     }
 }

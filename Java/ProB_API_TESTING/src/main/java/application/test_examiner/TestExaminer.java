@@ -10,9 +10,9 @@ public class TestExaminer {
     private ModelLoader modelLoader;
     private SystemUnderTest systemUnderTest;
 
-    public TestExaminer(String type){
+    public TestExaminer(String type) {
 
-        switch (type){
+        switch (type) {
             case "tls":
                 this.modelLoader = new ModelLoader(de.prob.Main.getInjector().getInstance(Api.class), Config.TLSMODELFILEPATH);
                 this.systemUnderTest = new TLSSystemUnderTest();
@@ -28,26 +28,25 @@ public class TestExaminer {
         }
     }
 
-    public void loadModel(){
+    public void loadModel() {
         System.out.println("Testing TLS Model...");
         this.modelLoader.loadAndExecuteAPI();
         this.modelLoader.modelInformation();
     }
 
-
-    public void createSUT(){
+    public void createSUT() {
         systemUnderTest.startSUT();
     }
 
-    public void executeSUTOperation(){
+    public void executeSUTOperation() {
 
     }
 
-    public void executeModelOperation(){
+    public void executeModelOperation() {
         this.modelLoader.executeSpecificTrace();
     }
 
-    public void compareResults(){
+    public void compareResults() {
 
     }
 }
