@@ -4,10 +4,11 @@ import com.google.inject.Inject;
 import de.prob.animator.domainobjects.ClassicalB;
 import de.prob.statespace.StateSpace;
 import de.prob.statespace.Trace;
-import java.util.List;
-import java.util.Arrays;
 
-public class TraceExecuter {
+import java.util.Arrays;
+import java.util.List;
+
+public class ModelExecuter {
 
     private final List<String> paramsSendClientHello = Arrays.asList(
             "x0303",
@@ -67,7 +68,7 @@ public class TraceExecuter {
     );
 
     private final List<String> paramsSendServerCertificate = Arrays.asList(
-           "A1B1C1",
+            "A1B1C1",
             "X509",
             "D20241231",
             "1",
@@ -79,7 +80,7 @@ public class TraceExecuter {
     private Trace trace;
 
     @Inject
-    public TraceExecuter (StateSpace model){
+    public ModelExecuter(StateSpace model) {
         this.model = model;
         this.trace = new Trace(model);
     }
@@ -91,6 +92,7 @@ public class TraceExecuter {
         System.out.println(traceToSatisfyingState.forward().toString());
         System.out.println(traceToSatisfyingState);
     }
+
     public void createSubscription(String var) {
         ClassicalB session_machine = new ClassicalB(var);
         model.subscribe(this, session_machine);
@@ -104,42 +106,44 @@ public class TraceExecuter {
         getOutTransitionInformations();
         System.out.println("Effectuated Transitions:" + trace.getTransitionList());
     }
-    public void generateRandomTrace (int steps){
-        for (int i = 0; i < steps; i++){
+
+    public void generateRandomTrace(int steps) {
+        for (int i = 0; i < steps; i++) {
             trace = trace.anyEvent(null);
         }
         System.out.println("Readable trace information");
         System.out.println(trace.toString());
     }
 
-    public void initaliseMachine(){
-        for (int i = 0; i < 2; i++){ //Set up constants + initialisation
+    public void initaliseMachine() {
+        for (int i = 0; i < 2; i++) { //Set up constants + initialisation
             trace = trace.anyEvent(null);
         }
         System.out.println("Effectuated Transitions:" + trace.getTransitionList());
     }
 
-    public void generateClientHelloMessages(){
-        trace.getCurrentState().findTransitions("SendClientHello",paramsFindSendClientHello,1000);
+    public void generateClientHelloMessages() {
+        trace.getCurrentState().findTransitions("SendClientHello", paramsFindSendClientHello, 1000);
         trace = trace.addTransitionWith("SendClientHello", paramsSendClientHello);
-        trace = trace.addTransitionWith("ReceiveClientHello",Arrays.asList());
+        trace = trace.addTransitionWith("ReceiveClientHello", Arrays.asList());
     }
 
-    public void generateServerHelloMessages(){
-        trace.getCurrentState().findTransitions("SendServerHello",paramsFindSendServerHello,1000);
+    public void generateServerHelloMessages() {
+        trace.getCurrentState().findTransitions("SendServerHello", paramsFindSendServerHello, 1000);
         trace = trace.addTransitionWith("SendServerHello", paramsSendServerHello);
-        trace = trace.addTransitionWith("SendEncryptedExtensions",paramsSendEncryptedExtensions);
-        trace.getCurrentState().findTransitions("SendServerCertificate",paramsFindSendServerCertificate,1000);
+        trace = trace.addTransitionWith("SendEncryptedExtensions", paramsSendEncryptedExtensions);
+        trace.getCurrentState().findTransitions("SendServerCertificate", paramsFindSendServerCertificate, 1000);
         trace = trace.addTransitionWith("SendServerCertificate", paramsSendServerCertificate);
     }
 
-    public void generateServerHelloMessagesWithoutClientCertificateRequest(){
-        trace.getCurrentState().findTransitions("SendServerHello",paramsFindSendServerHello,1000);
+    public void generateServerHelloMessagesWithoutClientCertificateRequest() {
+        trace.getCurrentState().findTransitions("SendServerHello", paramsFindSendServerHello, 1000);
         trace = trace.addTransitionWith("SendServerHello", paramsSendServerHello);
-        trace = trace.addTransitionWith("SendEncryptedExtensions",paramsSendEncryptedExtensions);
+        trace = trace.addTransitionWith("SendEncryptedExtensions", paramsSendEncryptedExtensions);
         trace = trace.addTransitionWith("SendClientCertificateRequest", Arrays.asList());
     }
-    public void performSpecificTransition(String operation, String[] params){
+
+    public void performSpecificTransition(String operation, String[] params) {
         // Check if params is null and replace it with an empty array if it is
         if (params == null) {
             params = new String[0];
@@ -148,10 +152,10 @@ public class TraceExecuter {
         trace.forward();
     }
 
-    public void getOutTransitionInformations(){
+    public void getOutTransitionInformations() {
         System.out.println("Next Transition param names:" + trace.getCurrentState().getOutTransitions().getFirst().getParameterNames());
         System.out.println("Printing possible values for next transition:");
-        for (int i = 0; i <  trace.getCurrentState().getOutTransitions().size(); i++){
+        for (int i = 0; i < trace.getCurrentState().getOutTransitions().size(); i++) {
             System.out.println("Transition param values:" + trace.getCurrentState().getOutTransitions().get(i).getParameterValues());
 
         }

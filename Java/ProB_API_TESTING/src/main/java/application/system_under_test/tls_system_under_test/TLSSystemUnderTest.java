@@ -1,29 +1,28 @@
 package application.system_under_test.tls_system_under_test;
 
+import application.information_capture.InformationCapture;
 import application.information_capture.tls_information_capture.TLSInformationCapture;
 import application.system_under_test.SystemUnderTest;
 
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
 import java.io.IOException;
 
-public class TLSSystemUnderTest {
-    private Process serverProcess, clientProcess;
-
+public class TLSSystemUnderTest extends SystemUnderTest {
     private final String clientClassName = "application.system_under_test.tls_system_under_test.Client";
     private final String serverClassName = "application.system_under_test.tls_system_under_test.Server";
     private final String classPath = "/Users/alex/Desktop/School/Masters/Projet de Recherche/Code/ALL CODE/TLSModeling/Java/ProB_API_TESTING/target/classes";
+    private Process serverProcess, clientProcess;
+    private InformationCapture informationCapture;
 
-    private TLSInformationCapture informationCapture;
-    public TLSSystemUnderTest (){
+    public TLSSystemUnderTest() {
         informationCapture = new TLSInformationCapture();
     }
 
+    @Override
     public void createSUT() {
         try {
-            this.serverProcess  = new ProcessBuilder( "java", "-cp", classPath, serverClassName).inheritIO().start();
-            Thread.sleep(3000);  // Wait for 3 seconds (3000 milliseconds) - In order for the server to start properly
-            this.clientProcess  = new ProcessBuilder( "java", "-cp", classPath, clientClassName).inheritIO().start();
+            this.serverProcess = new ProcessBuilder("java", "-cp", classPath, serverClassName).inheritIO().start();
+            Thread.sleep(2000);  // Wait for 2 seconds (2000 milliseconds) - In order for the server to start properly
+            this.clientProcess = new ProcessBuilder("java", "-cp", classPath, clientClassName).inheritIO().start();
             this.serverProcess.waitFor();
             this.clientProcess.waitFor();
 
@@ -32,9 +31,10 @@ public class TLSSystemUnderTest {
         }
 
     }
-
+    @Override
     public void startSUT() {
-// Create the first Runnable for startCapture
+
+        // Create the first Runnable for startCapture
         Runnable task1 = new Runnable() {
             @Override
             public void run() {
@@ -50,18 +50,15 @@ public class TLSSystemUnderTest {
             }
         };
 
-        // Create two threads for each task
+        // Create two threads for each task - It takes a bit of time before the .txt file is generated.
         Thread thread1 = new Thread(task1);
         Thread thread2 = new Thread(task2);
 
         // Start the threads
         thread1.start();
         thread2.start();
-
-        //informationCapture.startCapture(); //Startin capture before the SUT in order to properly get all the information
-        //this.createSUT(); //This java implementation creates and starts the process at the same time...
     }
-
+    @Override
     public void executeSUTOperation() {
 
     }

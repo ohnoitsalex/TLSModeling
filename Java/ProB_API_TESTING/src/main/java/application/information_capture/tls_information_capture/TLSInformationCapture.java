@@ -2,7 +2,9 @@ package application.information_capture.tls_information_capture;
 
 import application.information_capture.InformationCapture;
 import org.pcap4j.core.*;
-import org.pcap4j.packet.*;
+import org.pcap4j.packet.Packet;
+import org.pcap4j.packet.TcpPacket;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +13,7 @@ public class TLSInformationCapture extends InformationCapture {
 
     private List<Packet> TLSPacketList = new ArrayList<>(); // List to store packets
 
-    public TLSInformationCapture (){
+    public TLSInformationCapture() {
 
     }
 

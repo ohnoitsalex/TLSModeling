@@ -1,7 +1,6 @@
 package application.config;
 
 import com.google.inject.AbstractModule;
-
 import de.prob.MainModule;
 
 public class Config extends AbstractModule {
