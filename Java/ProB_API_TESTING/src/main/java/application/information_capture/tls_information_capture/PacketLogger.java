@@ -1,4 +1,4 @@
-package application.packet_capture;
+package application.information_capture.tls_information_capture;
 
 import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.IpV6Packet;
@@ -43,7 +43,7 @@ public class PacketLogger {
     }
 
     //Method that reformats the raw data in a readable and comparable way. Need to test out the data first before implementing
-    public static void writeData(String data, String filePath){
+    public static void writeData(String data, String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
             writer.write(data);
             writer.newLine();
@@ -78,6 +78,7 @@ public class PacketLogger {
 
         return headers.toString();
     }
+
     // Helper method to log headers and raw payload data to a file
     public static void logPacketData(String headers, Packet payload, String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {

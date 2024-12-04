@@ -1,13 +1,10 @@
-
-package application.packet_capture;
+package application.information_capture.tls_information_capture;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import static application.packet_capture.PacketLogger.writeData;
+import static application.information_capture.tls_information_capture.PacketLogger.writeData;
 
 public class TlsHandshakeParser {
 
@@ -75,7 +72,7 @@ public class TlsHandshakeParser {
         System.out.println("Cipher Suites Length: " + cipherSuitesLength);
 
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("Cipher Suites (%d suites)\n", cipherSuitesLength/2));
+        sb.append(String.format("Cipher Suites (%d suites)\n", cipherSuitesLength / 2));
         for (int i = 0; i < cipherSuitesLength; i += 2) {
             int cipherId = buffer.getShort() & 0xFFFF;
             sb.append(String.format("\tCipher Suite: %s (0x%04x)\n", getCipherSuite(cipherId), cipherId));
@@ -159,7 +156,7 @@ public class TlsHandshakeParser {
             buffer.get(extensionData);
 
             String type = "unknown";
-            String data = "\tData: "+ bytesToHex(extensionData);
+            String data = "\tData: " + bytesToHex(extensionData);
             switch (extensionType) {
                 case 0x0000: // server_name
                     type = "server_name";
@@ -211,23 +208,23 @@ public class TlsHandshakeParser {
 
     private static String parseServerNameExtension(byte[] data) {
         StringBuilder sb = new StringBuilder();
-        int i= 0;
+        int i = 0;
         while (i < data.length) {
-            int entryLength = ((data[i] & 0xff) << 8) | (data[i+1] & 0xff);
+            int entryLength = ((data[i] & 0xff) << 8) | (data[i + 1] & 0xff);
             sb.append(String.format("\tServer Name Entry length: %d\n", entryLength));
 
-            int typeId = data[i+2];
-            String typeName = (typeId == 0) ? ("DNS hostname" ) : ("unknown");
+            int typeId = data[i + 2];
+            String typeName = (typeId == 0) ? ("DNS hostname") : ("unknown");
             sb.append(String.format("\t\tEntry type: %s\n", typeName));
 
-            int lengthName = ((data[i+3] & 0xff) << 8) | (data[i+4] & 0xff);
+            int lengthName = ((data[i + 3] & 0xff) << 8) | (data[i + 4] & 0xff);
             sb.append(String.format("\t\tEntry name length: %d\n", lengthName));
-            i+=5;
+            i += 5;
 
-            byte[] name = Arrays.copyOfRange(data, i, i+lengthName);
+            byte[] name = Arrays.copyOfRange(data, i, i + lengthName);
             sb.append(String.format("\t\tEntry name: %s\n", new String(name, StandardCharsets.UTF_8)));
 
-            i+=lengthName;
+            i += lengthName;
 
         }
         return sb.toString();
@@ -236,7 +233,7 @@ public class TlsHandshakeParser {
     private static String parseSupportedVersionsExtension(int dataLength, byte[] data) {
         StringBuilder sb = new StringBuilder();
         int i = 0;
-        if (dataLength%2 != 0) {
+        if (dataLength % 2 != 0) {
             sb.append(String.format("\tSupportedVersion length: %d \n", dataLength - 1));
             i++;
         }
@@ -244,7 +241,7 @@ public class TlsHandshakeParser {
             int versionMajor = data[i] & 0xFF;
             int versionMinor = data[i + 1] & 0xFF;
             sb.append(String.format("\tVersion: 0%d0%d%n", versionMajor, versionMinor));
-            i = i+ 2;
+            i = i + 2;
         }
         return sb.toString();
     }
@@ -252,11 +249,11 @@ public class TlsHandshakeParser {
     private static String parseKeyShareExtension(boolean isClient, byte[] data) {
         StringBuilder sb = new StringBuilder();
         sb.append("\tKey Share Extension\n");
-        int i=0;
+        int i = 0;
         if (isClient) {
-            int keyShareLength = ((data[i] & 0xff) << 8) | (data[i+1] & 0xff);
+            int keyShareLength = ((data[i] & 0xff) << 8) | (data[i + 1] & 0xff);
             sb.append(String.format("\tClient Key Share Length: %d\n", keyShareLength));
-            i+= 2;
+            i += 2;
         }
         while (i < data.length) {
             // Group 2 Bytes
@@ -267,11 +264,11 @@ public class TlsHandshakeParser {
             i += 2;
 
             // Key exchange length
-            int keyLength = ((data[i] & 0xff) << 8) | (data[i+1] & 0xff);
+            int keyLength = ((data[i] & 0xff) << 8) | (data[i + 1] & 0xff);
             i += 2;
 
             // Key data
-            byte[] keyData = Arrays.copyOfRange(data, i, i+keyLength);
+            byte[] keyData = Arrays.copyOfRange(data, i, i + keyLength);
             sb.append(String.format("\t\tKey Exchange Length: %d\n", keyLength));
             sb.append(String.format("\t\tKey: %s\n", bytesToHex(keyData)));
             i += keyLength;
@@ -297,7 +294,7 @@ public class TlsHandshakeParser {
         sb.append("\tSupported Groups:\n");
         int i = 2;
         while (i < data.length) {
-            int groupId = ((data[i] & 0xff) << 8) | (data[i+1] & 0xff);
+            int groupId = ((data[i] & 0xff) << 8) | (data[i + 1] & 0xff);
             sb.append(String.format("\t\t* Supported Group: %s\n", getGroupValue(groupId)));
             i += 2;
         }
@@ -306,12 +303,12 @@ public class TlsHandshakeParser {
 
     private static String parseStatusRequestExtension(int version, byte[] data) {
         StringBuilder sb = new StringBuilder();
-        int i=0;
+        int i = 0;
         if (version == 2) {
             // Certificate Status Length
             int statusLength = ((data[0] & 0xff) << 8) | (data[1] & 0xff);
             sb.append(String.format("\tCertificate Status List Length: %d\n", statusLength));
-            i+=2;
+            i += 2;
         }
 
         // Certificate Status Type
@@ -321,18 +318,18 @@ public class TlsHandshakeParser {
 
         if (version == 2) {
             // Certificate Status Length
-            int statusLength = ((data[i] & 0xff) << 8) | (data[i+1] & 0xff);
+            int statusLength = ((data[i] & 0xff) << 8) | (data[i + 1] & 0xff);
             sb.append(String.format("\tCertificate Status Length: %d\n", statusLength));
-            i+=2;
+            i += 2;
         }
 
         // Responder ID list Length
-        int listLength = ((data[i] & 0xff) << 8) | (data[i+1] & 0xff);
+        int listLength = ((data[i] & 0xff) << 8) | (data[i + 1] & 0xff);
         sb.append(String.format("\tResponder ID list Length: %d\n", listLength));
-        i+=2;
+        i += 2;
 
         // Request Extensions Length
-        int extensionsLength = ((data[i] & 0xff) << 8) | (data[i+1] & 0xff);
+        int extensionsLength = ((data[i] & 0xff) << 8) | (data[i + 1] & 0xff);
         sb.append(String.format("\tRequest Extensions Length: %d\n", extensionsLength));
 
         return sb.toString();
@@ -346,19 +343,19 @@ public class TlsHandshakeParser {
         sb.append(String.format("\tSignature Hash Algorithms Length: %d\n", signatureLength));
 
         if (signatureLength > 0) {
-            sb.append(String.format("\tSignature Hash Algorithms (%d algorithms)\n", signatureLength/2));
+            sb.append(String.format("\tSignature Hash Algorithms (%d algorithms)\n", signatureLength / 2));
         }
 
         int i = 2;
         while (i < data.length) {
 
             int hash = data[i] & 0xff;
-            int signature = data[i+1] & 0xff;
+            int signature = data[i + 1] & 0xff;
             int signatureAlgo = (hash << 8) | signature;
             sb.append(String.format("\t* Signature Algorithm: %s (0x%04x)\n", getAlgorithm(signatureAlgo), signatureAlgo));
             sb.append(String.format("\t\tSignature Hash Algorithm Hash: %s (%d)\n", getHash(hash), hash));
             sb.append(String.format("\t\tSignature Hash Algorithm Signature: %s (%d)\n", getSignature(signature), signature));
-            i+=2;
+            i += 2;
         }
         return sb.toString();
     }
@@ -417,7 +414,7 @@ public class TlsHandshakeParser {
         int length = data[0] & 0xff;
         sb.append(String.format("\tPSK Key Exchange Modes Length: %d\n", length));
         // Mode list
-        for (int i=1; i <= length; i++) {
+        for (int i = 1; i <= length; i++) {
             int mode = data[i];
             sb.append(String.format("\tPSK Key Exchange Mode: 0x%02x\n", mode));
         }
