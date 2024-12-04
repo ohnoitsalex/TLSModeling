@@ -1,4 +1,4 @@
-package application.system_under_test;
+package application.system_under_test.tls_system_under_test;
 
 import javax.net.ssl.*;
 import java.io.*;
@@ -9,7 +9,7 @@ import java.security.cert.X509Certificate;
 public class Client {
 
     private static final String SERVER_HOST = "localhost";
-    private static final int SERVER_PORT = 1235;
+    private static final int SERVER_PORT = 1238;
 
     public static void main(String[] args) {
         try {

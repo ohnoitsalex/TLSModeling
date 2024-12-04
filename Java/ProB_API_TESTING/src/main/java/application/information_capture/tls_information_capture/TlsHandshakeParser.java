@@ -1,13 +1,11 @@
 
-package application.packet_capture;
+package application.information_capture.tls_information_capture;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import static application.packet_capture.PacketLogger.writeData;
+import static application.information_capture.tls_information_capture.PacketLogger.writeData;
 
 public class TlsHandshakeParser {
 

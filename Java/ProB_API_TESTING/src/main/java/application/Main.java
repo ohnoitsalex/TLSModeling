@@ -1,5 +1,6 @@
 package application;
 
+import application.system_under_test.tls_system_under_test.TLSSystemUnderTest;
 import de.prob.scripting.Api;
 import application.probAPI.Loader;
 
@@ -7,7 +8,10 @@ public class Main {
     private static final String libraryFilePath = "/Users/alex/Desktop/School/Masters/Projet de Recherche/Code/ALL CODE/TLSModeling/Java/ProB_API_TESTING/src/main/resources/models/Library_Example.mch";
     private static final String tlsModelFilePath = "/Users/alex/Desktop/School/Masters/Projet de Recherche/Code/ALL CODE/TLSModeling/Java/ProB_API_TESTING/src/main/resources/models/TLS_specification.mch";
     public static void main(String[] args) {
-        loadTLSModel();
+
+        //loadTLSModel();
+        TLSSystemUnderTest sut = new TLSSystemUnderTest();
+        sut.startSUT();
     }
 
     public static void loadTLSModel(){

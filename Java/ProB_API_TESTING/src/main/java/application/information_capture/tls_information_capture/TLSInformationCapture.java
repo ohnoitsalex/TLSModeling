@@ -1,47 +1,22 @@
-package application.packet_capture;
+package application.information_capture.tls_information_capture;
 
+import application.information_capture.InformationCapture;
 import org.pcap4j.core.*;
 import org.pcap4j.packet.*;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class PacketSniffer {
+public class TLSInformationCapture extends InformationCapture {
 
-    private static List<Packet> TLSPacketList = new ArrayList<>(); // List to store packets
+    private List<Packet> TLSPacketList = new ArrayList<>(); // List to store packets
 
-    public static void main(String[] args) throws NotOpenException, PcapNativeException {
-        //setUpNetworkInterface("lo0","tcp port 1234");
-        try {
-            // Step 1: Get the network interface
-            PcapNetworkInterface networkInterface = getNetworkInterface("lo0");
-            if (networkInterface == null) {
-                System.out.println("No network interface found.");
-                return;
-            }
-            // Step 2: Open the network interface for packet capture
-            PcapHandle handle = openCaptureHandle(networkInterface);
+    public TLSInformationCapture (){
 
-            // Step 3: Set the filter for capturing TCP packets on port 1234 (TLS/HTTPS)
-            setPacketFilter(handle);
-
-
-            System.out.println("Starting packet capture. Listening for TLS handshake packets on port 1235...");
-
-            // Step 4: Start capturing packets
-            captureTlsHandshakePackets(handle);
-
-            // Step 5: Log Packets
-            logPacket();
-
-        } catch (PcapNativeException | NotOpenException e) {
-            System.err.println("Error opening network interface or capturing packets: " + e.getMessage());
-            e.printStackTrace();
-        }
     }
 
     // Method to retrieve the network interface by name
-    private static PcapNetworkInterface getNetworkInterface(String interfaceName) throws PcapNativeException {
+    private PcapNetworkInterface getNetworkInterface(String interfaceName) throws PcapNativeException {
         PcapNetworkInterface nif = Pcaps.getDevByName(interfaceName);
         if (nif == null) {
             System.out.println("No network interface found with name: " + interfaceName);
@@ -50,16 +25,16 @@ public class PacketSniffer {
     }
 
     // Method to open a capture handle for a given network interface
-    private static PcapHandle openCaptureHandle(PcapNetworkInterface networkInterface) throws PcapNativeException, NotOpenException {
+    private PcapHandle openCaptureHandle(PcapNetworkInterface networkInterface) throws PcapNativeException, NotOpenException {
         int snapLen = 65536; // Capture all packets, no truncation
         int timeout = 10;    // Timeout in milliseconds
         return networkInterface.openLive(snapLen, PcapNetworkInterface.PromiscuousMode.PROMISCUOUS, timeout);
     }
 
     // Method to set the packet filter to capture only TCP packets on port 443 (TLS/HTTPS)
-    private static void setPacketFilter(PcapHandle handle) throws PcapNativeException {
+    private void setPacketFilter(PcapHandle handle) throws PcapNativeException {
         try {
-            handle.setFilter("tcp port 1235", BpfProgram.BpfCompileMode.OPTIMIZE);
+            handle.setFilter("tcp port 1238", BpfProgram.BpfCompileMode.OPTIMIZE);
         } catch (PcapNativeException e) {
             System.err.println("Error setting filter: " + e.getMessage());
             throw e;
@@ -69,7 +44,7 @@ public class PacketSniffer {
     }
 
     // Method to capture and process TLS handshake packets with headers
-    private static void captureTlsHandshakePackets(PcapHandle handle) {
+    private void captureTlsHandshakePackets(PcapHandle handle) {
         System.out.println("Starting TLS Handshake packet capture...");
         PacketListener listener = new PacketListener() {
             @Override
@@ -110,7 +85,7 @@ public class PacketSniffer {
     }
 
 
-    private static void logPacket() {
+    private void logPacket() {
         for (int i = 0; i < TLSPacketList.size(); i++) {
             Packet currentPacket = TLSPacketList.get(i);
             String headers = PacketLogger.extractHeaders(currentPacket);
@@ -124,9 +99,40 @@ public class PacketSniffer {
     }
 
     // Method to check if the payload represents a TLS Handshake record
-    private static boolean isTlsHandshakeRecord(Packet payload) {
+    private boolean isTlsHandshakeRecord(Packet payload) {
         byte[] rawData = payload.getRawData();
         return rawData.length > 0 && rawData[0] == (byte) 0x16; // 0x16 indicates a TLS Handshake record
+    }
+
+    @Override
+    public void startCapture() {
+        //setUpNetworkInterface("lo0","tcp port 1234");
+        try {
+            // Step 1: Get the network interface
+            PcapNetworkInterface networkInterface = getNetworkInterface("lo0");
+            if (networkInterface == null) {
+                System.out.println("No network interface found.");
+                return;
+            }
+            // Step 2: Open the network interface for packet capture
+            PcapHandle handle = openCaptureHandle(networkInterface);
+
+            // Step 3: Set the filter for capturing TCP packets on port 1234 (TLS/HTTPS)
+            setPacketFilter(handle);
+
+
+            System.out.println("Starting packet capture. Listening for TLS handshake packets on port 1238...");
+
+            // Step 4: Start capturing packets
+            captureTlsHandshakePackets(handle);
+
+            // Step 5: Log Packets
+            logPacket();
+
+        } catch (PcapNativeException | NotOpenException e) {
+            System.err.println("Error opening network interface or capturing packets: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
 

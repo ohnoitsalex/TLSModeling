@@ -1,11 +1,11 @@
-package application.system_under_test;
+package application.system_under_test.tls_system_under_test;
 
 import javax.net.ssl.*;
 import java.io.*;
 import java.security.KeyStore;
 
 public class Server {
-    private static final int PORT = 1235;
+    private static final int PORT = 1238;
     public static void main(String[] args) {
         try {
             // Load keystore containing server's private key and certificate
