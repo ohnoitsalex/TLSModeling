@@ -50,7 +50,7 @@ public class Client {
                         "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256"
                 };
                 socket.setEnabledCipherSuites(customCipherSuites);
-                socket.setEnabledProtocols(new String[]{"TLSv1.2", "TLSv1.3"});
+                socket.setEnabledProtocols(new String[]{"TLSv1.2"});
 
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {

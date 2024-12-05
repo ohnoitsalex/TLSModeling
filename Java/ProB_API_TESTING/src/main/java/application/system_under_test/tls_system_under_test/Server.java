@@ -41,7 +41,7 @@ public class Server {
                 };
                 serverSocket.setEnabledCipherSuites(customCipherSuites);
                 // Specify allowed TLS versions
-                serverSocket.setEnabledProtocols(new String[]{"TLSv1.3"});
+                serverSocket.setEnabledProtocols(new String[]{"TLSv1.2", "TLSv1.3"});
 
                 // Accept incoming connections
                 try (SSLSocket clientSocket = (SSLSocket) serverSocket.accept()) {
