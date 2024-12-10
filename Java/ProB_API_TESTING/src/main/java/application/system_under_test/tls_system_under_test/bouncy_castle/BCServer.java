@@ -1,4 +1,4 @@
-package application.system_under_test.tls_system_under_test;
+package application.system_under_test.tls_system_under_test.bouncy_castle;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.jsse.*;
