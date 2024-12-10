@@ -1,9 +1,12 @@
 package application.system_under_test.tls_system_under_test;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.jsse.*;
+import org.bouncycastle.tls.*;
+
+
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.*;
 import java.security.cert.CertificateException;
@@ -30,5 +33,7 @@ public class BCServer {
         KeyStore keystore = KeyStore.getInstance("PKCS12");
         keystore.load(new FileInputStream("Baeldung.p12"), keystorePassword);
         PrivateKey key = (PrivateKey) keystore.getKey("baeldung", keyPassword);
+
+
     }
 }
