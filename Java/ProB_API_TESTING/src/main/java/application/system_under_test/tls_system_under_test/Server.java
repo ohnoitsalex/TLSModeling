@@ -37,11 +37,10 @@ public class Server {
 
                 // Enable custom cipher suites
                 String[] customCipherSuites = {
-                        "TLS_RSA_WITH_AES_256_CBC_SHA"
                 };
                 serverSocket.setEnabledCipherSuites(customCipherSuites);
                 // Specify allowed TLS versions
-                serverSocket.setEnabledProtocols(new String[]{"TLSv1.2", "TLSv1.3"});
+                serverSocket.setEnabledProtocols(new String[]{"TLSv1.3"});
 
                 // Accept incoming connections
                 try (SSLSocket clientSocket = (SSLSocket) serverSocket.accept()) {
