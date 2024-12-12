@@ -13,6 +13,10 @@ public class BCClient {
     private static final String SERVER_HOST = "localhost";
     private static final int SERVER_PORT = 1238;
 
+    private static final ProtocolVersion[] C_TLS_VERSIONS = new ProtocolVersion[]{ProtocolVersion.TLSv12, ProtocolVersion.TLSv13};
+    private static final int[] C_CIPHERS = new int[]{CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, CipherSuite.TLS_AES_128_GCM_SHA256, CipherSuite.TLS_CHACHA20_POLY1305_SHA256};
+
+
     public static void main(String[] args) throws Exception {
         // Secure random number generator
         SecureRandom secureRandom = new SecureRandom();
@@ -23,6 +27,17 @@ public class BCClient {
         // Create the TLS client protocol using Bouncy Castle's crypto implementation
         TlsClientProtocol protocol = new TlsClientProtocol(socket.getInputStream(), socket.getOutputStream());
         TlsClient client = new DefaultTlsClient(new BcTlsCrypto()) {
+
+            @Override
+            public ProtocolVersion[] getProtocolVersions() {
+                return C_TLS_VERSIONS;
+            }
+
+            @Override
+            protected int[] getSupportedCipherSuites() {
+                return C_CIPHERS;
+            }
+
             @Override
             public TlsAuthentication getAuthentication() throws IOException {
                 return null;
