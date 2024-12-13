@@ -97,6 +97,28 @@ public class BCClient {
             }
         };
 
+        //TRYING TO REPRODUCE 2 CLIENTHELLO B2B
+
+//        // Create the first Runnable for startCapture
+//        Runnable start_connection = new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    protocol.connect(client);
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//        };
+//
+//        // Create two threads for each task - It takes a bit of time before the .txt file is generated.
+//        Thread thread1 = new Thread(start_connection);
+//        Thread thread2 = new Thread(start_connection);
+//
+//        // Start the threads
+//        thread1.start();
+//        thread2.start();
+
         // Start the TLS handshake
         protocol.connect(client);
 
