@@ -2,19 +2,24 @@ package application.system_under_test.tls_system_under_test.bouncy_castle;
 
 import org.bouncycastle.tls.*;
 import org.bouncycastle.tls.crypto.impl.bc.BcTlsCrypto;
+import org.checkerframework.checker.units.qual.Length;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.SecureRandom;
 import java.util.Hashtable;
+import java.util.Vector;
 
 public class BCServer {
 
+    private static final String SERVER_HOST = "localhost";
     private static final int SERVER_PORT = 1238;
-
-    private static final ProtocolVersion[] S_TLS_VERSIONS = new ProtocolVersion[]{ProtocolVersion.TLSv13};
-    private static final int[] S_CIPHER_SUITES = new int[]{CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, CipherSuite.TLS_CHACHA20_POLY1305_SHA256};
+    private static final Vector<SignatureAndHashAlgorithm> signature_algorithms = new Vector<>();
+    private static final Vector <SignatureAndHashAlgorithm> signature_algorithms_cert = new Vector<>();
+    private static final Vector<Integer> key_share = new Vector<Integer>();
+    private static final ProtocolVersion[] tls_versions = new ProtocolVersion[]{ProtocolVersion.TLSv13};
+    private static final int[] enabled_cipher_suites = new int[]{CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, CipherSuite.TLS_CHACHA20_POLY1305_SHA256};
 
     public static void main(String[] args) throws Exception {
 
@@ -34,20 +39,50 @@ public class BCServer {
         // Create a custom server instance by subclassing DefaultTlsServer
         TlsServer server = new DefaultTlsServer(new BcTlsCrypto()) {
 
+            //Protocol Version Entries
             @Override
             public ProtocolVersion[] getProtocolVersions() {
-                return S_TLS_VERSIONS;
+                return tls_versions;
             }
 
+            //Cipher Suites Entries
             @Override
             protected int[] getSupportedCipherSuites() {
-                return S_CIPHER_SUITES;
+                return enabled_cipher_suites;
             }
 
             @Override
-            public Hashtable getServerExtensions() throws IOException {
-                // You can customize server extensions here if necessary.
-                return super.getServerExtensions();
+            public Hashtable getServerExtensions() {
+
+                Hashtable extensions = new Hashtable();
+                try {
+                    // Signature Algorithms
+                    signature_algorithms.addElement(SignatureAndHashAlgorithm.ed448);
+                    signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_rsae_sha256);
+                    signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_rsae_sha384);
+                    signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_rsae_sha512);
+                    signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_pss_sha256);
+                    signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_pss_sha384);
+                    signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_pss_sha512);
+
+                    TlsExtensionsUtils.addSignatureAlgorithmsExtension(extensions, signature_algorithms);
+
+                    // Signature Algorithm Certificates
+                    signature_algorithms_cert.addElement(SignatureAndHashAlgorithm.ed448);
+                    signature_algorithms_cert.addElement(SignatureAndHashAlgorithm.rsa_pss_rsae_sha256);
+                    signature_algorithms_cert.addElement(SignatureAndHashAlgorithm.rsa_pss_rsae_sha384);
+
+                    TlsExtensionsUtils.addSignatureAlgorithmsCertExtension(extensions, signature_algorithms_cert);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return extensions;
+            }
+
+            //Supported Groups Entries
+            @Override
+            public int[] getSupportedGroups() {
+                return new int[]{NamedGroup.x448};
             }
         };
 
