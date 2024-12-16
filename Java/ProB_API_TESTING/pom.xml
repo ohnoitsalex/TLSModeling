@@ -19,33 +19,28 @@
             <artifactId>de.prob2.kernel</artifactId>
             <version>4.13.1</version>
         </dependency>
-
         <!-- SLF4J API -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>2.0.9</version>
         </dependency>
-
         <!-- Logback Binding for SLF4J -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.4.11</version>
         </dependency>
-
         <dependency>
             <groupId>org.pcap4j</groupId>
             <artifactId>pcap4j-core</artifactId>
             <version>1.8.2</version>
         </dependency>
-
         <dependency>
             <groupId>org.pcap4j</groupId>
             <artifactId>pcap4j-packetfactory-static</artifactId>
             <version>1.8.2</version>
         </dependency>
-
         <!-- https://mvnrepository.com/artifact/net.java.dev.jna/jna -->
         <dependency>
             <groupId>net.java.dev.jna</groupId>
@@ -64,20 +59,64 @@
             <artifactId>bcprov-jdk18on</artifactId>
             <version>1.79</version>
         </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.bouncycastle/bctls-jdk18on -->
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bctls-jdk18on</artifactId>
             <version>1.79</version>
         </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk18on -->
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk18on</artifactId>
             <version>1.79</version>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.22.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.9.20</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+                <version>1.14.0</version>
+                <configuration>
+                    <complianceLevel>14</complianceLevel>
+                    <source>14</source>
+                    <target>14</target>
+                    <aspectLibraries>
+                        <aspectLibrary>
+                            <groupId>org.aspectj</groupId>
+                            <artifactId>aspectjrt</artifactId>
+                        </aspectLibrary>
+                    </aspectLibraries>
+                    <showWeaveInfo>true</showWeaveInfo>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

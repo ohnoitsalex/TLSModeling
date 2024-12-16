@@ -49,7 +49,7 @@ public class BCClient {
                 return null;
             }
 
-            //Signature Algorithms Entries Entries
+            //Signature Algorithms Entries
             @Override
             protected Vector getSupportedSignatureAlgorithms() {
                 signature_algorithms.addElement(SignatureAndHashAlgorithm.ed448);
@@ -62,7 +62,7 @@ public class BCClient {
                 return signature_algorithms;
             }
 
-            //Supported Groups Entries
+//            //Supported Groups Entries
             @Override
             protected Vector getSupportedGroups(Vector vector) {
                 supported_groups.addElement(NamedGroup.x25519);
