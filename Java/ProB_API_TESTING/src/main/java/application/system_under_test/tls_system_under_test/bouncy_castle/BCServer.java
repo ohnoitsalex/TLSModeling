@@ -1,17 +1,25 @@
 package application.system_under_test.tls_system_under_test.bouncy_castle;
 
+import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
+import org.bouncycastle.crypto.util.PrivateKeyFactory;
 import org.bouncycastle.tls.*;
+import org.bouncycastle.tls.crypto.TlsCryptoParameters;
+import org.bouncycastle.tls.crypto.impl.bc.BcDefaultTlsCredentialedSigner;
+import org.bouncycastle.tls.crypto.impl.bc.BcTlsCertificate;
 import org.bouncycastle.tls.crypto.impl.bc.BcTlsCrypto;
 import org.checkerframework.checker.units.qual.Length;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.security.SecureRandom;
-import java.util.Hashtable;
+import java.nio.charset.StandardCharsets;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
 import java.util.Vector;
 
+
 public class BCServer {
+
 
     private static final String SERVER_HOST = "localhost";
     private static final int SERVER_PORT = 1238;
@@ -21,35 +29,38 @@ public class BCServer {
     private static final ProtocolVersion[] tls_versions = new ProtocolVersion[]{ProtocolVersion.TLSv13};
     private static final int[] enabled_cipher_suites = new int[]{CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, CipherSuite.TLS_CHACHA20_POLY1305_SHA256};
 
+
     public static void main(String[] args) throws Exception {
 
-        // Secure random number generator
-        SecureRandom secureRandom = new SecureRandom();
 
         // Set up the server socket to listen on port 1238
         ServerSocket serverSocket = new ServerSocket(SERVER_PORT);
         System.out.println("TLS Server listening on port " + SERVER_PORT);
 
+
         // Accept incoming client connections
         Socket socket = serverSocket.accept();
         System.out.println("Connection established with client");
 
+
         // Create the TLS server protocol handler
         TlsServerProtocol protocol = new TlsServerProtocol(socket.getInputStream(), socket.getOutputStream());
         // Create a custom server instance by subclassing DefaultTlsServer
-        TlsServer server = new DefaultTlsServer(new BcTlsCrypto()) {
-
+        BcTlsCrypto crypto = new BcTlsCrypto();
+        TlsServer server = new DefaultTlsServer(crypto) {
             //Protocol Version Entries
             @Override
-            public ProtocolVersion[] getProtocolVersions() {
-                return tls_versions;
+            protected ProtocolVersion[] getSupportedVersions() {
+                return ProtocolVersion.TLSv13.downTo(ProtocolVersion.TLSv13);
             }
+
 
             //Cipher Suites Entries
             @Override
             protected int[] getSupportedCipherSuites() {
                 return enabled_cipher_suites;
             }
+
 
 //            @Override
 //            public Hashtable getServerExtensions() {
@@ -78,6 +89,35 @@ public class BCServer {
 //                }
 //                return extensions;
 //            }
+
+
+            @Override
+            public TlsCredentials getCredentials() throws IOException {
+                try {
+                    // Loading certificate
+                    CertificateFactory cf = CertificateFactory.getInstance("X.509");
+                    Certificate cert = cf.generateCertificate(new FileInputStream("src/main/resources/session/rootCA.pem"));
+
+                    BcTlsCertificate bcCert = new BcTlsCertificate(crypto, cert.getEncoded());
+                    org.bouncycastle.tls.Certificate tlsCert = new org.bouncycastle.tls.Certificate(new BcTlsCertificate[]{bcCert});
+
+                    // Loading private key
+                    byte[] keyBytes = "test123".getBytes(StandardCharsets.UTF_8);
+                    AsymmetricKeyParameter keyParameter = PrivateKeyFactory.createKey(keyBytes);
+
+
+                    // Créer les informations d'identité du serveur
+                    return new BcDefaultTlsCredentialedSigner(
+                            new TlsCryptoParameters(context),
+                            crypto,
+                            keyParameter,
+                            tlsCert,
+                            SignatureAndHashAlgorithm.rsa_pss_pss_sha256
+                    );
+                } catch (Exception e) {
+                    throw new IOException("Échec du chargement des informations d'identité", e);
+                }
+            }
 
             //Supported Groups Entries
             @Override
