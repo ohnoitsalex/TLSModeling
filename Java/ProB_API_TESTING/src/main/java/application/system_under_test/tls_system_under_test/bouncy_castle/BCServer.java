@@ -13,6 +13,8 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.util.Vector;
@@ -22,7 +24,7 @@ public class BCServer {
 
 
     private static final String SERVER_HOST = "localhost";
-    private static final int SERVER_PORT = 1238;
+    private static final int SERVER_PORT = 1234;
     private static final Vector<SignatureAndHashAlgorithm> signature_algorithms = new Vector<>();
     private static final Vector <SignatureAndHashAlgorithm> signature_algorithms_cert = new Vector<>();
     private static final Vector<Integer> key_share = new Vector<Integer>();
@@ -51,7 +53,7 @@ public class BCServer {
             //Protocol Version Entries
             @Override
             protected ProtocolVersion[] getSupportedVersions() {
-                return ProtocolVersion.TLSv13.downTo(ProtocolVersion.TLSv13);
+                return ProtocolVersion.TLSv13.only();
             }
 
 
@@ -94,26 +96,39 @@ public class BCServer {
             @Override
             public TlsCredentials getCredentials() throws IOException {
                 try {
-                    // Loading certificate
-                    CertificateFactory cf = CertificateFactory.getInstance("X.509");
-                    Certificate cert = cf.generateCertificate(new FileInputStream("src/main/resources/session/rootCA.pem"));
+                    CertificateHandler.generate();
+//                    // Loading private key from file
+//                    System.out.println(new FileInputStream("src/main/resources/session/private_key.pem"));
+//                    byte[] keyBytes = Files.readAllBytes(Path.of("src/main/resources/session/private_key.pem"));
+//                    String test = new String(keyBytes, StandardCharsets.UTF_8);
+//                    System.out.println(test);
+//                    AsymmetricKeyParameter keyParameter = PrivateKeyFactory.createKey(keyBytes);
 
-                    BcTlsCertificate bcCert = new BcTlsCertificate(crypto, cert.getEncoded());
-                    org.bouncycastle.tls.Certificate tlsCert = new org.bouncycastle.tls.Certificate(new BcTlsCertificate[]{bcCert});
+                    //Loading private key from api
+                    AsymmetricKeyParameter privateKey = PrivateKeyFactory.createKey(CertificateHandler.keyPair.getPrivate().getEncoded());
 
-                    // Loading private key
-                    byte[] keyBytes = "test123".getBytes(StandardCharsets.UTF_8);
-                    AsymmetricKeyParameter keyParameter = PrivateKeyFactory.createKey(keyBytes);
+//                    // Loading certificate from file
+//                    CertificateFactory cf = CertificateFactory.getInstance("X.509");
+//                    Certificate cert = cf.generateCertificate(new FileInputStream("src/main/resources/session/certificate.crt"));
+//                    BcTlsCertificate bcCert = new BcTlsCertificate(crypto, cert.getEncoded());
+//                    org.bouncycastle.tls.Certificate tlsCert = new org.bouncycastle.tls.Certificate(new BcTlsCertificate[]{bcCert});
+
+                    org.bouncycastle.tls.Certificate tlsCertificate = new org.bouncycastle.tls.Certificate(
+                            new org.bouncycastle.tls.crypto.impl.bc.BcTlsCertificate[]{new org.bouncycastle.tls.crypto.impl.bc.BcTlsCertificate(crypto, CertificateHandler.certificate.getEncoded())});
 
 
-                    // Créer les informations d'identité du serveur
-                    return new BcDefaultTlsCredentialedSigner(
-                            new TlsCryptoParameters(context),
-                            crypto,
-                            keyParameter,
-                            tlsCert,
-                            SignatureAndHashAlgorithm.rsa_pss_pss_sha256
-                    );
+
+
+//                    // Créer les informations d'identité du serveur
+//                    return new BcDefaultTlsCredentialedSigner(
+//                            new TlsCryptoParameters(context),
+//                            crypto,
+//                            privateKey,
+//                            tlsCertificate,
+//                            SignatureAndHashAlgorithm.rsa_pss_pss_sha256
+//                                        );
+                    return null;
+
                 } catch (Exception e) {
                     throw new IOException("Échec du chargement des informations d'identité", e);
                 }

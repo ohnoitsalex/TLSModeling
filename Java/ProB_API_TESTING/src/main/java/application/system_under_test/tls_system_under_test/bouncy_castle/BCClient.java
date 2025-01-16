@@ -12,7 +12,7 @@ import java.util.Vector;
 public class BCClient {
 
     private static final String SERVER_HOST = "localhost";
-    private static final int SERVER_PORT = 1238;
+    private static final int SERVER_PORT = 1234;
     private static final Vector <SignatureAndHashAlgorithm> signature_algorithms = new Vector<>();
     private static final Vector <SignatureAndHashAlgorithm> signature_algorithms_cert = new Vector<>();
     private static final Vector<Integer> supported_groups = new Vector<Integer>();
@@ -70,10 +70,10 @@ public class BCClient {
                 return supported_groups;
             }
 
-            @Override
-            protected short[] getAllowedServerCertificateTypes() {
-                return super.getAllowedServerCertificateTypes();
-            }
+//            @Override
+//            protected short[] getAllowedServerCertificateTypes() {
+//                return super.getAllowedServerCertificateTypes();
+//            }
 
             //Key Share Entries
             @Override
