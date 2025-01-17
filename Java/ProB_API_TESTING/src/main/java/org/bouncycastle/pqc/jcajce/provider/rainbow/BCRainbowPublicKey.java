@@ -9,12 +9,14 @@ import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.pqc.crypto.rainbow.RainbowPublicKeyParameters;
 import org.bouncycastle.pqc.crypto.util.PublicKeyFactory;
 import org.bouncycastle.pqc.jcajce.interfaces.RainbowKey;
+import org.bouncycastle.pqc.jcajce.interfaces.RainbowPublicKey;
+import org.bouncycastle.pqc.jcajce.provider.util.KeyUtil;
 import org.bouncycastle.pqc.jcajce.spec.RainbowParameterSpec;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.Strings;
 
 public class BCRainbowPublicKey
-    implements PublicKey, RainbowKey {
+    implements PublicKey, RainbowKey, RainbowPublicKey {
     private static final long serialVersionUID = 1L;
 
     private transient RainbowPublicKeyParameters params;

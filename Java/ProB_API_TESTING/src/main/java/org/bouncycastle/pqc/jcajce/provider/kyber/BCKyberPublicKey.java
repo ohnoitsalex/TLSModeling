@@ -9,12 +9,14 @@ import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.pqc.crypto.mlkem.MLKEMPublicKeyParameters;
 import org.bouncycastle.pqc.crypto.util.PublicKeyFactory;
 import org.bouncycastle.pqc.jcajce.interfaces.KyberKey;
+import org.bouncycastle.pqc.jcajce.interfaces.KyberPublicKey;
+import org.bouncycastle.pqc.jcajce.provider.util.KeyUtil;
 import org.bouncycastle.pqc.jcajce.spec.KyberParameterSpec;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.Strings;
 
 public class BCKyberPublicKey
-    implements PublicKey, KyberKey {
+    implements PublicKey, KyberKey, KyberPublicKey {
     private static final long serialVersionUID = 1L;
 
     private transient MLKEMPublicKeyParameters params;

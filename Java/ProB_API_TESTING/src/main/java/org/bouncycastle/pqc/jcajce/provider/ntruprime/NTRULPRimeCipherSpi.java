@@ -28,6 +28,7 @@ import org.bouncycastle.jcajce.spec.KEMParameterSpec;
 import org.bouncycastle.jcajce.spec.KTSParameterSpec;
 import org.bouncycastle.pqc.crypto.ntruprime.NTRULPRimeKEMExtractor;
 import org.bouncycastle.pqc.crypto.ntruprime.NTRULPRimeKEMGenerator;
+import org.bouncycastle.pqc.jcajce.provider.util.WrapUtil;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.Exceptions;
 

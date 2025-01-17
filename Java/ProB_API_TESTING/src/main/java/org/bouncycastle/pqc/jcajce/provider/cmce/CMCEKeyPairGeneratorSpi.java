@@ -14,6 +14,8 @@ import org.bouncycastle.pqc.crypto.cmce.CMCEKeyPairGenerator;
 import org.bouncycastle.pqc.crypto.cmce.CMCEParameters;
 import org.bouncycastle.pqc.crypto.cmce.CMCEPrivateKeyParameters;
 import org.bouncycastle.pqc.crypto.cmce.CMCEPublicKeyParameters;
+import org.bouncycastle.pqc.jcajce.provider.util.SpecUtil;
+import org.bouncycastle.pqc.jcajce.spec.CMCEParameterSpec;
 import org.bouncycastle.util.Strings;
 
 public class CMCEKeyPairGeneratorSpi

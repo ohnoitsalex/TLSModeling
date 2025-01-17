@@ -7,6 +7,7 @@ import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
+import org.bouncycastle.pqc.jcajce.spec.McElieceKeyGenParameterSpec;
 import org.bouncycastle.pqc.legacy.crypto.mceliece.McElieceKeyGenerationParameters;
 import org.bouncycastle.pqc.legacy.crypto.mceliece.McElieceKeyPairGenerator;
 import org.bouncycastle.pqc.legacy.crypto.mceliece.McElieceParameters;

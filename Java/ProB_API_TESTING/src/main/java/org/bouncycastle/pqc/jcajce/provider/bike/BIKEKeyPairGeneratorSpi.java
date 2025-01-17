@@ -14,6 +14,8 @@ import org.bouncycastle.pqc.crypto.bike.BIKEKeyPairGenerator;
 import org.bouncycastle.pqc.crypto.bike.BIKEParameters;
 import org.bouncycastle.pqc.crypto.bike.BIKEPrivateKeyParameters;
 import org.bouncycastle.pqc.crypto.bike.BIKEPublicKeyParameters;
+import org.bouncycastle.pqc.jcajce.provider.util.SpecUtil;
+import org.bouncycastle.pqc.jcajce.spec.BIKEParameterSpec;
 import org.bouncycastle.util.Strings;
 
 public class BIKEKeyPairGeneratorSpi

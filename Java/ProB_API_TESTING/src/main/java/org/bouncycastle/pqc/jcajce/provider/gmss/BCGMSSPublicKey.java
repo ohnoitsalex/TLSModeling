@@ -7,6 +7,7 @@ import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.pqc.asn1.GMSSPublicKey;
 import org.bouncycastle.pqc.asn1.PQCObjectIdentifiers;
 import org.bouncycastle.pqc.asn1.ParSet;
+import org.bouncycastle.pqc.jcajce.provider.util.KeyUtil;
 import org.bouncycastle.pqc.legacy.crypto.gmss.GMSSParameters;
 import org.bouncycastle.pqc.legacy.crypto.gmss.GMSSPublicKeyParameters;
 import org.bouncycastle.util.encoders.Hex;
