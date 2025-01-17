@@ -5,11 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import jakarta.activation.ActivationDataFlavor;
-import jakarta.activation.DataContentHandler;
-import jakarta.activation.DataSource;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeBodyPart;
+import javax.activation.ActivationDataFlavor;
+import javax.activation.DataContentHandler;
+import javax.activation.DataSource;
+import javax.mail.internet.MimeBodyPart;
 
 public class x_pkcs7_signature 
     implements DataContentHandler 
@@ -22,12 +21,12 @@ public class x_pkcs7_signature
      */ 
     
     private static final ActivationDataFlavor ADF;
-    private static final ActivationDataFlavor[]         ADFs;
+    private static final DataFlavor[]         ADFs;
     
     static 
     {
         ADF  = new ActivationDataFlavor(MimeBodyPart.class, "application/x-pkcs7-signature", "Signature");
-        ADFs = new ActivationDataFlavor[] { ADF };
+        ADFs = new DataFlavor[] { ADF };
     }
     
     public Object getContent(DataSource _ds) 
@@ -35,21 +34,14 @@ public class x_pkcs7_signature
     {
         return _ds.getInputStream();
     }
-
-    public Object getTransferData(ActivationDataFlavor _df, DataSource _ds)
+    
+    public Object getTransferData(DataFlavor _df, DataSource _ds) 
         throws IOException 
-    {    
-        if (ADF.equals(_df)) 
-        {
-            return getContent(_ds);
-        }
-        else 
-        {
-            return null;
-        }
+    {
+        return HandlerUtil.getTransferData(this, ADF, _df, _ds);
     }
     
-    public ActivationDataFlavor[] getTransferDataFlavors()
+    public DataFlavor[] getTransferDataFlavors() 
     {
         return ADFs;
     }
@@ -59,14 +51,7 @@ public class x_pkcs7_signature
     {
         if (_obj instanceof MimeBodyPart) 
         {
-            try 
-            {
-                ((MimeBodyPart)_obj).writeTo(_os);
-            } 
-            catch (MessagingException ex) 
-            {
-                throw new IOException(ex.getMessage());
-            }
+            HandlerUtil.writeFromMimeBodyPart((MimeBodyPart)_obj, _os);
         }
         else if (_obj instanceof byte[]) 
         {
@@ -74,13 +59,7 @@ public class x_pkcs7_signature
         }
         else if (_obj instanceof InputStream)
         {
-            int            b;
-            InputStream    in = (InputStream)_obj;
-
-            while ((b = in.read()) >= 0)
-            {
-                _os.write(b);
-            }
+            HandlerUtil.writeFromInputStream((InputStream)_obj, _os);
         }
         else
         {

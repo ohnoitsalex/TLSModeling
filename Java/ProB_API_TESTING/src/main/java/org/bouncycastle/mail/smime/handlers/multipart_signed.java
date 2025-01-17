@@ -1,33 +1,32 @@
 package org.bouncycastle.mail.smime.handlers;
 
 import java.awt.datatransfer.DataFlavor;
-import java.io.BufferedInputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
 
-import jakarta.activation.ActivationDataFlavor;
-import jakarta.activation.DataContentHandler;
-import jakarta.activation.DataSource;
-import jakarta.mail.MessagingException;
-import jakarta.mail.Multipart;
-import jakarta.mail.internet.ContentType;
-import jakarta.mail.internet.MimeBodyPart;
-import jakarta.mail.internet.MimeMultipart;
+import javax.activation.ActivationDataFlavor;
+import javax.activation.DataContentHandler;
+import javax.activation.DataSource;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.internet.ContentType;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
 
-import org.bouncycastle.mail.smime.SMIMEStreamingProcessor;
 import org.bouncycastle.mail.smime.SMIMEUtil;
+import org.bouncycastle.util.Strings;
 
-public class multipart_signed 
-    implements DataContentHandler 
+public class multipart_signed
+    implements DataContentHandler
 {
     private static final ActivationDataFlavor ADF = new ActivationDataFlavor(MimeMultipart.class, "multipart/signed", "Multipart Signed");
-    private static final ActivationDataFlavor[] DFS = new ActivationDataFlavor[] { ADF };
-    
-    public Object getContent(DataSource ds) 
-        throws IOException 
+    private static final DataFlavor[] DFS = new DataFlavor[]{ADF};
+
+    public Object getContent(DataSource ds)
+        throws IOException
     {
         try
         {
@@ -38,29 +37,22 @@ public class multipart_signed
             return null;
         }
     }
-    
-    public Object getTransferData(ActivationDataFlavor df, DataSource ds)
-        throws IOException 
-    {    
-        if (ADF.equals(df))
-        {
-            return getContent(ds);
-        }
-        else
-        {
-            return null;
-        }
+
+    public Object getTransferData(DataFlavor df, DataSource ds)
+        throws IOException
+    {
+        return HandlerUtil.getTransferData(this, ADF, df, ds);
     }
-    
-    public ActivationDataFlavor[] getTransferDataFlavors()
+
+    public DataFlavor[] getTransferDataFlavors()
     {
         return DFS;
     }
-    
-    public void writeTo(Object obj, String _mimeType, OutputStream os) 
+
+    public void writeTo(Object obj, String _mimeType, OutputStream os)
         throws IOException
     {
-        
+
         if (obj instanceof MimeMultipart)
         {
             try
@@ -72,36 +64,9 @@ public class multipart_signed
                 throw new IOException(ex.getMessage());
             }
         }
-        else if(obj instanceof byte[])
-        {
-            os.write((byte[])obj);
-        }
-        else if (obj instanceof InputStream)
-        {
-            int         b;
-            InputStream in = (InputStream)obj;
-            
-            if (!(in instanceof BufferedInputStream))
-            {
-                in = new BufferedInputStream(in);
-            }
-
-            while ((b = in.read()) >= 0)
-            {
-                os.write(b);
-            }
-
-            in.close();
-        }
-        else if (obj instanceof SMIMEStreamingProcessor)
-        {
-            SMIMEStreamingProcessor processor = (SMIMEStreamingProcessor)obj;
-
-            processor.write(os);
-        }
         else
         {
-            throw new IOException("unknown object in writeTo " + obj);
+            HandlerUtil.writeFromBarrInputStreamSMIMESTreamProcessor(obj, os);
         }
     }
 
@@ -132,7 +97,7 @@ public class multipart_signed
             return;
         }
 
-        MimeBodyPart    mimePart = (MimeBodyPart)bodyPart;
+        MimeBodyPart mimePart = (MimeBodyPart)bodyPart;
 
         if (SMIMEUtil.isMultipartContent(mimePart))
         {
@@ -227,7 +192,8 @@ public class multipart_signed
         return b.toString();
     }
 
-    private static class LineOutputStream extends FilterOutputStream
+    private static class LineOutputStream
+        extends FilterOutputStream
     {
         private static byte newline[];
 
@@ -241,11 +207,11 @@ public class multipart_signed
         {
             try
             {
-                byte abyte0[] = getBytes(s);
+                byte abyte0[] = Strings.toUTF8ByteArray(s);
                 super.out.write(abyte0);
                 super.out.write(newline);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 throw new MessagingException("IOException", exception);
             }
@@ -258,7 +224,7 @@ public class multipart_signed
             {
                 super.out.write(newline);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 throw new MessagingException("IOException", exception);
             }
@@ -269,21 +235,6 @@ public class multipart_signed
             newline = new byte[2];
             newline[0] = 13;
             newline[1] = 10;
-        }
-
-        private static byte[] getBytes(String s)
-        {
-            char ac[] = s.toCharArray();
-            int i = ac.length;
-            byte abyte0[] = new byte[i];
-            int j = 0;
-
-            while (j < i)
-            {
-                abyte0[j] = (byte)ac[j++];
-            }
-
-            return abyte0;
         }
     }
 }
