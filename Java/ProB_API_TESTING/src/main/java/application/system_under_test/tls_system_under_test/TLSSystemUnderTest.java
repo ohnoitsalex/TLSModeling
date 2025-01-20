@@ -27,7 +27,6 @@ public class TLSSystemUnderTest extends SystemUnderTest {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override

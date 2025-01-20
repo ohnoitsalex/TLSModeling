@@ -43,16 +43,25 @@ public class Client {
             SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
             // Create SSL socket
-            try (SSLSocket socket = (SSLSocket) sslSocketFactory.createSocket(SERVER_HOST, SERVER_PORT);
-                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
+            try (SSLSocket socket = (SSLSocket) sslSocketFactory.createSocket(SERVER_HOST, SERVER_PORT)) {
+                // Enable custom cipher suites
+                String[] customCipherSuites = {
+                        "TLS_RSA_WITH_AES_256_CBC_SHA",
+                        "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256"
+                };
+                socket.setEnabledCipherSuites(customCipherSuites);
+                socket.setEnabledProtocols(new String[]{"TLSv1.2"});
 
-                // Send a message to the server
-                out.println("Hello, Server!");
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
 
-                // Read the response from the server
-                String response = in.readLine();
-                System.out.println("Received from server: " + response);
+                    // Send a message to the server
+                    out.println("Hello, Server!");
+
+                    // Read the response from the server
+                    String response = in.readLine();
+                    System.out.println("Received from server: " + response);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

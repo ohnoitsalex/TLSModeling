@@ -16,7 +16,7 @@ public class Server {
             char[] password = "test123".toCharArray();
             KeyStore keyStore = KeyStore.getInstance("JKS");
 
-            try (FileInputStream fis = new FileInputStream("/Users/alex/Desktop/School/Masters/Projet de Recherche/Code/ALL CODE/TLSModeling/Java/ProB_API_TESTING/src/main/resources/session/serverkeystore")) {
+            try (FileInputStream fis = new FileInputStream("src/main/resources/session/serverkeystore")) {
                 keyStore.load(fis, password);
             }
 
@@ -34,6 +34,13 @@ public class Server {
             // Create SSL server socket
             try (SSLServerSocket serverSocket = (SSLServerSocket) ssf.createServerSocket(PORT)) {
                 System.out.println("Server started. Waiting for client...");
+
+                // Enable custom cipher suites
+                String[] customCipherSuites = {
+                };
+                serverSocket.setEnabledCipherSuites(customCipherSuites);
+                // Specify allowed TLS versions
+                serverSocket.setEnabledProtocols(new String[]{"TLSv1.3"});
 
                 // Accept incoming connections
                 try (SSLSocket clientSocket = (SSLSocket) serverSocket.accept()) {
