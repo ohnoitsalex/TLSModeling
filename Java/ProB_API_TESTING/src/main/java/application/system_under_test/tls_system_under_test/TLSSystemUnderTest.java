@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class TLSSystemUnderTest extends SystemUnderTest {
     private Process serverProcess, clientProcess;
-    private InformationCapture informationCapture;
+    private final InformationCapture informationCapture;
 
     public TLSSystemUnderTest() {
         informationCapture = new TLSInformationCapture();

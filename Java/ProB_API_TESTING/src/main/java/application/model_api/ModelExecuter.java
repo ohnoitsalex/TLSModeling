@@ -125,7 +125,7 @@ public class ModelExecuter {
     public void generateClientHelloMessages() {
         trace.getCurrentState().findTransitions("SendClientHello", paramsFindSendClientHello, 1000);
         trace = trace.addTransitionWith("SendClientHello", paramsSendClientHello);
-        trace = trace.addTransitionWith("ReceiveClientHello", Arrays.asList());
+        trace = trace.addTransitionWith("ReceiveClientHello", List.of());
     }
 
     public void generateServerHelloMessages() {
@@ -140,7 +140,7 @@ public class ModelExecuter {
         trace.getCurrentState().findTransitions("SendServerHello", paramsFindSendServerHello, 1000);
         trace = trace.addTransitionWith("SendServerHello", paramsSendServerHello);
         trace = trace.addTransitionWith("SendEncryptedExtensions", paramsSendEncryptedExtensions);
-        trace = trace.addTransitionWith("SendClientCertificateRequest", Arrays.asList());
+        trace = trace.addTransitionWith("SendClientCertificateRequest", List.of());
     }
 
     public void performSpecificTransition(String operation, String[] params) {

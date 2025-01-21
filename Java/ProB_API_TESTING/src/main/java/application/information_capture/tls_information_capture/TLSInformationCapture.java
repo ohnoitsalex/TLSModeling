@@ -1,6 +1,7 @@
 package application.information_capture.tls_information_capture;
 
 import application.information_capture.InformationCapture;
+import application.information_converter.InformationConvertertoAbstract;
 import org.pcap4j.core.*;
 import org.pcap4j.packet.Packet;
 import org.pcap4j.packet.TcpPacket;
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class TLSInformationCapture extends InformationCapture {
 
-    private List<Packet> TLSPacketList = new ArrayList<>(); // List to store packets
+    private final List<Packet> TLSPacketList = new ArrayList<>(); // List to store packets
 
     public TLSInformationCapture() {
 
@@ -36,7 +37,7 @@ public class TLSInformationCapture extends InformationCapture {
     // Method to set the packet filter to capture only TCP packets on port 443 (TLS/HTTPS)
     private void setPacketFilter(PcapHandle handle) throws PcapNativeException {
         try {
-            handle.setFilter("tcp port 1238", BpfProgram.BpfCompileMode.OPTIMIZE);
+            handle.setFilter("tcp port 1234", BpfProgram.BpfCompileMode.OPTIMIZE);
         } catch (PcapNativeException e) {
             System.err.println("Error setting filter: " + e.getMessage());
             throw e;
@@ -54,7 +55,7 @@ public class TLSInformationCapture extends InformationCapture {
                 // Override function
                 // Process TCP packets that may contain TLS data
                 if (packet.contains(TcpPacket.class)) {
-                    System.out.println("FOUND TCP PACKET");
+//                    System.out.println("FOUND TCP PACKET");
                     TcpPacket tcpPacket = packet.get(TcpPacket.class);
                     Packet payload = tcpPacket.getPayload();
                     // Check for a TCP payload that starts with TLS Handshake type (0x16)
@@ -63,15 +64,18 @@ public class TLSInformationCapture extends InformationCapture {
                         TLSPacketList.add(packet);
                         // Extract header information
                         String headers = PacketLogger.extractHeaders(packet);
-                        System.out.println("Extracted Headers");
+//                        System.out.println("Extracted Headers");
                         // Log headers and raw data to file
-                        PacketLogger.logPacketData(headers, payload, "tls_handshake_data.txt");
+                        PacketLogger.logPacketData(headers, payload, "data/tls_handshake_data.txt");
+                        InformationConvertertoAbstract.configureYAML();
+                        InformationConvertertoAbstract.serializeToYAML(TlsHandshakeParser.tlsClientInformationHolder, "data/SUTClientHello");
+                        InformationConvertertoAbstract.serializeToYAML(TlsHandshakeParser.tlsServerInformationHolder, "data/SUTServerHello");
                     }
                 }
             }
         };
         try {
-            System.out.println("Entered TRY");
+//            System.out.println("Entered TRY");
             int maxPackets = -1; //Non Stop ->Listening continuously
             handle.loop(maxPackets, listener);
         } catch (NotOpenException e) {
@@ -96,7 +100,7 @@ public class TLSInformationCapture extends InformationCapture {
             Packet payload = tcpPacket.getPayload();
 
             // Log headers and raw data to file
-            PacketLogger.logPacketData(headers, payload, "tls_handshake_data.txt");
+            PacketLogger.logPacketData(headers, payload, "data/tls_handshake_data.txt");
         }
     }
 
@@ -123,7 +127,7 @@ public class TLSInformationCapture extends InformationCapture {
             setPacketFilter(handle);
 
 
-            System.out.println("Starting packet capture. Listening for TLS handshake packets on port 1238...");
+            System.out.println("Starting packet capture. Listening for TLS handshake packets on port 1234...");
 
             // Step 4: Start capturing packets
             captureTlsHandshakePackets(handle);

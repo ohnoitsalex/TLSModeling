@@ -88,6 +88,11 @@
             <artifactId>bcmls-jdk18on</artifactId>
             <version>1.78.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>2.0</version> <!-- Ensure to use the latest version -->
+        </dependency>
 
     </dependencies>
 </project>

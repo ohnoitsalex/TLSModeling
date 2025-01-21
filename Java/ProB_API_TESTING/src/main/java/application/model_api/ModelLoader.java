@@ -17,9 +17,9 @@ public class ModelLoader {
      */
     private static final Injector INJECTOR = Guice.createInjector(Stage.PRODUCTION, new Config());
 
-    private String modelFilePath;
+    private final String modelFilePath;
 
-    private Api api;
+    private final Api api;
     private StateSpace model;
     private ModelExecuter modelExecuter;
 

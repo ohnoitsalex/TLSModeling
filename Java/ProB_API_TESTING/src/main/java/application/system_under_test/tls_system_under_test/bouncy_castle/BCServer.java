@@ -155,11 +155,11 @@ public class BCServer {
 
             // Send HTTP response back to the client
             OutputStream outputStream = protocol.getOutputStream();
-            outputStream.write("HTTP/1.1 200 OK\r\n".getBytes("UTF-8"));
-            outputStream.write("Content-Type: text/plain\r\n".getBytes("UTF-8"));
-            outputStream.write("Connection: close\r\n".getBytes("UTF-8"));
-            outputStream.write("\r\n".getBytes("UTF-8"));
-            outputStream.write("Hello, this is a secure TLS server!\r\n".getBytes("UTF-8"));
+            outputStream.write("HTTP/1.1 200 OK\r\n".getBytes(StandardCharsets.UTF_8));
+            outputStream.write("Content-Type: text/plain\r\n".getBytes(StandardCharsets.UTF_8));
+            outputStream.write("Connection: close\r\n".getBytes(StandardCharsets.UTF_8));
+            outputStream.write("\r\n".getBytes(StandardCharsets.UTF_8));
+            outputStream.write("Hello, this is a secure TLS server!\r\n".getBytes(StandardCharsets.UTF_8));
             outputStream.flush();
 
             // Close the socket connection
