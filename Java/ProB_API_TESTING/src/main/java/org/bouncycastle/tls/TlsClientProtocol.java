@@ -89,6 +89,37 @@ public class TlsClientProtocol
         }
     }
 
+    public void sendClientHelloMessage(TlsClient tlsClient) throws IOException
+    {
+        if (tlsClient == null)
+        {
+            throw new IllegalArgumentException("'tlsClient' cannot be null");
+        }
+        if (this.tlsClient != null)
+        {
+            throw new IllegalStateException("'connect' can only be called once");
+        }
+
+        this.tlsClient = tlsClient;
+        this.tlsClientContext = new TlsClientContextImpl(tlsClient.getCrypto());
+
+        tlsClient.init(tlsClientContext);
+        if (tlsClientContext !=null) {
+            sendClientHello();
+        } else {
+            System.out.println("TlsClientContext is null");
+        }
+
+//        tlsClient.notifyCloseHandle(this);
+//
+//        beginHandshake(false);
+//
+//        if (blocking)
+//        {
+//            blockForHandshake();
+//        }
+    }
+
 //    public boolean renegotiate() throws IOException
 //    {
 //        boolean allowed = super.renegotiate();
@@ -98,6 +129,7 @@ public class TlsClientProtocol
 //        }
 //        return allowed;
 //    }
+
 
     protected void beginHandshake(boolean renegotiation) throws IOException
     {
@@ -1735,7 +1767,7 @@ public class TlsClientProtocol
         message.send(this);
     }
 
-    protected void sendClientHello()
+    public void sendClientHello()
         throws IOException
     {
         SecurityParameters securityParameters = tlsClientContext.getSecurityParametersHandshake();
