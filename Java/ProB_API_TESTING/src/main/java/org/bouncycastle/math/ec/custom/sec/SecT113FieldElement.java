@@ -1,10 +1,10 @@
 package org.bouncycastle.math.ec.custom.sec;
 
-import java.math.BigInteger;
-
 import org.bouncycastle.math.ec.ECFieldElement;
 import org.bouncycastle.math.raw.Nat128;
 import org.bouncycastle.util.Arrays;
+
+import java.math.BigInteger;
 
 public class SecT113FieldElement extends ECFieldElement.AbstractF2m
 {

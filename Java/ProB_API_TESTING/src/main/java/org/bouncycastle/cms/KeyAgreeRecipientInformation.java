@@ -24,8 +24,8 @@ import org.bouncycastle.util.Arrays;
 public class KeyAgreeRecipientInformation
     extends RecipientInformation
 {
-    private KeyAgreeRecipientInfo info;
-    private ASN1OctetString       encryptedKey;
+    private final KeyAgreeRecipientInfo info;
+    private final ASN1OctetString       encryptedKey;
 
     static void readRecipientInfo(List infos, KeyAgreeRecipientInfo info,
         AlgorithmIdentifier messageAlgorithm, CMSSecureReadable secureReadable)

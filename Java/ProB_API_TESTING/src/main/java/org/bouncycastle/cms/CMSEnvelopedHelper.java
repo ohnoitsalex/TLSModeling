@@ -1,24 +1,17 @@
 package org.bouncycastle.cms;
 
+import org.bouncycastle.asn1.ASN1Encodable;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.ASN1Set;
+import org.bouncycastle.asn1.cms.*;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+import org.bouncycastle.operator.DigestCalculator;
+
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.bouncycastle.asn1.ASN1Encodable;
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.ASN1Set;
-import org.bouncycastle.asn1.cms.CMSObjectIdentifiers;
-import org.bouncycastle.asn1.cms.KEKRecipientInfo;
-import org.bouncycastle.asn1.cms.KEMRecipientInfo;
-import org.bouncycastle.asn1.cms.KeyAgreeRecipientInfo;
-import org.bouncycastle.asn1.cms.KeyTransRecipientInfo;
-import org.bouncycastle.asn1.cms.OtherRecipientInfo;
-import org.bouncycastle.asn1.cms.PasswordRecipientInfo;
-import org.bouncycastle.asn1.cms.RecipientInfo;
-import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
-import org.bouncycastle.operator.DigestCalculator;
 
 class CMSEnvelopedHelper
 {
@@ -105,7 +98,7 @@ class CMSEnvelopedHelper
     static class CMSDigestAuthenticatedSecureReadable
         extends CMSDefaultSecureReadable
     {
-        private DigestCalculator digestCalculator;
+        private final DigestCalculator digestCalculator;
 
         public CMSDigestAuthenticatedSecureReadable(DigestCalculator digestCalculator, ASN1ObjectIdentifier contentType, CMSReadable readable)
         {
@@ -161,7 +154,7 @@ class CMSEnvelopedHelper
     static class CMSAuthEnveSecureReadable
         extends CMSDefaultSecureReadable
     {
-        private AlgorithmIdentifier algorithm;
+        private final AlgorithmIdentifier algorithm;
 
         CMSAuthEnveSecureReadable(AlgorithmIdentifier algorithm, ASN1ObjectIdentifier contentType, CMSReadable readable)
         {

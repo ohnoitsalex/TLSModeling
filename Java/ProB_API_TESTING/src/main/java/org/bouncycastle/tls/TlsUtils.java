@@ -56,8 +56,8 @@ import org.bouncycastle.util.io.Streams;
  */
 public class TlsUtils
 {
-    private static byte[] DOWNGRADE_TLS11 = Hex.decodeStrict("444F574E47524400");
-    private static byte[] DOWNGRADE_TLS12 = Hex.decodeStrict("444F574E47524401");
+    private static final byte[] DOWNGRADE_TLS11 = Hex.decodeStrict("444F574E47524400");
+    private static final byte[] DOWNGRADE_TLS12 = Hex.decodeStrict("444F574E47524401");
 
     // Map OID strings to HashAlgorithm values
     private static final Hashtable CERT_SIG_ALG_OIDS = createCertSigAlgOIDs();
@@ -888,7 +888,7 @@ public class TlsUtils
         {
             throw new EOFException();
         }
-        return ((i1 << 24) | (i2 << 16) | (i3 << 8) | i4) & 0xFFFFFFFFL;
+        return (((long) i1 << 24) | ((long) i2 << 16) | ((long) i3 << 8) | i4) & 0xFFFFFFFFL;
     }
 
     public static long readUint32(byte[] buf, int offset)
@@ -905,14 +905,14 @@ public class TlsUtils
     {
         int hi = readUint24(input);
         int lo = readUint24(input);
-        return ((long)(hi & 0xffffffffL) << 24) | (long)(lo & 0xffffffffL);
+        return ((hi & 0xffffffffL) << 24) | (lo & 0xffffffffL);
     }
 
     public static long readUint48(byte[] buf, int offset)
     {
         int hi = readUint24(buf, offset);
         int lo = readUint24(buf, offset + 3);
-        return ((long)(hi & 0xffffffffL) << 24) | (long)(lo & 0xffffffffL);
+        return ((hi & 0xffffffffL) << 24) | (lo & 0xffffffffL);
     }
 
     public static byte[] readAllOrNothing(int length, InputStream input)
@@ -1604,12 +1604,12 @@ public class TlsUtils
 
     public static byte[] clone(byte[] data)
     {
-        return null == data ? (byte[])null : data.length == 0 ? EMPTY_BYTES : (byte[])data.clone();
+        return null == data ? null : data.length == 0 ? EMPTY_BYTES : data.clone();
     }
 
     public static String[] clone(String[] s)
     {
-        return null == s ? (String[])null : s.length < 1 ? EMPTY_STRINGS : (String[])s.clone();
+        return null == s ? null : s.length < 1 ? EMPTY_STRINGS : s.clone();
     }
 
     public static boolean constantTimeAreEqual(int len, byte[] a, int aOff, byte[] b, int bOff)
@@ -4381,8 +4381,7 @@ public class TlsUtils
         int macAlgorithm = getMACAlgorithm(cipherSuite);
         if (macAlgorithm != MACAlgorithm._null)
         {
-            if (macAlgorithm < 0 || !crypto.hasMacAlgorithm(macAlgorithm))
-                return false;
+            return macAlgorithm >= 0 && crypto.hasMacAlgorithm(macAlgorithm);
         }
 
         return true;
@@ -5275,7 +5274,7 @@ public class TlsUtils
     {
         for (int i = 0; i < bs.length; ++i)
         {
-            int c = bs[i] & 0xFF;;
+            int c = bs[i] & 0xFF;
             if (c >= 0x80)
             {
                 return true;
@@ -6137,13 +6136,12 @@ public class TlsUtils
         for (int i = 0; i < count; ++i)
         {
             Object element = externalPSKs.elementAt(i);
-            if (!(element instanceof TlsPSKExternal))
+            if (!(element instanceof TlsPSKExternal pskExternal))
             {
                 throw new TlsFatalAlert(AlertDescription.internal_error,
                     "External PSKs element is not a TlsPSKExternal");
             }
 
-            TlsPSKExternal pskExternal = (TlsPSKExternal)element;
             if (!Arrays.contains(prfAlgorithms, pskExternal.getPRFAlgorithm()))
             {
                 throw new TlsFatalAlert(AlertDescription.internal_error,

@@ -56,10 +56,10 @@ public class TimeStampResponseGenerator
     ASN1EncodableVector statusStrings;
 
     int failInfo;
-    private TimeStampTokenGenerator tokenGenerator;
-    private Set                     acceptedAlgorithms;
-    private Set                     acceptedPolicies;
-    private Set                     acceptedExtensions;
+    private final TimeStampTokenGenerator tokenGenerator;
+    private final Set                     acceptedAlgorithms;
+    private final Set                     acceptedPolicies;
+    private final Set                     acceptedExtensions;
 
     /**
      *

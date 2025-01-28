@@ -112,10 +112,10 @@ public class CMSCompressedDataStreamGenerator
     private static class CmsCompressedOutputStream
         extends OutputStream
     {
-        private OutputStream _out;
-        private BERSequenceGenerator _sGen;
-        private BERSequenceGenerator _cGen;
-        private BERSequenceGenerator _eiGen;
+        private final OutputStream _out;
+        private final BERSequenceGenerator _sGen;
+        private final BERSequenceGenerator _cGen;
+        private final BERSequenceGenerator _eiGen;
         
         CmsCompressedOutputStream(
             OutputStream out,

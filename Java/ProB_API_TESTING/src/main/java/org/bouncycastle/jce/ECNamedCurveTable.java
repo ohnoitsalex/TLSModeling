@@ -86,11 +86,6 @@ public class ECNamedCurveTable
         }
 
         char first = identifier.charAt(0);
-        if (first < '0' || first > '2')
-        {
-            return false;
-        }
-
-        return true;
+        return first >= '0' && first <= '2';
     }
 }

@@ -32,9 +32,9 @@ abstract class AbstractTlsContext
         return crypto.createNonceGenerator(additionalSeedMaterial);
     }
 
-    private TlsCrypto crypto;
-    private int connectionEnd;
-    private TlsNonceGenerator nonceGenerator;
+    private final TlsCrypto crypto;
+    private final int connectionEnd;
+    private final TlsNonceGenerator nonceGenerator;
     private SecurityParameters securityParametersHandshake = null;
     private SecurityParameters securityParametersConnection = null;
 

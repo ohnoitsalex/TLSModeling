@@ -10,7 +10,7 @@ import org.bouncycastle.util.Arrays;
 public class TranscriptHash
 {
 
-    private MlsCipherSuite suite;
+    private final MlsCipherSuite suite;
     byte[] confirmed;
     byte[] interim;
 

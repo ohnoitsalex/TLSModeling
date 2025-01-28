@@ -1,14 +1,5 @@
 package org.bouncycastle.cms.jcajce;
 
-import java.security.Provider;
-import java.security.PublicKey;
-import java.security.SecureRandom;
-import java.security.interfaces.RSAPublicKey;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.crypto.Cipher;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.DERNull;
 import org.bouncycastle.asn1.cms.CMSORIforKEMOtherInfo;
@@ -18,17 +9,20 @@ import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.asn1.x9.X9ObjectIdentifiers;
 import org.bouncycastle.cms.KEMKeyWrapper;
-import org.bouncycastle.jcajce.interfaces.MLKEMPublicKey;
 import org.bouncycastle.jcajce.spec.KTSParameterSpec;
-import org.bouncycastle.jcajce.spec.MLKEMParameterSpec;
 import org.bouncycastle.operator.DefaultKemEncapsulationLengthProvider;
 import org.bouncycastle.operator.GenericKey;
 import org.bouncycastle.operator.KemEncapsulationLengthProvider;
 import org.bouncycastle.operator.OperatorException;
-import org.bouncycastle.pqc.jcajce.interfaces.NTRUKey;
-import org.bouncycastle.pqc.jcajce.spec.NTRUParameterSpec;
 import org.bouncycastle.util.Arrays;
-import org.bouncycastle.util.Integers;
+
+import javax.crypto.Cipher;
+import java.security.Provider;
+import java.security.PublicKey;
+import java.security.SecureRandom;
+import java.security.interfaces.RSAPublicKey;
+import java.util.HashMap;
+import java.util.Map;
 
 class JceCMSKEMKeyWrapper
     extends KEMKeyWrapper

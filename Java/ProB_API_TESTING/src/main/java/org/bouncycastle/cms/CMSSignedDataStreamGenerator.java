@@ -307,9 +307,8 @@ public class CMSSignedDataStreamGenerator
             for (Iterator it = certs.iterator(); it.hasNext();)
             {
                 Object obj = it.next();
-                if (obj instanceof ASN1TaggedObject)
+                if (obj instanceof ASN1TaggedObject tagged)
                 {
-                    ASN1TaggedObject tagged = (ASN1TaggedObject)obj;
 
                     if (tagged.getTagNo() == 1)
                     {
@@ -400,11 +399,11 @@ public class CMSSignedDataStreamGenerator
     private class CmsSignedDataOutputStream
         extends OutputStream
     {
-        private OutputStream         _out;
-        private ASN1ObjectIdentifier _contentOID;
-        private BERSequenceGenerator _sGen;
-        private BERSequenceGenerator _sigGen;
-        private BERSequenceGenerator _eiGen;
+        private final OutputStream         _out;
+        private final ASN1ObjectIdentifier _contentOID;
+        private final BERSequenceGenerator _sGen;
+        private final BERSequenceGenerator _sigGen;
+        private final BERSequenceGenerator _eiGen;
 
         public CmsSignedDataOutputStream(
             OutputStream         out,

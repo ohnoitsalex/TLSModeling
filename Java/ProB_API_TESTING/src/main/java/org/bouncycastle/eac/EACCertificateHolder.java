@@ -11,7 +11,7 @@ import org.bouncycastle.eac.operator.EACSignatureVerifier;
 
 public class EACCertificateHolder
 {
-    private CVCertificate cvCertificate;
+    private final CVCertificate cvCertificate;
 
     private static CVCertificate parseBytes(byte[] certEncoding)
         throws IOException

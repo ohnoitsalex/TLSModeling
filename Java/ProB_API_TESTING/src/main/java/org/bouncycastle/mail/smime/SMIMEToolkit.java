@@ -1,31 +1,21 @@
 package org.bouncycastle.mail.smime;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cms.*;
+import org.bouncycastle.operator.DigestCalculatorProvider;
+import org.bouncycastle.operator.OutputEncryptor;
+import org.bouncycastle.util.CollectionStore;
 
 import javax.mail.MessagingException;
 import javax.mail.Part;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-
-import org.bouncycastle.cert.X509CertificateHolder;
-import org.bouncycastle.cms.CMSException;
-import org.bouncycastle.cms.Recipient;
-import org.bouncycastle.cms.RecipientId;
-import org.bouncycastle.cms.RecipientInfoGenerator;
-import org.bouncycastle.cms.RecipientInformation;
-import org.bouncycastle.cms.RecipientInformationStore;
-import org.bouncycastle.cms.SignerId;
-import org.bouncycastle.cms.SignerInfoGenerator;
-import org.bouncycastle.cms.SignerInformation;
-import org.bouncycastle.cms.SignerInformationVerifier;
-import org.bouncycastle.operator.DigestCalculatorProvider;
-import org.bouncycastle.operator.OutputEncryptor;
-import org.bouncycastle.util.CollectionStore;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A tool kit of common tasks.

@@ -1,16 +1,11 @@
 package org.bouncycastle.math.ec.custom.sec;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-
-import org.bouncycastle.math.ec.AbstractECLookupTable;
-import org.bouncycastle.math.ec.ECConstants;
-import org.bouncycastle.math.ec.ECCurve;
-import org.bouncycastle.math.ec.ECFieldElement;
-import org.bouncycastle.math.ec.ECLookupTable;
-import org.bouncycastle.math.ec.ECPoint;
+import org.bouncycastle.math.ec.*;
 import org.bouncycastle.math.raw.Nat160;
 import org.bouncycastle.util.encoders.Hex;
+
+import java.math.BigInteger;
+import java.security.SecureRandom;
 
 public class SecP160K1Curve extends ECCurve.AbstractFp
 {

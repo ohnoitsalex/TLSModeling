@@ -84,7 +84,7 @@ public class TimeStampToken
                     + " signers, but it must contain just the TSA signature.");
         }
 
-        tsaSignerInfo = (SignerInformation)signers.iterator().next();
+        tsaSignerInfo = signers.iterator().next();
 
         try
         {

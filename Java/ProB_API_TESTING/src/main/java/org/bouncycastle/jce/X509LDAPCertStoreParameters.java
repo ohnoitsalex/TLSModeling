@@ -12,90 +12,90 @@ public class X509LDAPCertStoreParameters
     implements X509StoreParameters, CertStoreParameters
 {
 
-    private String ldapURL;
+    private final String ldapURL;
 
-    private String baseDN;
+    private final String baseDN;
 
     // LDAP attributes, where data is stored
 
-    private String userCertificateAttribute;
+    private final String userCertificateAttribute;
 
-    private String cACertificateAttribute;
+    private final String cACertificateAttribute;
 
-    private String crossCertificateAttribute;
+    private final String crossCertificateAttribute;
 
-    private String certificateRevocationListAttribute;
+    private final String certificateRevocationListAttribute;
 
-    private String deltaRevocationListAttribute;
+    private final String deltaRevocationListAttribute;
 
-    private String authorityRevocationListAttribute;
+    private final String authorityRevocationListAttribute;
 
-    private String attributeCertificateAttributeAttribute;
+    private final String attributeCertificateAttributeAttribute;
 
-    private String aACertificateAttribute;
+    private final String aACertificateAttribute;
 
-    private String attributeDescriptorCertificateAttribute;
+    private final String attributeDescriptorCertificateAttribute;
 
-    private String attributeCertificateRevocationListAttribute;
+    private final String attributeCertificateRevocationListAttribute;
 
-    private String attributeAuthorityRevocationListAttribute;
+    private final String attributeAuthorityRevocationListAttribute;
 
     // LDAP attributes with which data can be found
 
-    private String ldapUserCertificateAttributeName;
+    private final String ldapUserCertificateAttributeName;
 
-    private String ldapCACertificateAttributeName;
+    private final String ldapCACertificateAttributeName;
 
-    private String ldapCrossCertificateAttributeName;
+    private final String ldapCrossCertificateAttributeName;
 
-    private String ldapCertificateRevocationListAttributeName;
+    private final String ldapCertificateRevocationListAttributeName;
 
-    private String ldapDeltaRevocationListAttributeName;
+    private final String ldapDeltaRevocationListAttributeName;
 
-    private String ldapAuthorityRevocationListAttributeName;
+    private final String ldapAuthorityRevocationListAttributeName;
 
-    private String ldapAttributeCertificateAttributeAttributeName;
+    private final String ldapAttributeCertificateAttributeAttributeName;
 
-    private String ldapAACertificateAttributeName;
+    private final String ldapAACertificateAttributeName;
 
-    private String ldapAttributeDescriptorCertificateAttributeName;
+    private final String ldapAttributeDescriptorCertificateAttributeName;
 
-    private String ldapAttributeCertificateRevocationListAttributeName;
+    private final String ldapAttributeCertificateRevocationListAttributeName;
 
-    private String ldapAttributeAuthorityRevocationListAttributeName;
+    private final String ldapAttributeAuthorityRevocationListAttributeName;
 
     // certificates and CRLs subject or issuer DN attributes, which must be
     // matched against ldap attribute names
 
-    private String userCertificateSubjectAttributeName;
+    private final String userCertificateSubjectAttributeName;
 
-    private String cACertificateSubjectAttributeName;
+    private final String cACertificateSubjectAttributeName;
 
-    private String crossCertificateSubjectAttributeName;
+    private final String crossCertificateSubjectAttributeName;
 
-    private String certificateRevocationListIssuerAttributeName;
+    private final String certificateRevocationListIssuerAttributeName;
 
-    private String deltaRevocationListIssuerAttributeName;
+    private final String deltaRevocationListIssuerAttributeName;
 
-    private String authorityRevocationListIssuerAttributeName;
+    private final String authorityRevocationListIssuerAttributeName;
 
-    private String attributeCertificateAttributeSubjectAttributeName;
+    private final String attributeCertificateAttributeSubjectAttributeName;
 
-    private String aACertificateSubjectAttributeName;
+    private final String aACertificateSubjectAttributeName;
 
-    private String attributeDescriptorCertificateSubjectAttributeName;
+    private final String attributeDescriptorCertificateSubjectAttributeName;
 
-    private String attributeCertificateRevocationListIssuerAttributeName;
+    private final String attributeCertificateRevocationListIssuerAttributeName;
 
-    private String attributeAuthorityRevocationListIssuerAttributeName;
+    private final String attributeAuthorityRevocationListIssuerAttributeName;
 
-    private String searchForSerialNumberIn;
+    private final String searchForSerialNumberIn;
 
     public static class Builder
     {
-        private String ldapURL;
+        private final String ldapURL;
 
-        private String baseDN;
+        private final String baseDN;
 
         // LDAP attributes, where data is stored
 
@@ -854,12 +854,11 @@ public class X509LDAPCertStoreParameters
             return true;
         }
 
-        if (!(o instanceof X509LDAPCertStoreParameters))
+        if (!(o instanceof X509LDAPCertStoreParameters params))
         {
             return false;
         }
 
-        X509LDAPCertStoreParameters params = (X509LDAPCertStoreParameters)o;
         return checkField(ldapURL, params.ldapURL)
             && checkField(baseDN, params.baseDN)
             && checkField(userCertificateAttribute, params.userCertificateAttribute)

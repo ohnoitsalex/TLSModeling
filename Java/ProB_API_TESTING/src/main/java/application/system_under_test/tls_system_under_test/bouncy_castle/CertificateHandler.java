@@ -44,7 +44,7 @@ public class CertificateHandler {
             // yesterday
             certGen.setNotBefore(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000));
             // in 2 years
-            certGen.setNotAfter(new Date(System.currentTimeMillis() + 2 * 365 * 24 * 60 * 60 * 1000));
+            certGen.setNotAfter(new Date(System.currentTimeMillis() + 2L * 365 * 24 * 60 * 60 * 1000));
             certGen.setPublicKey(keyPair.getPublic());
             certGen.setSignatureAlgorithm("SHA256WithRSAEncryption");
             certGen.addExtension(X509Extensions.ExtendedKeyUsage, true,

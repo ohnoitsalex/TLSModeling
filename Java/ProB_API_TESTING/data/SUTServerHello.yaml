@@ -1,0 +1,14 @@
+!!application.information_holder.tls_information_holder.TLSServerInformationHolder
+serverHelloInformation:
+  random: '7f 80 b4 60 02 7c f9 4a 4f 57 ff 3b 8b 07 74 be 14 69 81 49 8e ff 0d c0
+    b6 99 cb 9a fb 12 36 32 '
+  pre_shared_key: '39 d1 3b 57 be 63 58 16 fc 45 a2 79 2c 0c 99 50 3f d4 52 1c 04
+    4b fd 18 87 f2 bc 57 25 c2 6a 3b '
+  legacy_session_id_echo: 'd1 85 69 99 5e 01 88 0f 70 ea c3 1d 60 0e 5f c0 a6 42 af
+    68 e4 98 c7 65 5e e6 62 c7 69 42 5f 5d '
+  legacy_version: '3'
+  supported_versions: '0304 '
+  legacy_compression_methods: '0'
+  key_share: '39 d1 3b 57 be 63 58 16 fc 45 a2 79 2c 0c 99 50 3f d4 52 1c 04 4b fd
+    18 87 f2 bc 57 25 c2 6a 3b '
+  cipher_suites: 'TLS_AES_256_GCM_SHA384 '

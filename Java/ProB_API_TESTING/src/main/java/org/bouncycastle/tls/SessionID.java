@@ -20,11 +20,10 @@ public final class SessionID
 
     public boolean equals(Object obj)
     {
-        if (!(obj instanceof SessionID))
+        if (!(obj instanceof SessionID other))
         {
             return false;
         }
-        SessionID other = (SessionID)obj;
         return Arrays.areEqual(id, other.id);
     }
 

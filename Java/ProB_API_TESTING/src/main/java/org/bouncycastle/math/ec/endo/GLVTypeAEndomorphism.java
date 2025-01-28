@@ -1,10 +1,10 @@
 package org.bouncycastle.math.ec.endo;
 
-import java.math.BigInteger;
-
 import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.math.ec.ECPointMap;
 import org.bouncycastle.math.ec.ScaleYNegateXPointMap;
+
+import java.math.BigInteger;
 
 public class GLVTypeAEndomorphism implements GLVEndomorphism
 {

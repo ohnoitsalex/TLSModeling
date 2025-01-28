@@ -5,7 +5,7 @@ import org.bouncycastle.util.Arrays;
 public class KEKRecipientId
     extends RecipientId
 {
-    private byte[] keyIdentifier;
+    private final byte[] keyIdentifier;
 
     /**
      * Construct a recipient ID with the key identifier of a KEK recipient.
@@ -27,12 +27,10 @@ public class KEKRecipientId
     public boolean equals(
         Object o)
     {
-        if (!(o instanceof KEKRecipientId))
+        if (!(o instanceof KEKRecipientId id))
         {
             return false;
         }
-
-        KEKRecipientId id = (KEKRecipientId)o;
 
         return Arrays.areEqual(keyIdentifier, id.keyIdentifier);
     }

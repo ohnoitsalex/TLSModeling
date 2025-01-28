@@ -1,15 +1,5 @@
 package org.bouncycastle.pkix;
 
-import java.io.IOException;
-import java.math.BigInteger;
-import java.security.AccessControlException;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.security.Security;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1Sequence;
@@ -24,6 +14,16 @@ import org.bouncycastle.crypto.CryptoServicesRegistrar;
 import org.bouncycastle.math.Primes;
 import org.bouncycastle.util.BigIntegers;
 import org.bouncycastle.util.Strings;
+
+import java.io.IOException;
+import java.math.BigInteger;
+import java.security.AccessControlException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.security.Security;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * A checker for vetting subject public keys based on the direct checking of the ASN.1

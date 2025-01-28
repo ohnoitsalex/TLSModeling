@@ -20,11 +20,11 @@ public class SignerInfoGeneratorBuilder
 {
     private final DigestAlgorithmIdentifierFinder digAlgFinder = new DefaultDigestAlgorithmIdentifierFinder();
 
-    private DigestCalculatorProvider digestProvider;
+    private final DigestCalculatorProvider digestProvider;
     private boolean directSignature;
     private CMSAttributeTableGenerator signedGen;
     private CMSAttributeTableGenerator unsignedGen;
-    private CMSSignatureEncryptionAlgorithmFinder sigEncAlgFinder;
+    private final CMSSignatureEncryptionAlgorithmFinder sigEncAlgFinder;
     private AlgorithmIdentifier contentDigest;
 
     /**

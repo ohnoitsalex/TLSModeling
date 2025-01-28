@@ -174,10 +174,10 @@ public class CMSEnvelopedDataStreamGenerator
     {
         private final OutputEncryptor _encryptor;
         private final OutputStream _cOut;
-        private OutputStream _octetStream;
-        private BERSequenceGenerator _cGen;
-        private BERSequenceGenerator _envGen;
-        private BERSequenceGenerator _eiGen;
+        private final OutputStream _octetStream;
+        private final BERSequenceGenerator _cGen;
+        private final BERSequenceGenerator _envGen;
+        private final BERSequenceGenerator _eiGen;
 
         public CmsEnvelopedDataOutputStream(
             OutputEncryptor encryptor,

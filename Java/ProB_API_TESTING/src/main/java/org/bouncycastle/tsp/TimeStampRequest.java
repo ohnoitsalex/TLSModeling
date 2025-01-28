@@ -25,10 +25,10 @@ import org.bouncycastle.asn1.x509.Extensions;
  */
 public class TimeStampRequest
 {
-    private static Set EMPTY_SET = Collections.unmodifiableSet(new HashSet());
+    private static final Set EMPTY_SET = Collections.unmodifiableSet(new HashSet());
 
-    private TimeStampReq req;
-    private Extensions extensions;
+    private final TimeStampReq req;
+    private final Extensions extensions;
 
     public TimeStampRequest(TimeStampReq req)
     {

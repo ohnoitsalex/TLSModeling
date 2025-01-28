@@ -1,9 +1,8 @@
 package org.bouncycastle.cms.jcajce;
 
+import javax.crypto.Cipher;
 import java.io.IOException;
 import java.io.OutputStream;
-
-import javax.crypto.Cipher;
 
 class JceAADStream
     extends OutputStream

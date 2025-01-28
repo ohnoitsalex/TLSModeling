@@ -11,6 +11,6 @@ import java.io.IOException;
  */
 public interface ESTClient
 {
-    public ESTResponse doRequest(ESTRequest c)
+    ESTResponse doRequest(ESTRequest c)
         throws IOException;
 }

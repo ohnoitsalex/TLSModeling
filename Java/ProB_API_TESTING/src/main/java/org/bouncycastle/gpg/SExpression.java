@@ -499,16 +499,14 @@ public class SExpression
                 out.write(':');
                 out.write(Strings.toUTF8ByteArray(s));
             }
-            else if (value instanceof String)
+            else if (value instanceof String s)
             {
-                String s = (String)value;
                 out.write(Strings.toByteArray(Integer.toString(s.length())));
                 out.write(':');
                 out.write(Strings.toUTF8ByteArray(s));
             }
-            else if (value instanceof byte[])
+            else if (value instanceof byte[] b)
             {
-                byte[] b = ((byte[])value);
                 out.write(Strings.toByteArray(Integer.toString(b.length)));
                 out.write(':');
                 out.write(b);

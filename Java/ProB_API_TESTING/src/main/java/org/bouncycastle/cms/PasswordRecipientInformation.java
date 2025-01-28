@@ -32,7 +32,7 @@ public class PasswordRecipientInformation
         KEYSIZES.put(CMSAlgorithm.AES256_CBC, Integers.valueOf(256));
     }
 
-    private PasswordRecipientInfo info;
+    private final PasswordRecipientInfo info;
 
     PasswordRecipientInformation(
         PasswordRecipientInfo   info,

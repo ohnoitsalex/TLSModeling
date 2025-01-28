@@ -6,6 +6,8 @@ import org.bouncycastle.oer.its.ieee1609dot2.basetypes.HashedId8;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.Selector;
 
+import java.util.Objects;
+
 public class ETSIRecipientID
     implements Selector<ETSIRecipientInfo>
 {
@@ -35,7 +37,7 @@ public class ETSIRecipientID
 
         ETSIRecipientID that = (ETSIRecipientID)o;
 
-        return id != null ? id.equals(that.id) : that.id == null;
+        return Objects.equals(id, that.id);
     }
 
     @Override

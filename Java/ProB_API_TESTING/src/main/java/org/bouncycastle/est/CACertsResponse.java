@@ -10,7 +10,7 @@ import org.bouncycastle.util.Store;
 public class CACertsResponse
 {
     private final Store<X509CertificateHolder> store;
-    private Store<X509CRLHolder> crlHolderStore;
+    private final Store<X509CRLHolder> crlHolderStore;
     private final ESTRequest requestToRetry;
     private final Source session;
     private final boolean trusted;

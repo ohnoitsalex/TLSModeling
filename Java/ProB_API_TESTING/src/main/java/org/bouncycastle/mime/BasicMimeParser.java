@@ -1,10 +1,10 @@
 package org.bouncycastle.mime;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.bouncycastle.mime.encoding.Base64InputStream;
 import org.bouncycastle.mime.encoding.QuotedPrintableInputStream;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class BasicMimeParser
     implements MimeParser

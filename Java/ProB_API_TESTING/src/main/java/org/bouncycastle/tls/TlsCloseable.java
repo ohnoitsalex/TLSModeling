@@ -4,5 +4,5 @@ import java.io.IOException;
 
 public interface TlsCloseable
 {
-    public void close() throws IOException;
+    void close() throws IOException;
 }

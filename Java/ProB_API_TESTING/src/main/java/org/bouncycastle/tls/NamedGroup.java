@@ -412,12 +412,7 @@ public class NamedGroup
         }
 
         String kemName = getKemName(namedGroup);
-        if (null != kemName)
-        {
-            return kemName;
-        }
-
-        return null;
+        return kemName;
     }
 
     public static String getText(int namedGroup)

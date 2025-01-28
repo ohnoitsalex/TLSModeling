@@ -63,7 +63,7 @@ public class CMSAuthenticatedDataParser
     RecipientInformationStore recipientInfoStore;
     AuthenticatedDataParser authData;
 
-    private AlgorithmIdentifier macAlg;
+    private final AlgorithmIdentifier macAlg;
     private byte[] mac;
     private AttributeTable authAttrs;
     private ASN1Set authAttrSet;
@@ -73,7 +73,7 @@ public class CMSAuthenticatedDataParser
     private boolean unauthAttrNotRead;
     private OriginatorInformation originatorInfo;
 
-    private CMSSecureReadable secureReadable;
+    private final CMSSecureReadable secureReadable;
 
     public CMSAuthenticatedDataParser(
         byte[] envelopedData)

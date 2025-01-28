@@ -169,7 +169,7 @@ public class Certificate
     {
         final boolean isTLSv13 = TlsUtils.isTLSv13(context);
 
-        if ((null != certificateRequestContext) != isTLSv13)
+        if ((null == certificateRequestContext) == isTLSv13)
         {
             throw new IllegalStateException();
         }

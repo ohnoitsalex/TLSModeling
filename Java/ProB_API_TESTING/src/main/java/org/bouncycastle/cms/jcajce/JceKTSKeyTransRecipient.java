@@ -1,12 +1,5 @@
 package org.bouncycastle.cms.jcajce;
 
-import java.io.IOException;
-import java.security.Key;
-import java.security.PrivateKey;
-import java.security.Provider;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bouncycastle.asn1.ASN1Encoding;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.DEROctetString;
@@ -18,6 +11,13 @@ import org.bouncycastle.cms.KeyTransRecipientId;
 import org.bouncycastle.operator.OperatorException;
 import org.bouncycastle.operator.jcajce.JceKTSKeyUnwrapper;
 import org.bouncycastle.util.encoders.Hex;
+
+import java.io.IOException;
+import java.security.Key;
+import java.security.PrivateKey;
+import java.security.Provider;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class JceKTSKeyTransRecipient
     implements KeyTransRecipient

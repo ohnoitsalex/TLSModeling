@@ -36,7 +36,7 @@ public class ECPointUtil
         }
         else
         {
-            int k[] = ((ECFieldF2m)curve.getField()).getMidTermsOfReductionPolynomial();
+            int[] k = ((ECFieldF2m)curve.getField()).getMidTermsOfReductionPolynomial();
             
             if (k.length == 3)
             {

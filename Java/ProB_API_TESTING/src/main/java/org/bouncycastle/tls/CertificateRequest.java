@@ -161,9 +161,9 @@ public class CertificateRequest
         final boolean isTLSv12 = TlsUtils.isTLSv12(negotiatedVersion);
         final boolean isTLSv13 = TlsUtils.isTLSv13(negotiatedVersion);
 
-        if (isTLSv13 != (null != certificateRequestContext) ||
+        if (isTLSv13 == (null == certificateRequestContext) ||
             isTLSv13 != (null == certificateTypes) ||
-            isTLSv12 != (null != supportedSignatureAlgorithms) ||
+                isTLSv12 == (null == supportedSignatureAlgorithms) ||
             (!isTLSv13 && (null != supportedSignatureAlgorithmsCert)))
         {
             throw new IllegalStateException();

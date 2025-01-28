@@ -16,14 +16,14 @@ import org.bouncycastle.tls.crypto.TlsNullNullCipher;
  */
 class RecordStream
 {
-    private static int DEFAULT_PLAINTEXT_LIMIT = (1 << 14);
+    private static final int DEFAULT_PLAINTEXT_LIMIT = (1 << 14);
 
     private final Record inputRecord = new Record();
     private final SequenceNumber readSeqNo = new SequenceNumber(), writeSeqNo = new SequenceNumber();
 
-    private TlsProtocol handler;
-    private InputStream input;
-    private OutputStream output;
+    private final TlsProtocol handler;
+    private final InputStream input;
+    private final OutputStream output;
     private TlsCipher pendingCipher = null;
     private TlsCipher readCipher = TlsNullNullCipher.INSTANCE;
     private TlsCipher readCipherDeferred = null;

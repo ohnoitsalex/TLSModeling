@@ -1,10 +1,10 @@
 package org.bouncycastle.cms;
 
-import java.io.IOException;
-
 import org.bouncycastle.asn1.ASN1Encoding;
 import org.bouncycastle.asn1.cms.SignerInfo;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+
+import java.io.IOException;
 
 /**
  * Toolkit methods for dealing with common errors in CMS

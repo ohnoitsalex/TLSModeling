@@ -1,16 +1,15 @@
 package org.bouncycastle.cms.jcajce;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-
-import javax.crypto.Cipher;
-
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.cms.InputStreamWithMAC;
 import org.bouncycastle.jcajce.io.CipherInputStream;
 import org.bouncycastle.operator.InputAEADDecryptor;
+
+import javax.crypto.Cipher;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 class CMSInputAEADDecryptor
     implements InputAEADDecryptor

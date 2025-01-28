@@ -1,8 +1,5 @@
 package org.bouncycastle.cms;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1OctetString;
 import org.bouncycastle.asn1.cms.CompressedData;
@@ -10,6 +7,9 @@ import org.bouncycastle.asn1.cms.ContentInfo;
 import org.bouncycastle.operator.InputExpander;
 import org.bouncycastle.operator.InputExpanderProvider;
 import org.bouncycastle.util.Encodable;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * containing class for an CMS Compressed Data object

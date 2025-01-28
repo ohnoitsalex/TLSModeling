@@ -1,31 +1,5 @@
 package org.bouncycastle.mail.smime.examples;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.security.KeyPairGenerator;
-import java.security.KeyStore;
-import java.security.PublicKey;
-import java.security.SecureRandom;
-import java.security.Security;
-import java.security.cert.CertStore;
-import java.security.cert.CertificateFactory;
-import java.security.cert.CollectionCertStoreParameters;
-import java.security.cert.PKIXParameters;
-import java.security.cert.TrustAnchor;
-import java.security.cert.X509CRL;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
-import javax.security.auth.x500.X500Principal;
-
 import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1Encoding;
 import org.bouncycastle.asn1.x509.Extension;
@@ -35,6 +9,15 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.validator.SignedMailValidator;
 import org.bouncycastle.pkix.jcajce.PKIXCertPathReviewer;
 import org.bouncycastle.pkix.util.ErrorBundle;
+
+import javax.mail.Session;
+import javax.mail.internet.MimeMessage;
+import javax.security.auth.x500.X500Principal;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.security.*;
+import java.security.cert.*;
+import java.util.*;
 
 /**
  * An Example that reads a signed mail and validates its signature. Also

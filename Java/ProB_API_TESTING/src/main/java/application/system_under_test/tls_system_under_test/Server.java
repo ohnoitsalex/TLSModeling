@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.security.KeyStore;
 
 public class Server {
-    private static final int PORT = 1238;
+    private static final int PORT = 1234;
 
     public static void main(String[] args) {
         try {
@@ -38,9 +38,9 @@ public class Server {
                 // Enable custom cipher suites
                 String[] customCipherSuites = {
                 };
-                serverSocket.setEnabledCipherSuites(customCipherSuites);
+                //serverSocket.setEnabledCipherSuites(customCipherSuites);
                 // Specify allowed TLS versions
-                serverSocket.setEnabledProtocols(new String[]{"TLSv1.3"});
+                //serverSocket.setEnabledProtocols(new String[]{"TLSv1.3"});
 
                 // Accept incoming connections
                 try (SSLSocket clientSocket = (SSLSocket) serverSocket.accept()) {

@@ -11,7 +11,7 @@ import java.security.cert.X509Certificate;
 public class Client {
 
     private static final String SERVER_HOST = "localhost";
-    private static final int SERVER_PORT = 1238;
+    private static final int SERVER_PORT = 1234;
 
     public static void main(String[] args) {
         try {
@@ -49,8 +49,8 @@ public class Client {
                         "TLS_RSA_WITH_AES_256_CBC_SHA",
                         "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256"
                 };
-                socket.setEnabledCipherSuites(customCipherSuites);
-                socket.setEnabledProtocols(new String[]{"TLSv1.2"});
+                //socket.setEnabledCipherSuites(customCipherSuites);
+                //socket.setEnabledProtocols(new String[]{"TLSv1.3"});
 
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {

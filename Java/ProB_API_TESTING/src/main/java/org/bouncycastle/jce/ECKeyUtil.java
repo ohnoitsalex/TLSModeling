@@ -237,7 +237,7 @@ public class ECKeyUtil
     private static class UnexpectedException
         extends RuntimeException
     {
-        private Throwable cause;
+        private final Throwable cause;
 
         UnexpectedException(Throwable cause)
         {

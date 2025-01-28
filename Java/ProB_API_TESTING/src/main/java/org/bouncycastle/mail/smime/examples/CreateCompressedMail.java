@@ -1,7 +1,7 @@
 package org.bouncycastle.mail.smime.examples;
 
-import java.io.FileOutputStream;
-import java.util.Properties;
+import org.bouncycastle.cms.jcajce.ZlibCompressor;
+import org.bouncycastle.mail.smime.SMIMECompressedGenerator;
 
 import javax.mail.Address;
 import javax.mail.Message;
@@ -9,9 +9,8 @@ import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-
-import org.bouncycastle.cms.jcajce.ZlibCompressor;
-import org.bouncycastle.mail.smime.SMIMECompressedGenerator;
+import java.io.FileOutputStream;
+import java.util.Properties;
 
 /**
  * a simple example that creates a single compressed mail message.

@@ -1,10 +1,5 @@
 package org.bouncycastle.cms;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import org.bouncycastle.asn1.ASN1Encoding;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1Set;
@@ -16,6 +11,11 @@ import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.Encodable;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 /**
  * containing class for an CMS AuthEnveloped Data object
  */
@@ -26,10 +26,10 @@ public class CMSAuthEnvelopedData
     ContentInfo contentInfo;
 
     private OriginatorInformation originatorInfo;
-    private AlgorithmIdentifier authEncAlg;
-    private ASN1Set authAttrs;
-    private byte[] mac;
-    private ASN1Set unauthAttrs;
+    private final AlgorithmIdentifier authEncAlg;
+    private final ASN1Set authAttrs;
+    private final byte[] mac;
+    private final ASN1Set unauthAttrs;
 
     public CMSAuthEnvelopedData(byte[] authEnvData)
         throws CMSException

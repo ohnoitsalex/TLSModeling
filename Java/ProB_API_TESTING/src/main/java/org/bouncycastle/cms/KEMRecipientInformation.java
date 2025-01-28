@@ -10,7 +10,7 @@ import org.bouncycastle.util.Arrays;
 public class KEMRecipientInformation
     extends RecipientInformation
 {
-    private KEMRecipientInfo info;
+    private final KEMRecipientInfo info;
 
     KEMRecipientInformation(
         KEMRecipientInfo        info,

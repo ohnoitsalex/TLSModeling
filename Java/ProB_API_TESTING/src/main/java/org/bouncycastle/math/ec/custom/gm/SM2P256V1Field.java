@@ -1,12 +1,12 @@
 package org.bouncycastle.math.ec.custom.gm;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-
 import org.bouncycastle.math.raw.Mod;
 import org.bouncycastle.math.raw.Nat;
 import org.bouncycastle.math.raw.Nat256;
 import org.bouncycastle.util.Pack;
+
+import java.math.BigInteger;
+import java.security.SecureRandom;
 
 public class SM2P256V1Field
 {

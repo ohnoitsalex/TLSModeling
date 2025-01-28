@@ -1,10 +1,11 @@
 package org.bouncycastle.cms;
 
-import java.math.BigInteger;
-
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.Selector;
+
+import java.math.BigInteger;
+import java.util.Objects;
 
 /**
  * a basic index for an originator.
@@ -94,12 +95,10 @@ class OriginatorId
     public boolean equals(
         Object  o)
     {
-        if (!(o instanceof OriginatorId))
+        if (!(o instanceof OriginatorId id))
         {
             return false;
         }
-
-        OriginatorId id = (OriginatorId)o;
 
         return Arrays.areEqual(subjectKeyId, id.subjectKeyId)
             && equalsObj(this.serialNumber, id.serialNumber)
@@ -108,7 +107,7 @@ class OriginatorId
 
     private boolean equalsObj(Object a, Object b)
     {
-        return (a != null) ? a.equals(b) : b == null;
+        return Objects.equals(a, b);
     }
 
     public boolean match(Object obj)

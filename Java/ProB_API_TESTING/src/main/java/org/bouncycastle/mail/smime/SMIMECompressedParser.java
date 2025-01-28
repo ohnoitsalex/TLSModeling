@@ -1,12 +1,12 @@
 package org.bouncycastle.mail.smime;
 
+import org.bouncycastle.cms.CMSCompressedDataParser;
+import org.bouncycastle.cms.CMSException;
+
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimePart;
-
-import org.bouncycastle.cms.CMSCompressedDataParser;
-import org.bouncycastle.cms.CMSException;
 
 /**
  * Stream based containing class for an S/MIME pkcs7-mime compressed MimePart.

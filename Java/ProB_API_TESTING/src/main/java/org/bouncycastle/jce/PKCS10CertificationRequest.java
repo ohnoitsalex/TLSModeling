@@ -73,11 +73,11 @@ import org.bouncycastle.util.Strings;
 public class PKCS10CertificationRequest
     extends CertificationRequest
 {
-    private static Hashtable            algorithms = new Hashtable();
-    private static Hashtable            params = new Hashtable();
-    private static Hashtable            keyAlgorithms = new Hashtable();
-    private static Hashtable            oids = new Hashtable();
-    private static Set                  noParams = new HashSet();
+    private static final Hashtable            algorithms = new Hashtable();
+    private static final Hashtable            params = new Hashtable();
+    private static final Hashtable            keyAlgorithms = new Hashtable();
+    private static final Hashtable            oids = new Hashtable();
+    private static final Set                  noParams = new HashSet();
 
     static
     {

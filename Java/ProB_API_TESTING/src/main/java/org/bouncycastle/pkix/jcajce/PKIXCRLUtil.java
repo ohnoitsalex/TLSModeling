@@ -1,19 +1,11 @@
 package org.bouncycastle.pkix.jcajce;
 
-import java.security.cert.CertStore;
-import java.security.cert.CertStoreException;
-import java.security.cert.PKIXParameters;
-import java.security.cert.X509CRL;
-import java.security.cert.X509Certificate;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 import org.bouncycastle.jcajce.PKIXCRLStoreSelector;
 import org.bouncycastle.util.Store;
 import org.bouncycastle.util.StoreException;
+
+import java.security.cert.*;
+import java.util.*;
 
 abstract class PKIXCRLUtil
 {

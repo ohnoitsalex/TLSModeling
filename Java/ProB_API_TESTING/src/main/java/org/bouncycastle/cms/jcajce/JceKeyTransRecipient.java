@@ -1,19 +1,5 @@
 package org.bouncycastle.cms.jcajce;
 
-import java.security.Key;
-import java.security.KeyFactory;
-import java.security.PrivateKey;
-import java.security.Provider;
-import java.security.PublicKey;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.crypto.Cipher;
-import javax.crypto.KeyAgreement;
-import javax.crypto.SecretKey;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.cms.CMSObjectIdentifiers;
 import org.bouncycastle.asn1.cms.KEMRecipientInfo;
@@ -29,6 +15,15 @@ import org.bouncycastle.jcajce.spec.UserKeyingMaterialSpec;
 import org.bouncycastle.operator.OperatorException;
 import org.bouncycastle.operator.jcajce.JceAsymmetricKeyUnwrapper;
 import org.bouncycastle.util.Arrays;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyAgreement;
+import javax.crypto.SecretKey;
+import java.security.*;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public abstract class JceKeyTransRecipient
     implements KeyTransRecipient

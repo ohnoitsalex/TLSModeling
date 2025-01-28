@@ -1,14 +1,27 @@
 package application.model_api;
 
+import application.information_capture.tls_information_capture.PacketLogger;
+import application.information_capture.tls_information_capture.TlsHandshakeParser;
+import application.information_converter.InformationConvertertoAbstract;
+import application.information_holder.tls_information_holder.TLSClientInformationHolder;
+import application.information_holder.tls_information_holder.TLSServerInformationHolder;
 import com.google.inject.Inject;
 import de.prob.animator.domainobjects.ClassicalB;
 import de.prob.statespace.StateSpace;
 import de.prob.statespace.Trace;
+import de.prob.statespace.Transition;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ModelExecuter {
+
+    public static TLSClientInformationHolder tlsClientInformationHolder;
+    private Map<String, String> clientHelloInformation = new HashMap<>();
+    private Map<String, String> serverHelloInformation = new HashMap<>();
+    public static TLSServerInformationHolder tlsServerInformationHolder;
 
     private final List<String> paramsSendClientHello = Arrays.asList(
             "x0303",
@@ -104,7 +117,7 @@ public class ModelExecuter {
         generateServerHelloMessages();
         //generateServerHelloMessagesWithoutClientCertificateRequest();
         getOutTransitionInformations();
-        System.out.println("Effectuated Transitions:" + trace.getTransitionList());
+        System.out.println("Possible transitions in current Trace:" + trace.getTransitionList());
     }
 
     public void generateRandomTrace(int steps) {
@@ -125,7 +138,7 @@ public class ModelExecuter {
     public void generateClientHelloMessages() {
         trace.getCurrentState().findTransitions("SendClientHello", paramsFindSendClientHello, 1000);
         trace = trace.addTransitionWith("SendClientHello", paramsSendClientHello);
-        trace = trace.addTransitionWith("ReceiveClientHello", Arrays.asList());
+        trace = trace.addTransitionWith("ReceiveClientHello", List.of());
     }
 
     public void generateServerHelloMessages() {
@@ -140,7 +153,7 @@ public class ModelExecuter {
         trace.getCurrentState().findTransitions("SendServerHello", paramsFindSendServerHello, 1000);
         trace = trace.addTransitionWith("SendServerHello", paramsSendServerHello);
         trace = trace.addTransitionWith("SendEncryptedExtensions", paramsSendEncryptedExtensions);
-        trace = trace.addTransitionWith("SendClientCertificateRequest", Arrays.asList());
+        trace = trace.addTransitionWith("SendClientCertificateRequest", List.of());
     }
 
     public void performSpecificTransition(String operation, String[] params) {
@@ -153,10 +166,55 @@ public class ModelExecuter {
     }
 
     public void getOutTransitionInformations() {
+        InformationConvertertoAbstract.configureYAML();
+
         System.out.println("Next Transition param names:" + trace.getCurrentState().getOutTransitions().getFirst().getParameterNames());
         System.out.println("Printing possible values for next transition:");
-        for (int i = 0; i < trace.getCurrentState().getOutTransitions().size(); i++) {
-            System.out.println("Transition param values:" + trace.getCurrentState().getOutTransitions().get(i).getParameterValues());
+        while (trace.canGoBack()){
+            trace = trace.back();
+        }
+        while (trace.canGoForward()) {
+            trace = trace.forward();
+            //System.out.println("Current State = "+trace.getCurrent().toString());
+            if (trace.getCurrent().toString() == "SendClientHello"){
+                System.out.println("Current Transition: SendClientHello");
+                Transition transition = trace.getCurrentTransition();
+                tlsClientInformationHolder = new TLSClientInformationHolder();
+                //System.out.println(transition.getName().toString());
+                clientHelloInformation.put("random", "NOT SUPPORTED IN MODEL ");
+                clientHelloInformation.put("legacy_version", String.valueOf(transition.getParameterValues().get(0))+ " ");
+                clientHelloInformation.put("supported_versions",transition.getParameterValues().get(1));
+                clientHelloInformation.put("legacy_compression_methods",transition.getParameterValues().get(2));
+                clientHelloInformation.put("pre_shared_key", transition.getParameterValues().get(3));
+                clientHelloInformation.put("signature_algorithms", transition.getParameterValues().get(4));
+                clientHelloInformation.put("supported_groups",transition.getParameterValues().get(5));
+                clientHelloInformation.put("cipher_suites",transition.getParameterValues().get(6));
+                tlsClientInformationHolder.setClientHelloInformation(clientHelloInformation);
+
+                InformationConvertertoAbstract.serializeToYAML(tlsClientInformationHolder, "data/ModelClientHello");
+            }
+            if (trace.getCurrent().toString() == "SendServerHello"){
+                System.out.println("SendServerHello");
+
+                System.out.println("Current Transition: SendClientHello");
+                Transition transition = trace.getCurrentTransition();
+                tlsServerInformationHolder = new TLSServerInformationHolder();
+                //System.out.println(transition.getName().toString());
+                serverHelloInformation.put("random", "NOT SUPPORTED IN MODEL ");
+                serverHelloInformation.put("legacy_version", transition.getParameterValues().get(0) + " ");
+                serverHelloInformation.put("supported_versions",transition.getParameterValues().get(3));
+                serverHelloInformation.put("legacy_compression_methods",(transition.getParameterValues().get(2)));
+                serverHelloInformation.put("pre_shared_key", transition.getParameterValues().get(6));
+                serverHelloInformation.put("legacy_session_id_echo", String.valueOf(transition.getParameterValues().get(1)) + " ");
+                serverHelloInformation.put("key_share",transition.getParameterValues().get(5));
+                serverHelloInformation.put("cipher_suites",String.valueOf(transition.getParameterValues().get(4)) + " ");
+                tlsServerInformationHolder.setServerHelloInformation(serverHelloInformation);
+
+                //InformationConvertertoAbstract.configureYAML();
+                InformationConvertertoAbstract.serializeToYAML(tlsServerInformationHolder, "data/ModelServerHello");
+            }
+
+            //System.out.println("Transition param values:" + trace.getCurrentState().getOutTransitions().toString());
 
         }
     }

@@ -1,7 +1,5 @@
 package org.bouncycastle.pkcs.jcajce;
 
-import java.security.Provider;
-
 import org.bouncycastle.asn1.pkcs.PBMAC1Params;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
@@ -12,6 +10,8 @@ import org.bouncycastle.jcajce.util.ProviderJcaJceHelper;
 import org.bouncycastle.operator.MacCalculator;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.PBEMacCalculatorProvider;
+
+import java.security.Provider;
 
 public class JcePBMac1CalculatorProviderBuilder
 {

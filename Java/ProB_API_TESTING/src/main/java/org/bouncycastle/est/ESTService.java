@@ -152,7 +152,7 @@ public class ESTService
                 if (contentType == null || !contentType.startsWith("application/pkcs7-mime"))
                 {
                     String j = contentType != null ? " got " + contentType : " but was not present.";
-                    throw new ESTException(("Response : " + url.toString() + "Expecting application/pkcs7-mime ") + j, null, resp.getStatusCode(), resp.getInputStream());
+                    throw new ESTException(("Response : " + url + "Expecting application/pkcs7-mime ") + j, null, resp.getStatusCode(), resp.getInputStream());
                 }
 
                 try
@@ -165,13 +165,13 @@ public class ESTService
                 }
                 catch (Throwable ex)
                 {
-                    throw new ESTException("Decoding CACerts: " + url.toString() + " " + ex.getMessage(), ex, resp.getStatusCode(), resp.getInputStream());
+                    throw new ESTException("Decoding CACerts: " + url + " " + ex.getMessage(), ex, resp.getStatusCode(), resp.getInputStream());
                 }
 
             }
             else if (resp.getStatusCode() != 204) // 204 are No Content
             {
-                throw new ESTException("Get CACerts: " + url.toString(), null, resp.getStatusCode(), resp.getInputStream());
+                throw new ESTException("Get CACerts: " + url, null, resp.getStatusCode(), resp.getInputStream());
             }
 
             caCertsResponse = new CACertsResponse(caCerts, crlHolderStore, req, resp.getSource(), clientProvider.isTrusted());
@@ -210,7 +210,7 @@ public class ESTService
             {
                 throw (ESTException)finalThrowable;
             }
-            throw new ESTException("Get CACerts: " + url.toString(), finalThrowable, resp.getStatusCode(), null);
+            throw new ESTException("Get CACerts: " + url, finalThrowable, resp.getStatusCode(), null);
         }
 
         return caCertsResponse;
@@ -699,7 +699,7 @@ public class ESTService
                 }
                 catch (Throwable ex)
                 {
-                    throw new ESTException("Decoding CACerts: " + url.toString() + " " + ex.getMessage(), ex, resp.getStatusCode(), resp.getInputStream());
+                    throw new ESTException("Decoding CACerts: " + url + " " + ex.getMessage(), ex, resp.getStatusCode(), resp.getInputStream());
                 }
 
                 break;

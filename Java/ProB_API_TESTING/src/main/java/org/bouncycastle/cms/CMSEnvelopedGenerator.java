@@ -1,8 +1,5 @@
 package org.bouncycastle.cms;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bouncycastle.asn1.cms.OriginatorInfo;
 import org.bouncycastle.asn1.kisa.KISAObjectIdentifiers;
 import org.bouncycastle.asn1.misc.MiscObjectIdentifiers;
@@ -11,6 +8,9 @@ import org.bouncycastle.asn1.ntt.NTTObjectIdentifiers;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.sec.SECObjectIdentifiers;
 import org.bouncycastle.asn1.x9.X9ObjectIdentifiers;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * General class for generating a CMS enveloped-data message.

@@ -1,9 +1,5 @@
 package org.bouncycastle.cms;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1OctetString;
 import org.bouncycastle.asn1.cms.ContentInfo;
@@ -14,6 +10,10 @@ import org.bouncycastle.operator.DigestCalculatorProvider;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.Encodable;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * containing class for an CMS Digested Data object
@@ -27,8 +27,8 @@ import org.bouncycastle.util.Encodable;
 public class CMSDigestedData
     implements Encodable
 {
-    private ContentInfo  contentInfo;
-    private DigestedData digestedData;
+    private final ContentInfo  contentInfo;
+    private final DigestedData digestedData;
 
     public CMSDigestedData(
         byte[] compressedData)

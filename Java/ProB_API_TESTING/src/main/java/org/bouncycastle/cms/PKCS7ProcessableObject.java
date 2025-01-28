@@ -1,13 +1,13 @@
 package org.bouncycastle.cms;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Iterator;
-
 import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1Encoding;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1Sequence;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Iterator;
 
 public class PKCS7ProcessableObject
     implements CMSTypedData

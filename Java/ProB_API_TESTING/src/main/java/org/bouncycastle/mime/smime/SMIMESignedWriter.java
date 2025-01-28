@@ -1,19 +1,5 @@
 package org.bouncycastle.mime.smime;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.math.BigInteger;
-import java.security.SecureRandom;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cms.CMSAlgorithm;
@@ -25,6 +11,13 @@ import org.bouncycastle.mime.MimeWriter;
 import org.bouncycastle.mime.encoding.Base64OutputStream;
 import org.bouncycastle.util.Store;
 import org.bouncycastle.util.Strings;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.util.*;
 
 /**
  * Writer for SMIME Signed objects.

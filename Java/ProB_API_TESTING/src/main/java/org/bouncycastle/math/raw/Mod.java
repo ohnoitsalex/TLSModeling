@@ -1,8 +1,8 @@
 package org.bouncycastle.math.raw;
 
-import java.util.Random;
-
 import org.bouncycastle.util.Integers;
+
+import java.util.Random;
 
 /**
  * Modular inversion as implemented in this class is based on the paper "Fast constant-time gcd

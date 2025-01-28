@@ -8,7 +8,7 @@ import org.bouncycastle.util.io.Streams;
 
 class CMSProcessableInputStream implements CMSProcessable, CMSReadable
 {
-    private InputStream input;
+    private final InputStream input;
     private boolean used = false;
 
     public CMSProcessableInputStream(

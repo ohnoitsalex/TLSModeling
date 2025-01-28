@@ -1,11 +1,7 @@
 package org.bouncycastle.mail.smime.handlers;
 
-import java.awt.datatransfer.DataFlavor;
-import java.io.FilterOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Enumeration;
+import org.bouncycastle.mail.smime.SMIMEUtil;
+import org.bouncycastle.util.Strings;
 
 import javax.activation.ActivationDataFlavor;
 import javax.activation.DataContentHandler;
@@ -15,9 +11,12 @@ import javax.mail.Multipart;
 import javax.mail.internet.ContentType;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
-
-import org.bouncycastle.mail.smime.SMIMEUtil;
-import org.bouncycastle.util.Strings;
+import java.awt.datatransfer.DataFlavor;
+import java.io.FilterOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Enumeration;
 
 public class multipart_signed
     implements DataContentHandler

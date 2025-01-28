@@ -7,7 +7,7 @@ import java.io.InputStream;
 public class CTEChunkedInputStream
     extends InputStream
 {
-    private InputStream src;
+    private final InputStream src;
     int chunkLen = 0;
 
 

@@ -195,13 +195,13 @@ public class CMSAuthenticatedDataStreamGenerator
     private class CmsAuthenticatedDataOutputStream
         extends OutputStream
     {
-        private OutputStream dataStream;
-        private BERSequenceGenerator cGen;
-        private BERSequenceGenerator envGen;
-        private BERSequenceGenerator eiGen;
-        private MacCalculator macCalculator;
-        private DigestCalculator digestCalculator;
-        private ASN1ObjectIdentifier contentType;
+        private final OutputStream dataStream;
+        private final BERSequenceGenerator cGen;
+        private final BERSequenceGenerator envGen;
+        private final BERSequenceGenerator eiGen;
+        private final MacCalculator macCalculator;
+        private final DigestCalculator digestCalculator;
+        private final ASN1ObjectIdentifier contentType;
 
         public CmsAuthenticatedDataOutputStream(
             MacCalculator   macCalculator,

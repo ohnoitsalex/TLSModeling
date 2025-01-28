@@ -1,9 +1,8 @@
 package org.bouncycastle.mail.smime.handlers;
 
-import java.awt.datatransfer.DataFlavor;
-
 import javax.activation.ActivationDataFlavor;
 import javax.mail.internet.MimeBodyPart;
+import java.awt.datatransfer.DataFlavor;
 
 public class x_pkcs7_mime 
     extends PKCS7ContentHandler

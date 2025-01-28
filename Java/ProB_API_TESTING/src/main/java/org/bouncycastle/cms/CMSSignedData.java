@@ -1,28 +1,6 @@
 package org.bouncycastle.cms;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.bouncycastle.asn1.ASN1Encodable;
-import org.bouncycastle.asn1.ASN1EncodableVector;
-import org.bouncycastle.asn1.ASN1InputStream;
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.ASN1OctetString;
-import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.ASN1Set;
-import org.bouncycastle.asn1.BERSequence;
-import org.bouncycastle.asn1.DERNull;
-import org.bouncycastle.asn1.DLSet;
+import org.bouncycastle.asn1.*;
 import org.bouncycastle.asn1.cms.ContentInfo;
 import org.bouncycastle.asn1.cms.SignedData;
 import org.bouncycastle.asn1.cms.SignerInfo;
@@ -35,6 +13,11 @@ import org.bouncycastle.operator.DigestAlgorithmIdentifierFinder;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.util.Encodable;
 import org.bouncycastle.util.Store;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.*;
 
 /**
  * general class for handling a pkcs7-signature message.
@@ -621,8 +604,8 @@ public class CMSSignedData
         // keep ourselves compatible with what was there before - issue with
         // NULL appearing and disappearing in AlgorithmIdentifier parameters.
         Set<AlgorithmIdentifier> oldDigestAlgs = signedData.getDigestAlgorithmIDs();
-        AlgorithmIdentifier[] oldDigestAlgIds = (AlgorithmIdentifier[])oldDigestAlgs.toArray(new AlgorithmIdentifier[oldDigestAlgs.size()]);
-        AlgorithmIdentifier[] newDigestAlgIds = (AlgorithmIdentifier[])digestAlgs.toArray(new AlgorithmIdentifier[digestAlgs.size()]);
+        AlgorithmIdentifier[] oldDigestAlgIds = oldDigestAlgs.toArray(new AlgorithmIdentifier[oldDigestAlgs.size()]);
+        AlgorithmIdentifier[] newDigestAlgIds = digestAlgs.toArray(new AlgorithmIdentifier[digestAlgs.size()]);
 
         compareAndReplaceAlgIds(oldDigestAlgIds, newDigestAlgIds);
 

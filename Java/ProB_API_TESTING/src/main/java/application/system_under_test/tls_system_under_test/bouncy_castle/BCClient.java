@@ -6,6 +6,7 @@ import org.bouncycastle.tls.crypto.TlsCrypto;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Vector;
 
@@ -124,10 +125,10 @@ public class BCClient {
 
         // Send an HTTP request over the TLS connection (this is the application data)
         OutputStream outputStream = protocol.getOutputStream();
-        outputStream.write("GET / HTTP/1.1\r\n".getBytes("UTF-8"));
-        outputStream.write("Host: localhost\r\n".getBytes("UTF-8"));
-        outputStream.write("Connection: close\r\n".getBytes("UTF-8"));
-        outputStream.write("\r\n".getBytes("UTF-8"));
+        outputStream.write("GET / HTTP/1.1\r\n".getBytes(StandardCharsets.UTF_8));
+        outputStream.write("Host: localhost\r\n".getBytes(StandardCharsets.UTF_8));
+        outputStream.write("Connection: close\r\n".getBytes(StandardCharsets.UTF_8));
+        outputStream.write("\r\n".getBytes(StandardCharsets.UTF_8));
         outputStream.flush();
 
         // Read the server's response

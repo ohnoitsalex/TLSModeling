@@ -1,21 +1,11 @@
 package org.bouncycastle.mime.smime;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.FilterOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.cms.CMSAlgorithm;
 import org.bouncycastle.util.Strings;
+
+import java.io.*;
+import java.util.*;
 
 class SMimeUtils
 {

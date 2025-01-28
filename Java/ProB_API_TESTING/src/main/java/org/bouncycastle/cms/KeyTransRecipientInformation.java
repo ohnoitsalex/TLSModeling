@@ -14,7 +14,7 @@ import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 public class KeyTransRecipientInformation
     extends RecipientInformation
 {
-    private KeyTransRecipientInfo info;
+    private final KeyTransRecipientInfo info;
 
     KeyTransRecipientInformation(
         KeyTransRecipientInfo   info,

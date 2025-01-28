@@ -1,5 +1,7 @@
 package org.bouncycastle.util.io.pem;
 
+import org.bouncycastle.util.encoders.Base64;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -7,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.bouncycastle.util.encoders.Base64;
 
 /**
  * A generic PEM reader, based on the format outlined in RFC 1421

@@ -11,5 +11,5 @@ public interface TlsObjectIdentifiers
     /**
      * RFC 7633
      */
-    static final ASN1ObjectIdentifier id_pe_tlsfeature = X509ObjectIdentifiers.id_pe.branch("24");
+    ASN1ObjectIdentifier id_pe_tlsfeature = X509ObjectIdentifiers.id_pe.branch("24");
 }

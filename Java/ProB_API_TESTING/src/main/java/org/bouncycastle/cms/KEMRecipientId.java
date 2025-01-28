@@ -1,9 +1,9 @@
 package org.bouncycastle.cms;
 
-import java.math.BigInteger;
-
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.cert.selector.X509CertificateHolderSelector;
+
+import java.math.BigInteger;
 
 public class KEMRecipientId
     extends PKIXRecipientId

@@ -116,12 +116,12 @@ public class TimeStampTokenGenerator
 
     GeneralName tsa = null;
     
-    private ASN1ObjectIdentifier  tsaPolicyOID;
+    private final ASN1ObjectIdentifier  tsaPolicyOID;
 
-    private List certs = new ArrayList();
-    private List crls = new ArrayList();
-    private List attrCerts = new ArrayList();
-    private Map otherRevoc = new HashMap();
+    private final List certs = new ArrayList();
+    private final List crls = new ArrayList();
+    private final List attrCerts = new ArrayList();
+    private final Map otherRevoc = new HashMap();
     private SignerInfoGenerator signerInfoGen;
 
     /**

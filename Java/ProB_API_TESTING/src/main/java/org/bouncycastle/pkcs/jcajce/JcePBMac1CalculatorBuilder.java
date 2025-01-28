@@ -1,13 +1,5 @@
 package org.bouncycastle.pkcs.jcajce;
 
-import java.io.OutputStream;
-import java.security.Provider;
-import java.security.SecureRandom;
-
-import javax.crypto.Mac;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-
 import org.bouncycastle.asn1.DERNull;
 import org.bouncycastle.asn1.nist.NISTObjectIdentifiers;
 import org.bouncycastle.asn1.pkcs.PBKDF2Params;
@@ -20,12 +12,15 @@ import org.bouncycastle.jcajce.util.DefaultJcaJceHelper;
 import org.bouncycastle.jcajce.util.JcaJceHelper;
 import org.bouncycastle.jcajce.util.NamedJcaJceHelper;
 import org.bouncycastle.jcajce.util.ProviderJcaJceHelper;
-import org.bouncycastle.operator.DefaultMacAlgorithmIdentifierFinder;
-import org.bouncycastle.operator.GenericKey;
-import org.bouncycastle.operator.MacAlgorithmIdentifierFinder;
-import org.bouncycastle.operator.MacCalculator;
-import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.operator.*;
 import org.bouncycastle.util.BigIntegers;
+
+import javax.crypto.Mac;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import java.io.OutputStream;
+import java.security.Provider;
+import java.security.SecureRandom;
 
 /**
  * A builder for RFC 8018 PBE based MAC calculators.

@@ -1,13 +1,5 @@
 package org.bouncycastle.pkcs.jcajce;
 
-import java.io.OutputStream;
-import java.security.Provider;
-import java.security.SecureRandom;
-
-import javax.crypto.Mac;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.PBEParameterSpec;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.DERNull;
 import org.bouncycastle.asn1.oiw.OIWObjectIdentifiers;
@@ -23,6 +15,13 @@ import org.bouncycastle.operator.GenericKey;
 import org.bouncycastle.operator.MacCalculator;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.pkcs.PKCS12MacCalculatorBuilder;
+
+import javax.crypto.Mac;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.PBEParameterSpec;
+import java.io.OutputStream;
+import java.security.Provider;
+import java.security.SecureRandom;
 
 public class JcePKCS12MacCalculatorBuilder
     implements PKCS12MacCalculatorBuilder

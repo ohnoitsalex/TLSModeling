@@ -1,9 +1,6 @@
 package org.bouncycastle.pkcs;
 
 
-
-import java.io.OutputStream;
-
 import org.bouncycastle.asn1.pkcs.MacData;
 import org.bouncycastle.asn1.pkcs.PKCS12PBEParams;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
@@ -11,6 +8,8 @@ import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.asn1.x509.DigestInfo;
 import org.bouncycastle.operator.MacCalculator;
 import org.bouncycastle.util.Strings;
+
+import java.io.OutputStream;
 
 class MacDataGenerator
 {

@@ -73,7 +73,7 @@ class DTLSReliableHandshake
         TlsUtils.writeUint24(length, message, 9);
 
         // HelloVerifyRequest fields
-        TlsUtils.writeVersion(ProtocolVersion.DTLSv10, message, MESSAGE_HEADER_LENGTH + 0);
+        TlsUtils.writeVersion(ProtocolVersion.DTLSv10, message, MESSAGE_HEADER_LENGTH);
         TlsUtils.writeOpaque8(cookie, message, MESSAGE_HEADER_LENGTH + 2);
 
         DTLSRecordLayer.sendHelloVerifyRequestRecord(sender, recordSeq, message);
@@ -82,16 +82,16 @@ class DTLSReliableHandshake
     /*
      * No 'final' modifiers so that it works in earlier JDKs
      */
-    private DTLSRecordLayer recordLayer;
-    private Timeout handshakeTimeout;
+    private final DTLSRecordLayer recordLayer;
+    private final Timeout handshakeTimeout;
 
-    private TlsHandshakeHash handshakeHash;
+    private final TlsHandshakeHash handshakeHash;
 
     private Hashtable currentInboundFlight = new Hashtable();
     private Hashtable previousInboundFlight = null;
     private Vector outboundFlight = new Vector();
 
-    private int initialResendMillis;
+    private final int initialResendMillis;
     private int resendMillis = -1;
     private Timeout resendTimeout = null;
 
@@ -405,7 +405,7 @@ class DTLSReliableHandshake
              * NOTE: This very simple epoch check will only work until we want to support
              * renegotiation (and we're not likely to do that anyway).
              */
-            short msg_type = TlsUtils.readUint8(buf, off + 0);
+            short msg_type = TlsUtils.readUint8(buf, off);
             int expectedEpoch = msg_type == HandshakeType.finished ? 1 : 0;
             if (epoch != expectedEpoch)
             {

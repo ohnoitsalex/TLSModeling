@@ -1,14 +1,5 @@
 package org.bouncycastle.mail.smime.examples;
 
-import java.security.cert.X509Certificate;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Properties;
-
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.cms.SignerInformation;
@@ -19,6 +10,14 @@ import org.bouncycastle.mail.smime.SMIMESignedParser;
 import org.bouncycastle.mail.smime.util.SharedFileInputStream;
 import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
 import org.bouncycastle.util.Store;
+
+import javax.mail.Session;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import java.security.cert.X509Certificate;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Properties;
 
 /**
  * a simple example that reads a basic SMIME signed mail file.

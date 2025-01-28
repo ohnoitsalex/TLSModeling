@@ -1,15 +1,11 @@
 package org.bouncycastle.mail.smime;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FilterOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.security.cert.CertificateParsingException;
-import java.security.cert.X509Certificate;
-import java.util.Enumeration;
+import org.bouncycastle.asn1.cms.IssuerAndSerialNumber;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
+import org.bouncycastle.cms.CMSTypedStream;
+import org.bouncycastle.mail.smime.util.CRLFOutputStream;
+import org.bouncycastle.mail.smime.util.FileBackedMimeBodyPart;
+import org.bouncycastle.util.Strings;
 
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
@@ -19,13 +15,10 @@ import javax.mail.internet.ContentType;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-
-import org.bouncycastle.asn1.cms.IssuerAndSerialNumber;
-import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
-import org.bouncycastle.cms.CMSTypedStream;
-import org.bouncycastle.mail.smime.util.CRLFOutputStream;
-import org.bouncycastle.mail.smime.util.FileBackedMimeBodyPart;
-import org.bouncycastle.util.Strings;
+import java.io.*;
+import java.security.cert.CertificateParsingException;
+import java.security.cert.X509Certificate;
+import java.util.Enumeration;
 
 public class SMIMEUtil
 {

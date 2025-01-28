@@ -1,10 +1,10 @@
 package org.bouncycastle.oer.its.template.etsi102941;
 
-import java.math.BigInteger;
-
 import org.bouncycastle.oer.OERDefinition;
 import org.bouncycastle.oer.its.template.etsi102941.basetypes.EtsiTs102941BaseTypes;
 import org.bouncycastle.oer.its.template.etsi103097.EtsiTs103097Module;
+
+import java.math.BigInteger;
 
 import static org.bouncycastle.oer.its.template.etsi103097.EtsiTs103097Module.EtsiTs103097Data_Signed;
 

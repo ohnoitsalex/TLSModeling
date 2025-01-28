@@ -1,11 +1,5 @@
 package org.bouncycastle.cms.jcajce;
 
-import java.io.OutputStream;
-import java.security.Key;
-
-import javax.crypto.Mac;
-import javax.crypto.SecretKey;
-
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.RecipientOperator;
@@ -13,6 +7,11 @@ import org.bouncycastle.jcajce.io.MacOutputStream;
 import org.bouncycastle.operator.GenericKey;
 import org.bouncycastle.operator.MacCalculator;
 import org.bouncycastle.operator.jcajce.JceGenericKey;
+
+import javax.crypto.Mac;
+import javax.crypto.SecretKey;
+import java.io.OutputStream;
+import java.security.Key;
 
 
 /**

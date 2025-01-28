@@ -1,8 +1,5 @@
 package org.bouncycastle.pkcs.bc;
 
-import java.io.OutputStream;
-import java.security.SecureRandom;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.pkcs.PKCS12PBEParams;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
@@ -17,6 +14,9 @@ import org.bouncycastle.crypto.paddings.PKCS7Padding;
 import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
 import org.bouncycastle.operator.GenericKey;
 import org.bouncycastle.operator.OutputEncryptor;
+
+import java.io.OutputStream;
+import java.security.SecureRandom;
 
 public class BcPKCS12PBEOutputEncryptorBuilder
 {

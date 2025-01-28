@@ -1,5 +1,10 @@
 package org.bouncycastle.pkix.util;
 
+import org.bouncycastle.pkix.util.filter.Filter;
+import org.bouncycastle.pkix.util.filter.TrustedInput;
+import org.bouncycastle.pkix.util.filter.UntrustedInput;
+import org.bouncycastle.pkix.util.filter.UntrustedUrlInput;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
@@ -9,11 +14,6 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
-
-import org.bouncycastle.pkix.util.filter.Filter;
-import org.bouncycastle.pkix.util.filter.TrustedInput;
-import org.bouncycastle.pkix.util.filter.UntrustedInput;
-import org.bouncycastle.pkix.util.filter.UntrustedUrlInput;
 
 public class LocalizedMessage 
 {
