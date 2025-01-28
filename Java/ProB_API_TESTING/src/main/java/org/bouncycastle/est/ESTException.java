@@ -11,10 +11,10 @@ import java.io.InputStream;
 public class ESTException
     extends IOException
 {
-    private Throwable cause;
+    private final Throwable cause;
 
     private InputStream body;
-    private int statusCode;
+    private final int statusCode;
 
     private static final long MAX_ERROR_BODY = 8192;
 

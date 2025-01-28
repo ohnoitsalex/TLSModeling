@@ -1,9 +1,9 @@
 package org.bouncycastle.cms;
 
-import java.math.BigInteger;
-
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.cert.selector.X509CertificateHolderSelector;
+
+import java.math.BigInteger;
 
 public class KeyAgreeRecipientId
     extends PKIXRecipientId
@@ -63,12 +63,10 @@ public class KeyAgreeRecipientId
     public boolean equals(
         Object  o)
     {
-        if (!(o instanceof KeyAgreeRecipientId))
+        if (!(o instanceof KeyAgreeRecipientId id))
         {
             return false;
         }
-
-        KeyAgreeRecipientId id = (KeyAgreeRecipientId)o;
 
         return this.baseSelector.equals(id.baseSelector);
     }

@@ -1,8 +1,8 @@
 package org.bouncycastle.math.ec;
 
-import java.math.BigInteger;
-
 import org.bouncycastle.math.raw.Nat;
+
+import java.math.BigInteger;
 
 public class FixedPointCombMultiplier extends AbstractECMultiplier
 {

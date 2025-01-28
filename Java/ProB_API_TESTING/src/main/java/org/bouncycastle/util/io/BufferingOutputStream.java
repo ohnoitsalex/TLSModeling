@@ -1,9 +1,9 @@
 package org.bouncycastle.util.io;
 
+import org.bouncycastle.util.Arrays;
+
 import java.io.IOException;
 import java.io.OutputStream;
-
-import org.bouncycastle.util.Arrays;
 
 /**
  * An output stream that buffers data to be feed into an encapsulated output stream.

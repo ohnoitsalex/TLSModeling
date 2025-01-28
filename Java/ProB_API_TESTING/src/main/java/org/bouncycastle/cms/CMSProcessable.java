@@ -14,8 +14,8 @@ public interface CMSProcessable
      * <p>
      * Note: this routine may be called multiple times.
      */
-    public void write(OutputStream out)
+    void write(OutputStream out)
         throws IOException, CMSException;
 
-    public Object getContent();
+    Object getContent();
 }

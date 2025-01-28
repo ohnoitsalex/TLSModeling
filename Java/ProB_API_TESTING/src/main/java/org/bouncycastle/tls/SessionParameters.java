@@ -106,15 +106,15 @@ public final class SessionParameters
         }
     }
 
-    private int cipherSuite;
-    private Certificate localCertificate;
-    private TlsSecret masterSecret;
-    private ProtocolVersion negotiatedVersion;
-    private Certificate peerCertificate;
+    private final int cipherSuite;
+    private final Certificate localCertificate;
+    private final TlsSecret masterSecret;
+    private final ProtocolVersion negotiatedVersion;
+    private final Certificate peerCertificate;
     private byte[] pskIdentity = null;
     private byte[] srpIdentity = null;
-    private byte[] encodedServerExtensions;
-    private boolean extendedMasterSecret;
+    private final byte[] encodedServerExtensions;
+    private final boolean extendedMasterSecret;
 
     private SessionParameters(int cipherSuite, Certificate localCertificate, TlsSecret masterSecret,
         ProtocolVersion negotiatedVersion, Certificate peerCertificate, byte[] pskIdentity, byte[] srpIdentity,

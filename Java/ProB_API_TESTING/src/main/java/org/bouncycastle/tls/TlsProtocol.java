@@ -128,9 +128,9 @@ public abstract class TlsProtocol
     /*
      * Queues for data from some protocols.
      */
-    private ByteQueue applicationDataQueue = new ByteQueue(0);
-    private ByteQueue alertQueue = new ByteQueue(2);
-    private ByteQueue handshakeQueue = new ByteQueue(0);
+    private final ByteQueue applicationDataQueue = new ByteQueue(0);
+    private final ByteQueue alertQueue = new ByteQueue(2);
+    private final ByteQueue handshakeQueue = new ByteQueue(0);
 //    private ByteQueue heartbeatQueue = new ByteQueue();
 
     final RecordStream recordStream;

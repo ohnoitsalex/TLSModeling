@@ -1,11 +1,9 @@
 package org.bouncycastle.mail.smime.examples;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.security.KeyStore;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
-import java.util.Properties;
+import org.bouncycastle.cms.CMSAlgorithm;
+import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
+import org.bouncycastle.cms.jcajce.JceKeyTransRecipientInfoGenerator;
+import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -15,11 +13,12 @@ import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-
-import org.bouncycastle.cms.CMSAlgorithm;
-import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
-import org.bouncycastle.cms.jcajce.JceKeyTransRecipientInfoGenerator;
-import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.security.KeyStore;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+import java.util.Properties;
 
 /**
  * a simple example that creates a single encrypted mail message.

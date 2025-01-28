@@ -1,8 +1,8 @@
 package org.bouncycastle.math.ec;
 
-import java.math.BigInteger;
-
 import org.bouncycastle.util.BigIntegers;
+
+import java.math.BigInteger;
 
 /**
  * Class holding methods for point multiplication based on the window

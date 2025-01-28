@@ -1,12 +1,8 @@
 package org.bouncycastle.math.ec.endo;
 
-import java.math.BigInteger;
+import org.bouncycastle.math.ec.*;
 
-import org.bouncycastle.math.ec.ECConstants;
-import org.bouncycastle.math.ec.ECCurve;
-import org.bouncycastle.math.ec.ECPoint;
-import org.bouncycastle.math.ec.PreCompCallback;
-import org.bouncycastle.math.ec.PreCompInfo;
+import java.math.BigInteger;
 
 public abstract class EndoUtil
 {

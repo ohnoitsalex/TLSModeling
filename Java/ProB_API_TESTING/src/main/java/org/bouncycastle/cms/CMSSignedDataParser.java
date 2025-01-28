@@ -1,33 +1,6 @@
 package org.bouncycastle.cms;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.bouncycastle.asn1.ASN1Encodable;
-import org.bouncycastle.asn1.ASN1EncodableVector;
-import org.bouncycastle.asn1.ASN1Generator;
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.ASN1OctetStringParser;
-import org.bouncycastle.asn1.ASN1SequenceParser;
-import org.bouncycastle.asn1.ASN1Set;
-import org.bouncycastle.asn1.ASN1SetParser;
-import org.bouncycastle.asn1.ASN1StreamParser;
-import org.bouncycastle.asn1.BERSequenceGenerator;
-import org.bouncycastle.asn1.BERSetParser;
-import org.bouncycastle.asn1.BERTaggedObject;
-import org.bouncycastle.asn1.BERTags;
-import org.bouncycastle.asn1.DERSet;
-import org.bouncycastle.asn1.DERTaggedObject;
+import org.bouncycastle.asn1.*;
 import org.bouncycastle.asn1.cms.CMSObjectIdentifiers;
 import org.bouncycastle.asn1.cms.ContentInfoParser;
 import org.bouncycastle.asn1.cms.SignedDataParser;
@@ -39,6 +12,12 @@ import org.bouncycastle.operator.DigestCalculatorProvider;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.util.Store;
 import org.bouncycastle.util.io.Streams;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.*;
 
 /**
  * Parsing class for an CMS Signed Data object from an input stream.
@@ -90,11 +69,11 @@ public class CMSSignedDataParser
     private static final CMSSignedHelper HELPER = CMSSignedHelper.INSTANCE;
     private static final DefaultDigestAlgorithmIdentifierFinder dgstAlgFinder = new DefaultDigestAlgorithmIdentifierFinder();
 
-    private SignedDataParser        _signedData;
-    private ASN1ObjectIdentifier    _signedContentType;
+    private final SignedDataParser        _signedData;
+    private final ASN1ObjectIdentifier    _signedContentType;
     private CMSTypedStream          _signedContent;
-    private Map                     digests;
-    private Set<AlgorithmIdentifier> digestAlgorithms;
+    private final Map                     digests;
+    private final Set<AlgorithmIdentifier> digestAlgorithms;
 
     private SignerInformationStore  _signerInfoStore;
     private ASN1Set                 _certSet, _crlSet;
@@ -183,9 +162,8 @@ public class CMSSignedDataParser
             ContentInfoParser     cont = _signedData.getEncapContentInfo();
             ASN1Encodable contentParser = cont.getContent(BERTags.OCTET_STRING);
 
-            if (contentParser instanceof ASN1OctetStringParser)
+            if (contentParser instanceof ASN1OctetStringParser octs)
             {
-                ASN1OctetStringParser octs = (ASN1OctetStringParser)contentParser;
 
                 CMSTypedStream ctStr = new CMSTypedStream(
                     cont.getContentType(), octs.getOctetStream());

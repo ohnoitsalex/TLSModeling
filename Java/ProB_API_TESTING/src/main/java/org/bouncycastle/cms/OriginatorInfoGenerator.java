@@ -1,12 +1,12 @@
 package org.bouncycastle.cms;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bouncycastle.asn1.ASN1Set;
 import org.bouncycastle.asn1.cms.OriginatorInfo;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.util.Store;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OriginatorInfoGenerator
 {

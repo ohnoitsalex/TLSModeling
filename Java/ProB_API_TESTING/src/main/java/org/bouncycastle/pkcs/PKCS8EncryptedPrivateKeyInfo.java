@@ -1,8 +1,5 @@
 package org.bouncycastle.pkcs;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.pkcs.EncryptedPrivateKeyInfo;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
@@ -10,6 +7,9 @@ import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.operator.InputDecryptor;
 import org.bouncycastle.operator.InputDecryptorProvider;
 import org.bouncycastle.util.io.Streams;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 /**
  * Holding class for a PKCS#8 EncryptedPrivateKeyInfo structure.

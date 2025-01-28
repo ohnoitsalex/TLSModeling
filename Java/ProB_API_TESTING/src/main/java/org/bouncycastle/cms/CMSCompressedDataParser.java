@@ -1,9 +1,5 @@
 package org.bouncycastle.cms;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.bouncycastle.asn1.ASN1OctetStringParser;
 import org.bouncycastle.asn1.ASN1SequenceParser;
 import org.bouncycastle.asn1.BERTags;
@@ -11,6 +7,10 @@ import org.bouncycastle.asn1.cms.CompressedDataParser;
 import org.bouncycastle.asn1.cms.ContentInfoParser;
 import org.bouncycastle.operator.InputExpander;
 import org.bouncycastle.operator.InputExpanderProvider;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Class for reading a CMS Compressed Data stream.

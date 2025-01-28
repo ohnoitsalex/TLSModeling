@@ -1,9 +1,9 @@
 package org.bouncycastle.math.ec;
 
-import java.math.BigInteger;
-
 import org.bouncycastle.math.ec.endo.EndoUtil;
 import org.bouncycastle.math.ec.endo.GLVEndomorphism;
+
+import java.math.BigInteger;
 
 public class GLVMultiplier extends AbstractECMultiplier
 {

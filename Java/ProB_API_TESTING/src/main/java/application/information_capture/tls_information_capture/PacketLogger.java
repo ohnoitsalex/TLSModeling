@@ -91,7 +91,6 @@ public class PacketLogger {
             writer.write("===========================\n");
             writer.newLine();
 
-
             TlsHandshakeParser.parseTlsHandshakeRecord(payload.getRawData());
 
             System.out.println("TLS Handshake Packet logged to " + filePath);

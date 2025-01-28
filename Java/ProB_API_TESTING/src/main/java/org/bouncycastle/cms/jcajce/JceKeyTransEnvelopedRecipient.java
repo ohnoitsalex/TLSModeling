@@ -1,16 +1,15 @@
 package org.bouncycastle.cms.jcajce;
 
-import java.io.InputStream;
-import java.security.Key;
-import java.security.PrivateKey;
-
-import javax.crypto.Cipher;
-
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.RecipientOperator;
 import org.bouncycastle.jcajce.io.CipherInputStream;
 import org.bouncycastle.operator.InputDecryptor;
+
+import javax.crypto.Cipher;
+import java.io.InputStream;
+import java.security.Key;
+import java.security.PrivateKey;
 
 public class JceKeyTransEnvelopedRecipient
     extends JceKeyTransRecipient

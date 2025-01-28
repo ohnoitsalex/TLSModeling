@@ -1,14 +1,5 @@
 package org.bouncycastle.cms.jcajce;
 
-import java.security.Key;
-import java.security.PrivateKey;
-import java.security.Provider;
-import java.security.interfaces.RSAPrivateKey;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.crypto.Cipher;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.cms.CMSORIforKEMOtherInfo;
 import org.bouncycastle.asn1.cms.KEMRecipientInfo;
@@ -20,6 +11,14 @@ import org.bouncycastle.operator.GenericKey;
 import org.bouncycastle.operator.OperatorException;
 import org.bouncycastle.operator.jcajce.JceGenericKey;
 import org.bouncycastle.util.Arrays;
+
+import javax.crypto.Cipher;
+import java.security.Key;
+import java.security.PrivateKey;
+import java.security.Provider;
+import java.security.interfaces.RSAPrivateKey;
+import java.util.HashMap;
+import java.util.Map;
 
 class JceCMSKEMKeyUnwrapper
     extends AsymmetricKeyUnwrapper

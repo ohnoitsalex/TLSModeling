@@ -12,7 +12,7 @@ public class ESTRequestBuilder
     private final String method;
     private URL url;
 
-    private HttpUtil.Headers headers;
+    private final HttpUtil.Headers headers;
     ESTHijacker hijacker;
     ESTSourceConnectionListener listener;
     ESTClient client;

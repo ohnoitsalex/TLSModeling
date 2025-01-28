@@ -1,10 +1,10 @@
 package org.bouncycastle.math.ec.custom.djb;
 
-import java.math.BigInteger;
-
 import org.bouncycastle.math.ec.ECFieldElement;
 import org.bouncycastle.math.raw.Nat256;
 import org.bouncycastle.util.Arrays;
+
+import java.math.BigInteger;
 
 public class Curve25519FieldElement extends ECFieldElement.AbstractFp
 {

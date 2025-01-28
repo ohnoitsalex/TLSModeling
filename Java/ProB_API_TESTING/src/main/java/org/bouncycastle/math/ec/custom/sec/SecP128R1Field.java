@@ -1,13 +1,13 @@
 package org.bouncycastle.math.ec.custom.sec;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-
 import org.bouncycastle.math.raw.Mod;
 import org.bouncycastle.math.raw.Nat;
 import org.bouncycastle.math.raw.Nat128;
 import org.bouncycastle.math.raw.Nat256;
 import org.bouncycastle.util.Pack;
+
+import java.math.BigInteger;
+import java.security.SecureRandom;
 
 public class SecP128R1Field
 {

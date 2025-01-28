@@ -6,8 +6,8 @@ import java.util.Collection;
 public class MultiCertStoreParameters
     implements CertStoreParameters
 {
-    private Collection certStores;
-    private boolean searchAllStores;
+    private final Collection certStores;
+    private final boolean searchAllStores;
 
     /**
      * Create a parameters object which specifies searching of all the passed in stores.

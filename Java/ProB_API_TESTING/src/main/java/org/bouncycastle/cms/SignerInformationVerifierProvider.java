@@ -11,6 +11,6 @@ public interface SignerInformationVerifierProvider
      * @return  a verifier if one is available, null otherwise.
      * @throws OperatorCreationException if creation of the verifier fails when it should suceed.
      */
-    public SignerInformationVerifier get(SignerId sid)
+    SignerInformationVerifier get(SignerId sid)
           throws OperatorCreationException;
 }

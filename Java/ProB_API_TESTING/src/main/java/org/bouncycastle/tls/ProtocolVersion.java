@@ -160,8 +160,8 @@ public final class ProtocolVersion
             && fullVersion <= SERVER_LATEST_SUPPORTED_TLS.getFullVersion();
     }
 
-    private int version;
-    private String name;
+    private final int version;
+    private final String name;
 
     private ProtocolVersion(int v, String name)
     {

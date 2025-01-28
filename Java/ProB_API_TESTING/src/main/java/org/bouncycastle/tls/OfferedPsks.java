@@ -65,7 +65,7 @@ public class OfferedPsks
         {
             throw new IllegalArgumentException("'binders' must be the same length as 'identities' (or null)");
         }
-        if ((null != binders) != (bindersSize >= 0))
+        if ((null == binders) == (bindersSize >= 0))
         {
             throw new IllegalArgumentException("'bindersSize' must be >= 0 iff 'binders' are present");
         }

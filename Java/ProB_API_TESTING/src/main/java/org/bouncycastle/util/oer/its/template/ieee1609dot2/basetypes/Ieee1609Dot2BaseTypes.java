@@ -1,10 +1,10 @@
 package org.bouncycastle.oer.its.template.ieee1609dot2.basetypes;
 
 
-import java.math.BigInteger;
-
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.oer.OERDefinition;
+
+import java.math.BigInteger;
 
 public class Ieee1609Dot2BaseTypes
 {

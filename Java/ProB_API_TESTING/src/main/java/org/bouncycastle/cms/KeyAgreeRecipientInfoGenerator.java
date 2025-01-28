@@ -18,9 +18,9 @@ import org.bouncycastle.operator.GenericKey;
 public abstract class KeyAgreeRecipientInfoGenerator
     implements RecipientInfoGenerator
 {
-    private ASN1ObjectIdentifier keyAgreementOID;
-    private ASN1ObjectIdentifier keyEncryptionOID;
-    private SubjectPublicKeyInfo originatorKeyInfo;
+    private final ASN1ObjectIdentifier keyAgreementOID;
+    private final ASN1ObjectIdentifier keyEncryptionOID;
+    private final SubjectPublicKeyInfo originatorKeyInfo;
 
     protected KeyAgreeRecipientInfoGenerator(ASN1ObjectIdentifier keyAgreementOID, SubjectPublicKeyInfo originatorKeyInfo, ASN1ObjectIdentifier keyEncryptionOID)
     {

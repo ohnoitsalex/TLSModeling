@@ -1,22 +1,17 @@
 package org.bouncycastle.cms;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.ASN1OctetString;
 import org.bouncycastle.asn1.ASN1Set;
-import org.bouncycastle.asn1.cms.Attribute;
-import org.bouncycastle.asn1.cms.AttributeTable;
-import org.bouncycastle.asn1.cms.AuthenticatedData;
-import org.bouncycastle.asn1.cms.CMSAlgorithmProtection;
-import org.bouncycastle.asn1.cms.CMSAttributes;
-import org.bouncycastle.asn1.cms.ContentInfo;
+import org.bouncycastle.asn1.cms.*;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.operator.DigestCalculatorProvider;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.Encodable;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * containing class for an CMS Authenticated Data object
@@ -27,10 +22,10 @@ public class CMSAuthenticatedData
     RecipientInformationStore   recipientInfoStore;
     ContentInfo                 contentInfo;
 
-    private AlgorithmIdentifier macAlg;
-    private ASN1Set authAttrs;
-    private ASN1Set unauthAttrs;
-    private byte[] mac;
+    private final AlgorithmIdentifier macAlg;
+    private final ASN1Set authAttrs;
+    private final ASN1Set unauthAttrs;
+    private final byte[] mac;
     private OriginatorInformation originatorInfo;
 
     public CMSAuthenticatedData(

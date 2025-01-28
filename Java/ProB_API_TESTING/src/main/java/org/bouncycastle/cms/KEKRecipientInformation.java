@@ -1,10 +1,10 @@
 package org.bouncycastle.cms;
 
-import java.io.IOException;
-
 import org.bouncycastle.asn1.cms.KEKIdentifier;
 import org.bouncycastle.asn1.cms.KEKRecipientInfo;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+
+import java.io.IOException;
 
 /**
  * the RecipientInfo class for a recipient who has been sent a message
@@ -13,7 +13,7 @@ import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 public class KEKRecipientInformation
     extends RecipientInformation
 {
-    private KEKRecipientInfo      info;
+    private final KEKRecipientInfo      info;
 
     KEKRecipientInformation(
         KEKRecipientInfo        info,

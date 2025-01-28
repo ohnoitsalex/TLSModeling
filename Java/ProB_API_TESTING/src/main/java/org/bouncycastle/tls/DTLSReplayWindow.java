@@ -35,10 +35,7 @@ class DTLSReplayWindow
             {
                 return true;
             }
-            if ((bitmap & (1L << diff)) != 0)
-            {
-                return true;
-            }
+            return (bitmap & (1L << diff)) != 0;
         }
 
         return false;

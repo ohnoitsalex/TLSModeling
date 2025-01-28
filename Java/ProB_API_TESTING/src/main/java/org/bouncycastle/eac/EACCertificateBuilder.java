@@ -21,12 +21,12 @@ public class EACCertificateBuilder
 {
     private static final byte [] ZeroArray = new byte [] {0};
 
-    private PublicKeyDataObject publicKey;
-    private CertificateHolderAuthorization certificateHolderAuthorization;
-    private PackedDate certificateEffectiveDate;
-    private PackedDate certificateExpirationDate;
-    private CertificateHolderReference certificateHolderReference;
-    private CertificationAuthorityReference certificationAuthorityReference;
+    private final PublicKeyDataObject publicKey;
+    private final CertificateHolderAuthorization certificateHolderAuthorization;
+    private final PackedDate certificateEffectiveDate;
+    private final PackedDate certificateExpirationDate;
+    private final CertificateHolderReference certificateHolderReference;
+    private final CertificationAuthorityReference certificationAuthorityReference;
 
     public EACCertificateBuilder(
         CertificationAuthorityReference certificationAuthorityReference,

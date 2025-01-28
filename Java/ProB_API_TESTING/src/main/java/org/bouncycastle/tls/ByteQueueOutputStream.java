@@ -9,7 +9,7 @@ import java.io.OutputStream;
 public class ByteQueueOutputStream
     extends OutputStream
 {
-    private ByteQueue buffer;
+    private final ByteQueue buffer;
 
     public ByteQueueOutputStream()
     {

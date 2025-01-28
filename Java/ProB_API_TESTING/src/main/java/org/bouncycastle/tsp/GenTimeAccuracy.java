@@ -5,7 +5,7 @@ import org.bouncycastle.asn1.tsp.Accuracy;
 
 public class GenTimeAccuracy
 {
-    private Accuracy accuracy;
+    private final Accuracy accuracy;
 
     public GenTimeAccuracy(Accuracy accuracy)
     {

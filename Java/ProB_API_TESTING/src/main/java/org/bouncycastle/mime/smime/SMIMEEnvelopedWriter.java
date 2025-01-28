@@ -1,21 +1,17 @@
 package org.bouncycastle.mime.smime;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import org.bouncycastle.cms.CMSAttributeTableGenerator;
-import org.bouncycastle.cms.CMSEnvelopedDataStreamGenerator;
-import org.bouncycastle.cms.CMSException;
-import org.bouncycastle.cms.OriginatorInformation;
-import org.bouncycastle.cms.RecipientInfoGenerator;
+import org.bouncycastle.cms.*;
 import org.bouncycastle.mime.Headers;
 import org.bouncycastle.mime.MimeIOException;
 import org.bouncycastle.mime.MimeWriter;
 import org.bouncycastle.mime.encoding.Base64OutputStream;
 import org.bouncycastle.operator.OutputEncryptor;
 import org.bouncycastle.util.Strings;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Writer for SMIME Enveloped objects.

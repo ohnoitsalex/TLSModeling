@@ -1,9 +1,9 @@
 package org.bouncycastle.mime;
 
+import org.bouncycastle.util.Strings;
+
 import java.io.IOException;
 import java.io.InputStream;
-
-import org.bouncycastle.util.Strings;
 
 public class BoundaryLimitedInputStream
     extends InputStream

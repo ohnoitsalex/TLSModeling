@@ -1186,7 +1186,7 @@ public class TlsServerProtocol
                     }
                     else
                     {
-                        if (TlsUtils.isTLSv12(tlsServerContext) != (certificateRequest.getSupportedSignatureAlgorithms() != null))
+                        if (TlsUtils.isTLSv12(tlsServerContext) == (certificateRequest.getSupportedSignatureAlgorithms() == null))
                         {
                             throw new TlsFatalAlert(AlertDescription.internal_error);
                         }

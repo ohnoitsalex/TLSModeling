@@ -60,12 +60,10 @@ public class PskIdentity
 
     public boolean equals(Object obj)
     {
-        if (!(obj instanceof PskIdentity))
+        if (!(obj instanceof PskIdentity that))
         {
             return false;
         }
-
-        PskIdentity that = (PskIdentity)obj;
 
         return this.obfuscatedTicketAge == that.obfuscatedTicketAge
             && Arrays.constantTimeAreEqual(this.identity, that.identity);

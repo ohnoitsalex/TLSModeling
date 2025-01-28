@@ -1,10 +1,10 @@
 package org.bouncycastle.cms;
 
-import java.math.BigInteger;
-
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.cert.selector.X509CertificateHolderSelector;
 import org.bouncycastle.util.Selector;
+
+import java.math.BigInteger;
 
 /**
  * a basic index for a signer.
@@ -12,7 +12,7 @@ import org.bouncycastle.util.Selector;
 public class SignerId
     implements Selector
 {
-    private X509CertificateHolderSelector baseSelector;
+    private final X509CertificateHolderSelector baseSelector;
 
     private SignerId(X509CertificateHolderSelector baseSelector)
     {
@@ -77,12 +77,10 @@ public class SignerId
     public boolean equals(
         Object  o)
     {
-        if (!(o instanceof SignerId))
+        if (!(o instanceof SignerId id))
         {
             return false;
         }
-
-        SignerId id = (SignerId)o;
 
         return this.baseSelector.equals(id.baseSelector);
     }

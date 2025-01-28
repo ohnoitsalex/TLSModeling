@@ -77,7 +77,7 @@ public class PKCS12Util
         }
         catch (Exception e)
         {
-            throw new IOException("error constructing MAC: " + e.toString());
+            throw new IOException("error constructing MAC: " + e);
         }
 
         pfx = new Pfx(info, mData);

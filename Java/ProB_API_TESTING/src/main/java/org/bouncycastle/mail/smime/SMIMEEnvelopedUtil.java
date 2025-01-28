@@ -1,15 +1,14 @@
 package org.bouncycastle.mail.smime;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeBodyPart;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.nist.NISTObjectIdentifiers;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.RecipientInformationStore;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeBodyPart;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SMIMEEnvelopedUtil
 {

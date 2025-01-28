@@ -1,8 +1,8 @@
 package org.bouncycastle.math.ec;
 
-import java.math.BigInteger;
-
 import org.bouncycastle.util.Integers;
+
+import java.math.BigInteger;
 
 /**
  * Class implementing the WNAF (Window Non-Adjacent Form) multiplication

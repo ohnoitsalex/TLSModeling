@@ -15,7 +15,7 @@ public class TLSServerInformationHolder {
     }
 
     // Create a HashMap
-    private Map<String, String> serverHelloInformation = new HashMap<>();
+    private static Map<String, String> serverHelloInformation = new HashMap<>();
 
     public TLSServerInformationHolder(){
         serverHelloInformation.put("random", null);

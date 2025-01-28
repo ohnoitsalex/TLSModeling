@@ -1,11 +1,11 @@
 package org.bouncycastle.math.ec;
 
-import java.math.BigInteger;
-import java.util.Random;
-
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.BigIntegers;
 import org.bouncycastle.util.Integers;
+
+import java.math.BigInteger;
+import java.util.Random;
 
 public abstract class ECFieldElement
     implements ECConstants

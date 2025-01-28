@@ -1,28 +1,7 @@
 package org.bouncycastle.cms;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
-
-import org.bouncycastle.asn1.ASN1EncodableVector;
-import org.bouncycastle.asn1.ASN1Encoding;
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.ASN1OctetString;
-import org.bouncycastle.asn1.ASN1Primitive;
-import org.bouncycastle.asn1.ASN1Set;
-import org.bouncycastle.asn1.DERNull;
-import org.bouncycastle.asn1.DERSet;
-import org.bouncycastle.asn1.cms.Attribute;
-import org.bouncycastle.asn1.cms.AttributeTable;
-import org.bouncycastle.asn1.cms.CMSAlgorithmProtection;
-import org.bouncycastle.asn1.cms.CMSAttributes;
-import org.bouncycastle.asn1.cms.IssuerAndSerialNumber;
-import org.bouncycastle.asn1.cms.SignerIdentifier;
-import org.bouncycastle.asn1.cms.SignerInfo;
-import org.bouncycastle.asn1.cms.Time;
+import org.bouncycastle.asn1.*;
+import org.bouncycastle.asn1.cms.*;
 import org.bouncycastle.asn1.oiw.OIWObjectIdentifiers;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
@@ -34,6 +13,13 @@ import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.RawContentVerifier;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.io.TeeOutputStream;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * an expanded SignerInfo block from a CMS Signed message
@@ -445,9 +431,8 @@ public class SignerInformation
         {
             if (signedAttributeSet == null && resultDigest != null)
             {
-                if (contentVerifier instanceof RawContentVerifier)
+                if (contentVerifier instanceof RawContentVerifier rawVerifier)
                 {
-                    RawContentVerifier rawVerifier = (RawContentVerifier)contentVerifier;
 
                     if (encName.equals("RSA"))
                     {
@@ -492,12 +477,10 @@ public class SignerInformation
                 throw new CMSException("[For counter signatures,] the signedAttributes field MUST NOT contain a content-type attribute");
             }
 
-            if (!(validContentType instanceof ASN1ObjectIdentifier))
+            if (!(validContentType instanceof ASN1ObjectIdentifier signedContentType))
             {
                 throw new CMSException("content-type attribute value not of ASN.1 type 'OBJECT IDENTIFIER'");
             }
-
-            ASN1ObjectIdentifier signedContentType = (ASN1ObjectIdentifier)validContentType;
 
             if (!signedContentType.equals(contentType))
             {
@@ -525,12 +508,10 @@ public class SignerInformation
         }
         else
         {
-            if (!(validMessageDigest instanceof ASN1OctetString))
+            if (!(validMessageDigest instanceof ASN1OctetString signedMessageDigest))
             {
                 throw new CMSException("message-digest attribute value not of ASN.1 type 'OCTET STRING'");
             }
-
-            ASN1OctetString signedMessageDigest = (ASN1OctetString)validMessageDigest;
 
             if (!Arrays.constantTimeAreEqual(resultDigest, signedMessageDigest.getOctets()))
             {

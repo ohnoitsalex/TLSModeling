@@ -1,8 +1,8 @@
 package org.bouncycastle.math.field;
 
-import java.math.BigInteger;
-
 import org.bouncycastle.util.BigIntegers;
+
+import java.math.BigInteger;
 
 public abstract class FiniteFields
 {

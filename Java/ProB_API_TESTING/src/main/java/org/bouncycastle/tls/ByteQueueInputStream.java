@@ -8,7 +8,7 @@ import java.io.InputStream;
 public class ByteQueueInputStream
     extends InputStream
 {
-    private ByteQueue buffer;
+    private final ByteQueue buffer;
 
     public ByteQueueInputStream()
     {

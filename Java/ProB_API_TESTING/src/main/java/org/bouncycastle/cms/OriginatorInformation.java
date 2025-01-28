@@ -5,7 +5,7 @@ import org.bouncycastle.util.Store;
 
 public class OriginatorInformation
 {
-    private OriginatorInfo originatorInfo;
+    private final OriginatorInfo originatorInfo;
 
     OriginatorInformation(OriginatorInfo originatorInfo)
     {

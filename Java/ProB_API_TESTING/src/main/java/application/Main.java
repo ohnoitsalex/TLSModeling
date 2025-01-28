@@ -7,8 +7,8 @@ public class Main {
 
     public static void main(String[] args) {
 
-        //tlsTestExaminer.loadModel();
-        //tlsTestExaminer.executeModelOperation();
-        tlsTestExaminer.createSUT();
+        tlsTestExaminer.loadModel();
+        tlsTestExaminer.executeModelOperation();
+        //tlsTestExaminer.createSUT();
     }
 }

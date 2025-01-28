@@ -80,7 +80,7 @@ public class CSRAttributesResponse
     {
         if (index.containsKey(requirementOid))
         {
-            return !(((AttrOrOID)index.get(requirementOid)).isOid());
+            return !(index.get(requirementOid).isOid());
         }
 
         return false;

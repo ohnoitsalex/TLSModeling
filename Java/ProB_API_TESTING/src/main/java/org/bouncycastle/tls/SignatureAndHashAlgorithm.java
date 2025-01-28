@@ -171,11 +171,10 @@ public class SignatureAndHashAlgorithm
 
     public boolean equals(Object obj)
     {
-        if (!(obj instanceof SignatureAndHashAlgorithm))
+        if (!(obj instanceof SignatureAndHashAlgorithm other))
         {
             return false;
         }
-        SignatureAndHashAlgorithm other = (SignatureAndHashAlgorithm)obj;
         return other.getHash() == getHash() && other.getSignature() == getSignature();
     }
 

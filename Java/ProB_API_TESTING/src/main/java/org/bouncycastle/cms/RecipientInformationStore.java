@@ -99,9 +99,8 @@ public class RecipientInformationStore
     public Collection<RecipientInformation> getRecipients(
         RecipientId selector)
     {
-        if (selector instanceof PKIXRecipientId)
+        if (selector instanceof PKIXRecipientId pkixId)
         {
-            PKIXRecipientId pkixId = (PKIXRecipientId)selector;
 
             X500Name issuer = pkixId.getIssuer();
             byte[] subjectKeyId = pkixId.getSubjectKeyIdentifier();

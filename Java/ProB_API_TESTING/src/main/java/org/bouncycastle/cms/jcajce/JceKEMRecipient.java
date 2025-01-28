@@ -1,18 +1,18 @@
 package org.bouncycastle.cms.jcajce;
 
-import java.security.Key;
-import java.security.PrivateKey;
-import java.security.Provider;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.cms.KEMRecipientInfo;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.KEMRecipient;
 import org.bouncycastle.operator.OperatorException;
+
+import java.security.Key;
+import java.security.PrivateKey;
+import java.security.Provider;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public abstract class JceKEMRecipient
     implements KEMRecipient

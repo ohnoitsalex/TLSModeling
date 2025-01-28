@@ -28,7 +28,7 @@ class DTLSRecordLayer
             return -1;
         }
 
-        short contentType = TlsUtils.readUint8(data, dataOff + 0);
+        short contentType = TlsUtils.readUint8(data, dataOff);
         if (ContentType.handshake != contentType)
         {
             return -1;
@@ -774,9 +774,9 @@ class DTLSRecordLayer
                     continue;
                 }
 
-                if (pendingEpoch != null)
-                {
+                if (pendingEpoch != null) {
                     readEpoch = pendingEpoch;
+                    break;
                 }
             }
 
@@ -1014,7 +1014,7 @@ class DTLSRecordLayer
             int ciphertextLength = encoded.len - recordHeaderLength;
             TlsUtils.checkUint16(ciphertextLength);
 
-            TlsUtils.writeUint8(encoded.recordType, encoded.buf, encoded.off + 0);
+            TlsUtils.writeUint8(encoded.recordType, encoded.buf, encoded.off);
             TlsUtils.writeVersion(recordVersion, encoded.buf, encoded.off + 1);
             TlsUtils.writeUint16(recordEpoch, encoded.buf, encoded.off + 3);
             TlsUtils.writeUint48(recordSequenceNumber, encoded.buf, encoded.off + 5);

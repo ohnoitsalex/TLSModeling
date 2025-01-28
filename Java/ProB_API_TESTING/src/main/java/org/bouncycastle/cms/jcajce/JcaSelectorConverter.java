@@ -1,12 +1,12 @@
 package org.bouncycastle.cms.jcajce;
 
-import java.io.IOException;
-import java.security.cert.X509CertSelector;
-
 import org.bouncycastle.asn1.ASN1OctetString;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.cms.KeyTransRecipientId;
 import org.bouncycastle.cms.SignerId;
+
+import java.io.IOException;
+import java.security.cert.X509CertSelector;
 
 public class JcaSelectorConverter
 {

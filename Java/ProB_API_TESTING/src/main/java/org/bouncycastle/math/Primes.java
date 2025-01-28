@@ -1,11 +1,11 @@
 package org.bouncycastle.math;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.BigIntegers;
+
+import java.math.BigInteger;
+import java.security.SecureRandom;
 
 /**
  * Utility methods for generating primes and testing for primality.

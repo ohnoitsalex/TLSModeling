@@ -1,9 +1,9 @@
 package org.bouncycastle.pkix.jcajce;
 
-import java.security.cert.CertPath;
-
 import org.bouncycastle.pkix.util.ErrorBundle;
 import org.bouncycastle.pkix.util.LocalizedException;
+
+import java.security.cert.CertPath;
 
 public class CertPathReviewerException extends LocalizedException
 {

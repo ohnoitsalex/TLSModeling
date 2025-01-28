@@ -1,19 +1,14 @@
 package org.bouncycastle.cms;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.bouncycastle.util.Iterable;
+
+import java.util.*;
 
 public class SignerInformationStore
     implements Iterable<SignerInformation>
 {
     private List all = new ArrayList();
-    private Map table = new HashMap();
+    private final Map table = new HashMap();
 
     /**
      * Create a store containing a single SignerInformation object.

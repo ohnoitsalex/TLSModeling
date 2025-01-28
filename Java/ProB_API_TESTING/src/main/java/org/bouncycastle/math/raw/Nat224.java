@@ -1,8 +1,8 @@
 package org.bouncycastle.math.raw;
 
-import java.math.BigInteger;
-
 import org.bouncycastle.util.Pack;
+
+import java.math.BigInteger;
 
 public abstract class Nat224
 {

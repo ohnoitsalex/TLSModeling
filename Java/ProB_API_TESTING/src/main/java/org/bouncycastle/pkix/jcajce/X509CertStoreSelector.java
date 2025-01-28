@@ -1,11 +1,11 @@
 package org.bouncycastle.pkix.jcajce;
 
+import org.bouncycastle.util.Selector;
+
 import java.io.IOException;
 import java.security.cert.Certificate;
 import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
-
-import org.bouncycastle.util.Selector;
 
 /**
  * This class is a Selector implementation for X.509 certificates.

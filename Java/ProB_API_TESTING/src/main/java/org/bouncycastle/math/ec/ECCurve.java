@@ -1,13 +1,5 @@
 package org.bouncycastle.math.ec;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Random;
-import java.util.Set;
-
 import org.bouncycastle.crypto.CryptoServicesRegistrar;
 import org.bouncycastle.math.Primes;
 import org.bouncycastle.math.ec.endo.ECEndomorphism;
@@ -18,6 +10,10 @@ import org.bouncycastle.math.raw.Nat;
 import org.bouncycastle.util.BigIntegers;
 import org.bouncycastle.util.Integers;
 import org.bouncycastle.util.Properties;
+
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.util.*;
 
 /**
  * base class for an elliptic curve

@@ -21,11 +21,11 @@ public abstract class PasswordRecipientInfoGenerator
     protected char[] password;
 
     private AlgorithmIdentifier keyDerivationAlgorithm;
-    private ASN1ObjectIdentifier kekAlgorithm;
+    private final ASN1ObjectIdentifier kekAlgorithm;
     private SecureRandom random;
     private int schemeID;
-    private int keySize;
-    private int blockSize;
+    private final int keySize;
+    private final int blockSize;
     private PasswordRecipient.PRF prf;
     private byte[] salt;
     private int iterationCount;

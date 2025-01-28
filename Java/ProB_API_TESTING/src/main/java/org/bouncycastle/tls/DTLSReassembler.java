@@ -7,10 +7,10 @@ class DTLSReassembler
     /*
      * No 'final' modifiers so that it works in earlier JDKs
      */
-    private short msg_type;
-    private byte[] body;
+    private final short msg_type;
+    private final byte[] body;
 
-    private Vector missing = new Vector();
+    private final Vector missing = new Vector();
 
     DTLSReassembler(short msg_type, int length)
     {

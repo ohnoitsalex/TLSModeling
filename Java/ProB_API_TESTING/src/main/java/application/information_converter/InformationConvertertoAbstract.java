@@ -26,8 +26,6 @@ public class InformationConvertertoAbstract {
     public static void serializeToYAML(Object obj, String name) {
         // Serialize to YAML string
         String yamlString = yaml.dump(obj);
-//        System.out.println("YAML String:");
-//        System.out.println(yamlString);
 
         // Optionally, write to a file
         try (FileWriter writer = new FileWriter(name+".yaml")) {

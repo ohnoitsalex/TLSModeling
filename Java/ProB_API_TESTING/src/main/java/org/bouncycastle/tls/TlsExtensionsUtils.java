@@ -523,50 +523,50 @@ public class TlsExtensionsUtils
     public static boolean hasClientCertificateURLExtension(Hashtable extensions) throws IOException
     {
         byte[] extensionData = TlsUtils.getExtensionData(extensions, EXT_client_certificate_url);
-        return extensionData == null ? false : readClientCertificateURLExtension(extensionData);
+        return extensionData != null && readClientCertificateURLExtension(extensionData);
     }
 
     public static boolean hasEarlyDataIndication(Hashtable extensions) throws IOException
     {
         byte[] extensionData = TlsUtils.getExtensionData(extensions, EXT_early_data);
-        return extensionData == null ? false : readEarlyDataIndication(extensionData);
+        return extensionData != null && readEarlyDataIndication(extensionData);
     }
 
     public static boolean hasEncryptThenMACExtension(Hashtable extensions) throws IOException
     {
         byte[] extensionData = TlsUtils.getExtensionData(extensions, EXT_encrypt_then_mac);
-        return extensionData == null ? false : readEncryptThenMACExtension(extensionData);
+        return extensionData != null && readEncryptThenMACExtension(extensionData);
     }
 
     public static boolean hasExtendedMasterSecretExtension(Hashtable extensions) throws IOException
     {
         byte[] extensionData = TlsUtils.getExtensionData(extensions, EXT_extended_master_secret);
-        return extensionData == null ? false : readExtendedMasterSecretExtension(extensionData);
+        return extensionData != null && readExtendedMasterSecretExtension(extensionData);
     }
 
     public static boolean hasServerNameExtensionServer(Hashtable extensions)
         throws IOException
     {
         byte[] extensionData = TlsUtils.getExtensionData(extensions, EXT_server_name);
-        return extensionData == null ? false : readServerNameExtensionServer(extensionData);
+        return extensionData != null && readServerNameExtensionServer(extensionData);
     }
 
     public static boolean hasPostHandshakeAuthExtension(Hashtable extensions) throws IOException
     {
         byte[] extensionData = TlsUtils.getExtensionData(extensions, EXT_post_handshake_auth);
-        return extensionData == null ? false : readPostHandshakeAuthExtension(extensionData);
+        return extensionData != null && readPostHandshakeAuthExtension(extensionData);
     }
 
     public static boolean hasTruncatedHMacExtension(Hashtable extensions) throws IOException
     {
         byte[] extensionData = TlsUtils.getExtensionData(extensions, EXT_truncated_hmac);
-        return extensionData == null ? false : readTruncatedHMacExtension(extensionData);
+        return extensionData != null && readTruncatedHMacExtension(extensionData);
     }
 
     public static boolean hasTrustedCAKeysExtensionServer(Hashtable extensions) throws IOException
     {
         byte[] extensionData = TlsUtils.getExtensionData(extensions, EXT_trusted_ca_keys);
-        return extensionData == null ? false : readTrustedCAKeysExtensionServer(extensionData);
+        return extensionData != null && readTrustedCAKeysExtensionServer(extensionData);
     }
 
     /**
@@ -962,7 +962,7 @@ public class TlsExtensionsUtils
         TlsUtils.writeUint8(count * 2, data, 0);
         for (int i = 0; i < count; ++i)
         {
-            TlsUtils.writeVersion((ProtocolVersion)versions[i], data, 1 + i * 2);
+            TlsUtils.writeVersion(versions[i], data, 1 + i * 2);
         }
         return data;
     }

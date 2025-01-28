@@ -206,11 +206,10 @@ public class CertificateStatus
 
     protected static boolean isOCSPResponseList(Object response)
     {
-        if (!(response instanceof Vector))
+        if (!(response instanceof Vector v))
         {
             return false;
         }
-        Vector v = (Vector)response;
         int count = v.size();
         if (count < 1)
         {

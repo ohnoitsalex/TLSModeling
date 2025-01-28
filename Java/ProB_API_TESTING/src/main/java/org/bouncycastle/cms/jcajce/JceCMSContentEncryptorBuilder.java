@@ -1,19 +1,5 @@
 package org.bouncycastle.cms.jcajce;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.security.AccessController;
-import java.security.AlgorithmParameters;
-import java.security.GeneralSecurityException;
-import java.security.PrivilegedAction;
-import java.security.Provider;
-import java.security.SecureRandom;
-
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-
 import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1Encoding;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
@@ -29,14 +15,17 @@ import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.crypto.generators.HKDFBytesGenerator;
 import org.bouncycastle.crypto.params.HKDFParameters;
 import org.bouncycastle.jcajce.io.CipherOutputStream;
-import org.bouncycastle.operator.DefaultSecretKeySizeProvider;
-import org.bouncycastle.operator.GenericKey;
-import org.bouncycastle.operator.MacCaptureStream;
-import org.bouncycastle.operator.OutputAEADEncryptor;
-import org.bouncycastle.operator.OutputEncryptor;
-import org.bouncycastle.operator.SecretKeySizeProvider;
+import org.bouncycastle.operator.*;
 import org.bouncycastle.operator.jcajce.JceGenericKey;
 import org.bouncycastle.util.Strings;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.security.*;
 
 /**
  * Builder for the content encryptor in EnvelopedData - used to encrypt the actual transmitted content.

@@ -324,9 +324,8 @@ public class SExprParser
         BigInteger[] bigIntegers = new BigInteger[bigIntegerLabels.length];
         for (Object item : expression.getValues())
         {
-            if (item instanceof SExpression)
+            if (item instanceof SExpression exp)
             {
-                SExpression exp = (SExpression)item;
                 String str = exp.getString(0);
                 for (int i = 0; i < bigIntegerLabels.length; ++i)
                 {
@@ -449,9 +448,8 @@ public class SExprParser
         int flag = 0;
         for (Object item : expression.getValues())
         {
-            if (item instanceof SExpression)
+            if (item instanceof SExpression exp)
             {
-                SExpression exp = (SExpression)item;
                 String label = exp.getString(0);
                 if (label.equals("curve"))
                 {

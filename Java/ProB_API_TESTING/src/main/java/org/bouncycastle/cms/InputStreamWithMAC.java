@@ -1,9 +1,9 @@
 package org.bouncycastle.cms;
 
+import org.bouncycastle.util.Arrays;
+
 import java.io.IOException;
 import java.io.InputStream;
-
-import org.bouncycastle.util.Arrays;
 
 public final class InputStreamWithMAC
     extends InputStream

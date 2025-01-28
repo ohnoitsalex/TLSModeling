@@ -1,9 +1,5 @@
 package org.bouncycastle.cms.bc;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.security.SecureRandom;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.oiw.OIWObjectIdentifiers;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
@@ -13,12 +9,11 @@ import org.bouncycastle.crypto.CipherKeyGenerator;
 import org.bouncycastle.crypto.modes.AEADBlockCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.util.CipherFactory;
-import org.bouncycastle.operator.DefaultSecretKeySizeProvider;
-import org.bouncycastle.operator.GenericKey;
-import org.bouncycastle.operator.MacCaptureStream;
-import org.bouncycastle.operator.OutputAEADEncryptor;
-import org.bouncycastle.operator.OutputEncryptor;
-import org.bouncycastle.operator.SecretKeySizeProvider;
+import org.bouncycastle.operator.*;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.security.SecureRandom;
 
 public class BcCMSContentEncryptorBuilder
 {

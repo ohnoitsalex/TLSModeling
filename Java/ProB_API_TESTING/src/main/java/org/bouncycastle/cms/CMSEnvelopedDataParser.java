@@ -1,9 +1,5 @@
 package org.bouncycastle.cms;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.bouncycastle.asn1.ASN1OctetStringParser;
 import org.bouncycastle.asn1.ASN1SequenceParser;
 import org.bouncycastle.asn1.ASN1Set;
@@ -13,6 +9,10 @@ import org.bouncycastle.asn1.cms.EncryptedContentInfoParser;
 import org.bouncycastle.asn1.cms.EnvelopedDataParser;
 import org.bouncycastle.asn1.cms.OriginatorInfo;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Parsing class for an CMS Enveloped Data object from an input stream.
@@ -52,7 +52,7 @@ public class CMSEnvelopedDataParser
     RecipientInformationStore recipientInfoStore;
     EnvelopedDataParser envelopedData;
     
-    private AlgorithmIdentifier encAlg;
+    private final AlgorithmIdentifier encAlg;
     private AttributeTable unprotectedAttributes;
     private boolean attrNotRead;
     private OriginatorInformation  originatorInfo;

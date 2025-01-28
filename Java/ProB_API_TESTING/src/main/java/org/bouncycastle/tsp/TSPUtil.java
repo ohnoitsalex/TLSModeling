@@ -38,7 +38,7 @@ import org.bouncycastle.util.Integers;
 
 public class TSPUtil
 {
-    private static List EMPTY_LIST = Collections.unmodifiableList(new ArrayList());
+    private static final List EMPTY_LIST = Collections.unmodifiableList(new ArrayList());
 
     private static final Map digestLengths = new HashMap();
     private static final Map digestNames = new HashMap();

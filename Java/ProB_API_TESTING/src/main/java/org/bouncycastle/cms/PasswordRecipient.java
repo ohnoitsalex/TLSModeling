@@ -7,10 +7,10 @@ import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 public interface PasswordRecipient
     extends Recipient
 {
-    public static final int PKCS5_SCHEME2 = 0;
-    public static final int PKCS5_SCHEME2_UTF8 = 1;
+    int PKCS5_SCHEME2 = 0;
+    int PKCS5_SCHEME2_UTF8 = 1;
 
-    static final class PRF
+    final class PRF
     {
         public static final PRF HMacSHA1 = new PRF("HMacSHA1", new AlgorithmIdentifier(PKCSObjectIdentifiers.id_hmacWithSHA1, DERNull.INSTANCE));
         public static final PRF HMacSHA224 = new PRF("HMacSHA224", new AlgorithmIdentifier(PKCSObjectIdentifiers.id_hmacWithSHA224, DERNull.INSTANCE));

@@ -1,13 +1,12 @@
 package org.bouncycastle.mail.smime.handlers;
 
-import java.awt.datatransfer.DataFlavor;
-import java.io.IOException;
-import java.io.OutputStream;
-
 import javax.activation.ActivationDataFlavor;
 import javax.activation.DataContentHandler;
 import javax.activation.DataSource;
 import javax.mail.internet.MimeBodyPart;
+import java.awt.datatransfer.DataFlavor;
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class PKCS7ContentHandler 
     implements DataContentHandler 

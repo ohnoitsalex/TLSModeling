@@ -11,10 +11,10 @@ import org.bouncycastle.operator.SignatureAlgorithmIdentifierFinder;
 
 public class SignerInformationVerifier
 {
-    private ContentVerifierProvider verifierProvider;
-    private DigestCalculatorProvider digestProvider;
-    private SignatureAlgorithmIdentifierFinder sigAlgorithmFinder;
-    private CMSSignatureAlgorithmNameGenerator sigNameGenerator;
+    private final ContentVerifierProvider verifierProvider;
+    private final DigestCalculatorProvider digestProvider;
+    private final SignatureAlgorithmIdentifierFinder sigAlgorithmFinder;
+    private final CMSSignatureAlgorithmNameGenerator sigNameGenerator;
 
     public SignerInformationVerifier(CMSSignatureAlgorithmNameGenerator sigNameGenerator, SignatureAlgorithmIdentifierFinder sigAlgorithmFinder, ContentVerifierProvider verifierProvider, DigestCalculatorProvider digestProvider)
     {
