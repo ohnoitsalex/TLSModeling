@@ -89,8 +89,7 @@ public class TlsClientProtocol
         }
     }
 
-    public void sendClientHelloMessage(TlsClient tlsClient) throws IOException
-    {
+    public void initConnexion(TlsClient tlsClient) throws IOException {
         if (tlsClient == null)
         {
             throw new IllegalArgumentException("'tlsClient' cannot be null");
@@ -104,20 +103,11 @@ public class TlsClientProtocol
         this.tlsClientContext = new TlsClientContextImpl(tlsClient.getCrypto());
 
         tlsClient.init(tlsClientContext);
-        if (tlsClientContext !=null) {
-            sendClientHello();
-        } else {
-            System.out.println("TlsClientContext is null");
-        }
+        tlsClient.notifyCloseHandle(this);
 
-//        tlsClient.notifyCloseHandle(this);
-//
-//        beginHandshake(false);
-//
-//        if (blocking)
-//        {
-//            blockForHandshake();
-//        }
+        super.beginHandshake(false);
+        this.connection_state = CS_CLIENT_HELLO;
+
     }
 
 //    public boolean renegotiate() throws IOException

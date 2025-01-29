@@ -97,6 +97,7 @@ public class BCPartialConnection {
             }
         };
 
-        protocol.sendClientHelloMessage(client);
+        protocol.initConnexion(client);
+        protocol.sendClientHello();
     }
 }
