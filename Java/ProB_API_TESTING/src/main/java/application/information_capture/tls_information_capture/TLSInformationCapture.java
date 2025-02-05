@@ -1,7 +1,7 @@
 package application.information_capture.tls_information_capture;
 
 import application.information_capture.InformationCapture;
-import application.information_converter.InformationConvertertoAbstract;
+import application.information_handler.InformationConvertertoAbstract;
 import org.pcap4j.core.*;
 import org.pcap4j.packet.Packet;
 import org.pcap4j.packet.TcpPacket;
@@ -66,10 +66,12 @@ public class TLSInformationCapture extends InformationCapture {
                         String headers = PacketLogger.extractHeaders(packet);
 //                        System.out.println("Extracted Headers");
                         // Log headers and raw data to file
-                        PacketLogger.logPacketData(headers, payload, "data/tls_handshake_data.txt");
+                        PacketLogger.logPacketData(headers, payload, "src/main/resources/data/tls_handshake_data.txt");
                         InformationConvertertoAbstract.configureYAML();
-                        InformationConvertertoAbstract.serializeToYAML(TlsHandshakeParser.tlsClientInformationHolder, "data/SUTClientHello");
-                        InformationConvertertoAbstract.serializeToYAML(TlsHandshakeParser.tlsServerInformationHolder, "data/SUTServerHello");
+                        InformationConvertertoAbstract.serializeToYAML(TlsHandshakeParser.tlsClientInformationHolder, "src/main/resources/data/SUTClientHello");
+                        InformationConvertertoAbstract.serializeToYAML(TlsHandshakeParser.tlsServerInformationHolder, "src/main/resources/data/SUTServerHello");
+                        InformationConvertertoAbstract.removeGlobalTagsYaml("src/main/resources/data/SUTClientHello.yaml");
+                        InformationConvertertoAbstract.removeGlobalTagsYaml("src/main/resources/data/SUTServerHello.yaml");
                     }
                 }
             }
@@ -100,7 +102,7 @@ public class TLSInformationCapture extends InformationCapture {
             Packet payload = tcpPacket.getPayload();
 
             // Log headers and raw data to file
-            PacketLogger.logPacketData(headers, payload, "data/tls_handshake_data.txt");
+            PacketLogger.logPacketData(headers, payload, "src/main/resources/data/tls_handshake_data.txt");
         }
     }
 

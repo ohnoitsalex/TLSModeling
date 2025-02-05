@@ -1,8 +1,6 @@
 package application.model_api;
 
-import application.information_capture.tls_information_capture.PacketLogger;
-import application.information_capture.tls_information_capture.TlsHandshakeParser;
-import application.information_converter.InformationConvertertoAbstract;
+import application.information_handler.InformationConvertertoAbstract;
 import application.information_holder.tls_information_holder.TLSClientInformationHolder;
 import application.information_holder.tls_information_holder.TLSServerInformationHolder;
 import com.google.inject.Inject;
@@ -182,7 +180,7 @@ public class ModelExecuter {
                 tlsClientInformationHolder = new TLSClientInformationHolder();
                 //System.out.println(transition.getName().toString());
                 clientHelloInformation.put("random", "NOT SUPPORTED IN MODEL ");
-                clientHelloInformation.put("legacy_version", String.valueOf(transition.getParameterValues().get(0))+ " ");
+                clientHelloInformation.put("legacy_version", String.valueOf(transition.getParameterValues().get(0)));
                 clientHelloInformation.put("supported_versions",transition.getParameterValues().get(1));
                 clientHelloInformation.put("legacy_compression_methods",transition.getParameterValues().get(2));
                 clientHelloInformation.put("pre_shared_key", transition.getParameterValues().get(3));
@@ -191,7 +189,8 @@ public class ModelExecuter {
                 clientHelloInformation.put("cipher_suites",transition.getParameterValues().get(6));
                 tlsClientInformationHolder.setClientHelloInformation(clientHelloInformation);
 
-                InformationConvertertoAbstract.serializeToYAML(tlsClientInformationHolder, "data/ModelClientHello");
+                InformationConvertertoAbstract.serializeToYAML(tlsClientInformationHolder, "src/main/resources/data/ModelClientHello");
+                InformationConvertertoAbstract.removeGlobalTagsYaml("src/main/resources/data/ModelClientHello.yaml");
             }
             if (trace.getCurrent().toString() == "SendServerHello"){
                 System.out.println("SendServerHello");
@@ -201,17 +200,18 @@ public class ModelExecuter {
                 tlsServerInformationHolder = new TLSServerInformationHolder();
                 //System.out.println(transition.getName().toString());
                 serverHelloInformation.put("random", "NOT SUPPORTED IN MODEL ");
-                serverHelloInformation.put("legacy_version", transition.getParameterValues().get(0) + " ");
+                serverHelloInformation.put("legacy_version", transition.getParameterValues().get(0));
                 serverHelloInformation.put("supported_versions",transition.getParameterValues().get(3));
                 serverHelloInformation.put("legacy_compression_methods",(transition.getParameterValues().get(2)));
                 serverHelloInformation.put("pre_shared_key", transition.getParameterValues().get(6));
-                serverHelloInformation.put("legacy_session_id_echo", String.valueOf(transition.getParameterValues().get(1)) + " ");
+                serverHelloInformation.put("legacy_session_id_echo", String.valueOf(transition.getParameterValues().get(1)));
                 serverHelloInformation.put("key_share",transition.getParameterValues().get(5));
-                serverHelloInformation.put("cipher_suites",String.valueOf(transition.getParameterValues().get(4)) + " ");
+                serverHelloInformation.put("cipher_suites",String.valueOf(transition.getParameterValues().get(4)));
                 tlsServerInformationHolder.setServerHelloInformation(serverHelloInformation);
 
                 //InformationConvertertoAbstract.configureYAML();
-                InformationConvertertoAbstract.serializeToYAML(tlsServerInformationHolder, "data/ModelServerHello");
+                InformationConvertertoAbstract.serializeToYAML(tlsServerInformationHolder, "src/main/resources/data/ModelServerHello");
+                InformationConvertertoAbstract.removeGlobalTagsYaml("src/main/resources/data/ModelServerHello.yaml");
             }
 
             //System.out.println("Transition param values:" + trace.getCurrentState().getOutTransitions().toString());

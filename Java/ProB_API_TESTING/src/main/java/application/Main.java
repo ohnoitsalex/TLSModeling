@@ -9,6 +9,6 @@ public class Main {
 
         tlsTestExaminer.loadModel();
         tlsTestExaminer.executeModelOperation();
-        //tlsTestExaminer.createSUT();
+        tlsTestExaminer.createSUT();
     }
 }

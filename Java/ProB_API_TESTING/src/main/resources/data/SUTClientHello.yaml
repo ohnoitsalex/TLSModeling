@@ -1,22 +1,21 @@
-!!application.information_holder.tls_information_holder.TLSClientInformationHolder
 clientHelloInformation:
-  random: '9c df 09 c0 07 31 1d 44 7d ed 78 5a db 19 7b a4 c0 a5 42 77 93 a8 2e fc
-    68 03 52 d4 1f 26 1f af '
-  pre_shared_key: '47 fc 1e ae db 67 8a ae 8d 26 d2 18 68 0a e3 97 b2 5c 1f 7a f3
-    ab 4e fc 28 84 f8 29 3c 58 8a 3a 04 92 d0 c8 e2 bf de e5 d4 02 f9 80 c4 a7 66
-    c8 f1 b2 a1 3c bb f7 59 33 15 77 b1 a1 b5 6d 4b e9 e8 20 6c 24 d7 da 62 fb b1
-    12 0c 4d 5d 2b 86 a4 47 02 d0 88 63 48 bf c5 69 c4 91 a7 cf c6 70 d2 bf '
-  legacy_version: '3'
-  supported_versions: '0304 0303 '
-  legacy_compression_methods: '00'
-  supported_groups: 'x25519, secp256r1, secp384r1, secp521r1, x448, ffdhe2048, ffdhe3072,
-    ffdhe4096, ffdhe6144, ffdhe8192, '
-  signature_algorithms: 'ecdsa_secp256r1_sha256, ecdsa_secp384r1_sha384, ecdsa_secp521r1_sha512,
+  random: fa a1 34 61 e1 ac 62 8a f2 4c 8c 0d 3e be aa 0c 54 68 47 cf 4d 7f 9c cf
+    0f 18 5b 6c 53 d3 0e 3c
+  pre_shared_key: '7a 2e 5b 81 bf 0a 31 f3 31 40 d5 93 ad c5 43 98 86 ae 1e ec 43
+    83 f3 6a 58 f3 09 ce aa 50 61 32 04 8e 81 6f d2 c4 d4 23 1f 83 c8 da 50 7e 00
+    44 e4 a3 f9 01 bd 27 42 9f 7d a3 34 02 65 c7 a9 60 ee b3 ee 2f 6b ef 91 97 4d
+    c6 6f 03 38 3e ec 53 28 a7 21 b0 c8 ff 47 ca a2 f5 1d 07 3d 82 33 86 8d '
+  legacy_version: x0303
+  supported_versions: '{TLS_1_3, TLS_1_2}'
+  legacy_compression_methods: '0'
+  supported_groups: '{x25519, secp256r1, secp384r1, secp521r1, x448, ffdhe2048, ffdhe3072,
+    ffdhe4096, ffdhe6144, ffdhe8192}'
+  signature_algorithms: '{ecdsa_secp256r1_sha256, ecdsa_secp384r1_sha384, ecdsa_secp521r1_sha512,
     ed25519, ed448, rsa_pss_rsae_sha256, rsa_pss_rsae_sha384, rsa_pss_rsae_sha512,
     rsa_pss_pss_sha256, rsa_pss_pss_sha384, rsa_pss_pss_sha512, rsa_pkcs1_sha256,
     rsa_pkcs1_sha384, rsa_pkcs1_sha512, SHA256 DSA, SHA224 ECDSA, SHA224 RSA, SHA224
-    DSA, ecdsa_sha1, rsa_pkcs1_sha1, SHA1 DSA, '
-  cipher_suites: 'TLS_AES_256_GCM_SHA384, TLS_AES_128_GCM_SHA256, TLS_CHACHA20_POLY1305_SHA256,
+    DSA, ecdsa_sha1, rsa_pkcs1_sha1, SHA1 DSA}'
+  cipher_suites: '{TLS_AES_256_GCM_SHA384, TLS_AES_128_GCM_SHA256, TLS_CHACHA20_POLY1305_SHA256,
     TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
     TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
     TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
@@ -30,4 +29,4 @@ clientHelloInformation:
     TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA,
     TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_128_GCM_SHA256, TLS_RSA_WITH_AES_256_CBC_SHA256,
     TLS_RSA_WITH_AES_128_CBC_SHA256, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA,
-    TLS_EMPTY_RENEGOTIATION_INFO_SCSV, '
+    TLS_EMPTY_RENEGOTIATION_INFO_SCSV}'
