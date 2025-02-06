@@ -8,20 +8,20 @@ import java.net.Socket;
 import java.security.SecureRandom;
 import java.util.Vector;
 
-public class BCPartialConnection {
+public class BCTlsDirectUse {
 
-
+    // Client default parameter
     private static final String SERVER_HOST = "localhost";
     private static final int SERVER_PORT = 1234;
     private static final Vector <SignatureAndHashAlgorithm> signature_algorithms = new Vector<>();
     private static final Vector <SignatureAndHashAlgorithm> signature_algorithms_cert = new Vector<>();
     private static final Vector<Integer> supported_groups = new Vector<Integer>();
     private static final Vector<Integer> key_share = new Vector<Integer>();
-    private static final ProtocolVersion[] C_TLS_VERSIONS = new ProtocolVersion[]{ProtocolVersion.TLSv12, ProtocolVersion.TLSv13};
-    private static final int[] C_CIPHERS = new int[]{CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, CipherSuite.TLS_AES_128_GCM_SHA256, CipherSuite.TLS_CHACHA20_POLY1305_SHA256};
 
+    public static void sendClientHello(ProtocolVersion[] tlsVersions, int[] ciphers) throws IOException {
 
-    public static void main(String[] args) throws Exception {
+        // CLIENT CREATION
+
         // Secure random number generator
         SecureRandom secureRandom = new SecureRandom();
 
@@ -35,13 +35,13 @@ public class BCPartialConnection {
             //Protocol Version Entries
             @Override
             public ProtocolVersion[] getProtocolVersions() {
-                return C_TLS_VERSIONS;
+                return tlsVersions;
             }
 
             //Cipher Suites Entries
             @Override
             protected int[] getSupportedCipherSuites() {
-                return C_CIPHERS;
+                return ciphers;
             }
 
             @Override
@@ -98,6 +98,13 @@ public class BCPartialConnection {
         };
 
         protocol.initConnexion(client);
+
         protocol.sendClientHello();
+
+        protocol.concludeClientHello();
+    }
+
+    public static void sendServerHello() {
+
     }
 }

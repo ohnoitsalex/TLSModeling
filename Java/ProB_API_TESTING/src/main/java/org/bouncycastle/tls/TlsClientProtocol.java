@@ -106,8 +106,15 @@ public class TlsClientProtocol
         tlsClient.notifyCloseHandle(this);
 
         super.beginHandshake(false);
-        this.connection_state = CS_CLIENT_HELLO;
 
+    }
+
+    public void concludeClientHello() throws IOException {
+        this.connection_state = CS_CLIENT_HELLO;
+        if (blocking)
+        {
+            blockForHandshake();
+        }
     }
 
 //    public boolean renegotiate() throws IOException
