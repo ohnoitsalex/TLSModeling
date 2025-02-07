@@ -86,6 +86,23 @@ public class TlsServerProtocol
         }
     }
 
+    public void initServerConnexion() {
+        if (tlsServer == null)
+        {
+            throw new IllegalArgumentException("'tlsServer' cannot be null");
+        }
+        if (this.tlsServer != null)
+        {
+            throw new IllegalStateException("'accept' can only be called once");
+        }
+
+        this.tlsServer = tlsServer;
+        this.tlsServerContext = new TlsServerContextImpl(tlsServer.getCrypto());
+
+        tlsServer.init(tlsServerContext);
+        tlsServer.notifyCloseHandle(this);
+    }
+
 //    public boolean renegotiate() throws IOException
 //    {
 //        boolean allowed = super.renegotiate();

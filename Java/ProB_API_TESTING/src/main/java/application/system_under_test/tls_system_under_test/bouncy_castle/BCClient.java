@@ -21,6 +21,9 @@ public class BCClient {
     private static final ProtocolVersion[] C_TLS_VERSIONS = new ProtocolVersion[]{ProtocolVersion.TLSv12, ProtocolVersion.TLSv13};
     private static final int[] C_CIPHERS = new int[]{CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, CipherSuite.TLS_AES_128_GCM_SHA256, CipherSuite.TLS_CHACHA20_POLY1305_SHA256};
 
+//    public static void main(String[] args) throws Exception {
+//        BCTlsDirectUse.sendClientHello(C_TLS_VERSIONS, C_CIPHERS);
+//    }
 
     public static void main(String[] args) throws Exception {
         // Secure random number generator
