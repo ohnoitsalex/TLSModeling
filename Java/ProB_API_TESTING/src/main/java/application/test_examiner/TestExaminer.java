@@ -19,8 +19,8 @@ public class TestExaminer {
                 break;
 
             //Simply to show the flexibility and adaptation of the code
-            case "libraryExample":
-                this.modelLoader = new ModelLoader(de.prob.Main.getInjector().getInstance(Api.class), Config.LIBRARYMODELFILEPATH);
+            case "tlsTesting":
+                this.modelLoader = new ModelLoader(de.prob.Main.getInjector().getInstance(Api.class), Config.TLSMODELFORTESTINGFILEPATH);
                 //this.systemUnderTest = new SystemUnderTest();
                 break;
             default:

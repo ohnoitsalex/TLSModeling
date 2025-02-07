@@ -1,6 +1,6 @@
 package application.information_holder.tls_information_holder;
 
-import application.information_converter.InformationConvertertoAbstract;
+import application.information_handler.InformationConvertertoAbstract;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,8 +1,7 @@
-!!application.information_holder.tls_information_holder.TLSClientInformationHolder
 clientHelloInformation:
   random: 'NOT SUPPORTED IN MODEL '
   pre_shared_key: '{}'
-  legacy_version: 'x0303 '
+  legacy_version: x0303
   supported_versions: '{TLS_1_3}'
   legacy_compression_methods: '0'
   supported_groups: '{X25519}'

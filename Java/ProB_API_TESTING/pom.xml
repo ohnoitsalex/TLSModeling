@@ -99,6 +99,13 @@
             <artifactId>guava</artifactId>
             <version>32.0.1-jre</version>  <!-- Ensure to use the latest version -->
         </dependency>
-
     </dependencies>
+    <build>
+        <!--
+        <resources>
+            <resource>
+                <directory>src/main/resources/data</directory>
+            </resource>
+        </resources> -->
+    </build>
 </project>

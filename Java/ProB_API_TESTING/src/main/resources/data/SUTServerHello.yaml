@@ -1,0 +1,13 @@
+serverHelloInformation:
+  random: 1d 3f e8 bf 4e c7 2e 6f 2c 59 89 a6 be be 3a b4 70 bb 33 69 67 2f d7 6a
+    62 54 6d 30 78 3e 5e dd
+  pre_shared_key: '22 38 9c dd 28 25 3a b8 95 dd 9b 73 dd c0 68 7c a5 56 e3 60 94
+    06 cf a2 18 37 ee d9 4c f9 eb 63 '
+  legacy_session_id_echo: 76 1a 7b 74 fd 69 75 1b e8 9c 11 64 54 23 8d 7e a4 7d 11
+    b0 4c 71 0c 13 49 bf 2f 46 29 ab 06 2e
+  legacy_version: x0303
+  supported_versions: '{TLS_1_3}'
+  legacy_compression_methods: '0'
+  key_share: '22 38 9c dd 28 25 3a b8 95 dd 9b 73 dd c0 68 7c a5 56 e3 60 94 06 cf
+    a2 18 37 ee d9 4c f9 eb 63 '
+  cipher_suites: TLS_AES_256_GCM_SHA384
