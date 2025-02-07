@@ -1,10 +1,10 @@
 clientHelloInformation:
-  random: fa a1 34 61 e1 ac 62 8a f2 4c 8c 0d 3e be aa 0c 54 68 47 cf 4d 7f 9c cf
-    0f 18 5b 6c 53 d3 0e 3c
-  pre_shared_key: '7a 2e 5b 81 bf 0a 31 f3 31 40 d5 93 ad c5 43 98 86 ae 1e ec 43
-    83 f3 6a 58 f3 09 ce aa 50 61 32 04 8e 81 6f d2 c4 d4 23 1f 83 c8 da 50 7e 00
-    44 e4 a3 f9 01 bd 27 42 9f 7d a3 34 02 65 c7 a9 60 ee b3 ee 2f 6b ef 91 97 4d
-    c6 6f 03 38 3e ec 53 28 a7 21 b0 c8 ff 47 ca a2 f5 1d 07 3d 82 33 86 8d '
+  random: 59 b0 6d cd a8 f5 5e b9 c0 41 2e b6 11 8f 75 c5 ad 6a 31 75 22 bd e4 eb
+    01 6a 90 e1 1d 2a 82 9c
+  pre_shared_key: 'fb 3b ca 4e f5 37 c9 8f 35 7e 8f 2a e2 6a ba cd 09 17 a3 b2 f0
+    6a 88 02 1c 61 17 3b 96 aa d9 3a 04 f5 65 67 de 52 68 cc c3 65 50 4e 68 4d 87
+    4e 7b 23 bd ad a8 79 7e a4 cf 8c 41 57 ef 6a 24 f4 a7 8e 5d cd 68 94 22 f1 56
+    95 d7 2a 3c 5c f6 39 1f 73 c4 36 ae bc 86 fc 5b 14 77 08 08 21 17 f4 c7 '
   legacy_version: x0303
   supported_versions: '{TLS_1_3, TLS_1_2}'
   legacy_compression_methods: '0'

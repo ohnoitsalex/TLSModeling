@@ -11,4 +11,9 @@ public class Main {
         tlsTestExaminer.executeModelOperation();
         tlsTestExaminer.createSUT();
     }
+
+    public void testServerHello(){
+        tlsTestExaminer.loadModel();
+        tlsTestExaminer.testServerHello();
+    }
 }

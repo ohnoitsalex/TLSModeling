@@ -18,7 +18,11 @@ public class BCTlsDirectUse {
     private static final Vector<Integer> supported_groups = new Vector<Integer>();
     private static final Vector<Integer> key_share = new Vector<Integer>();
 
-    public static void sendClientHello(ProtocolVersion[] tlsVersions, int[] ciphers) throws IOException {
+    public static void sendClientHello(ProtocolVersion[] tlsVersions, int[] ciphers,
+                                       Vector <SignatureAndHashAlgorithm> signatureAlgorithms,
+                                       Vector<Integer> supportedGroup,
+                                       Vector<Integer> keyShare,
+                                       ProtocolVersion[] protocolVersion) throws IOException {
 
         // CLIENT CREATION
 
@@ -52,22 +56,24 @@ public class BCTlsDirectUse {
             //Signature Algorithms Entries Entries
             @Override
             protected Vector getSupportedSignatureAlgorithms() {
-                signature_algorithms.addElement(SignatureAndHashAlgorithm.ed448);
-                signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_rsae_sha256);
-                signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_rsae_sha384);
-                signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_rsae_sha512);
-                signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_pss_sha256);
-                signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_pss_sha384);
-                signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_pss_sha512);
-                return signature_algorithms;
+//                signature_algorithms.addElement(SignatureAndHashAlgorithm.ed448);
+//                signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_rsae_sha256);
+//                signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_rsae_sha384);
+//                signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_rsae_sha512);
+//                signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_pss_sha256);
+//                signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_pss_sha384);
+//                signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_pss_sha512);
+//                return signature_algorithms;
+                return signatureAlgorithms;
             }
 
             //Supported Groups Entries
             @Override
             protected Vector getSupportedGroups(Vector vector) {
-                supported_groups.addElement(NamedGroup.x25519);
-                supported_groups.addElement(NamedGroup.x448);
-                return supported_groups;
+//                supported_groups.addElement(NamedGroup.x25519);
+//                supported_groups.addElement(NamedGroup.x448);
+//                return supported_groups;
+                return supportedGroup;
             }
 
 //            @Override
@@ -78,9 +84,10 @@ public class BCTlsDirectUse {
             //Key Share Entries
             @Override
             public Vector getEarlyKeyShareGroups() {
-                //key_share.addElement(NamedGroup.x25519);
-                key_share.addElement(NamedGroup.x448);
-                return key_share;
+//                //key_share.addElement(NamedGroup.x25519);
+//                key_share.addElement(NamedGroup.x448);
+//                return key_share;
+                return keyShare;
             }
 
             @Override
@@ -93,7 +100,8 @@ public class BCTlsDirectUse {
 
             @Override
             protected ProtocolVersion[] getSupportedVersions() {
-                return ProtocolVersion.TLSv13.downTo(ProtocolVersion.TLSv13);
+//                return ProtocolVersion.TLSv13.downTo(ProtocolVersion.TLSv13);
+                return protocolVersion;
             }
         };
 

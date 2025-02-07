@@ -109,7 +109,7 @@ public class ModelExecuter {
         model.subscribe(this, session_machine);
     }
 
-    public void generateSpecificTrace() {
+    public void generateClientAndServerHello() {
         initaliseMachine();
         generateClientHelloMessages();
         generateServerHelloMessages();
