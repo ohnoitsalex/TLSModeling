@@ -20,12 +20,9 @@ public class Config extends AbstractModule {
     public static final String CLASSPATH = "target/classes";
     public static final String WRITERFILEPATH = "src/main/resources/data/tls_handshake_data.txt";
     public static final String DIFFERENCES = "src/main/resources/data/differences.txt";
-
     public static final String RESSOURCESSUTCLIENTHELLO = "data/SUTClientHello.yaml";
 
     public static final String RESSOURCESMODELCLIENTHELLO = "data/ModelClientHello.yaml";
-
-
 
     @Override
     protected void configure() {
