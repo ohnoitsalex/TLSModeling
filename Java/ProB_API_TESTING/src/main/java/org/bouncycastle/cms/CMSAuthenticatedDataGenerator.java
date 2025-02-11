@@ -1,18 +1,6 @@
 package org.bouncycastle.cms;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Collections;
-import java.util.Map;
-
-import org.bouncycastle.asn1.ASN1EncodableVector;
-import org.bouncycastle.asn1.ASN1Encoding;
-import org.bouncycastle.asn1.ASN1OctetString;
-import org.bouncycastle.asn1.ASN1Set;
-import org.bouncycastle.asn1.BEROctetString;
-import org.bouncycastle.asn1.DEROctetString;
-import org.bouncycastle.asn1.DERSet;
+import org.bouncycastle.asn1.*;
 import org.bouncycastle.asn1.cms.AuthenticatedData;
 import org.bouncycastle.asn1.cms.CMSObjectIdentifiers;
 import org.bouncycastle.asn1.cms.ContentInfo;
@@ -22,6 +10,12 @@ import org.bouncycastle.operator.DigestCalculatorProvider;
 import org.bouncycastle.operator.MacCalculator;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.util.io.TeeOutputStream;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * General class for generating a CMS authenticated-data message.
@@ -38,13 +32,11 @@ import org.bouncycastle.util.io.TeeOutputStream;
  * </pre>
  */
 public class CMSAuthenticatedDataGenerator
-    extends CMSAuthenticatedGenerator
-{
+        extends CMSAuthenticatedGenerator {
     /**
      * base constructor
      */
-    public CMSAuthenticatedDataGenerator()
-    {
+    public CMSAuthenticatedDataGenerator() {
     }
 
     /**
@@ -56,8 +48,7 @@ public class CMSAuthenticatedDataGenerator
      * @throws CMSException on failure in encoding data or processing recipients.
      */
     public CMSAuthenticatedData generate(CMSTypedData typedData, MacCalculator macCalculator)
-        throws CMSException
-    {
+            throws CMSException {
         return generate(typedData, macCalculator, null);
     }
 
@@ -71,8 +62,7 @@ public class CMSAuthenticatedDataGenerator
      * @throws CMSException on failure in encoding data or processing recipients.
      */
     public CMSAuthenticatedData generate(CMSTypedData typedData, MacCalculator macCalculator, final DigestCalculator digestCalculator)
-        throws CMSException
-    {
+            throws CMSException {
         ASN1OctetString encContent;
         ASN1OctetString macResult;
 
@@ -80,10 +70,8 @@ public class CMSAuthenticatedDataGenerator
 
         AuthenticatedData authData;
 
-        if (digestCalculator != null)
-        {
-            try
-            {
+        if (digestCalculator != null) {
+            try {
                 ByteArrayOutputStream bOut = new ByteArrayOutputStream();
                 OutputStream out = new TeeOutputStream(digestCalculator.getOutputStream(), bOut);
 
@@ -92,22 +80,18 @@ public class CMSAuthenticatedDataGenerator
                 out.close();
 
                 encContent = new BEROctetString(bOut.toByteArray());
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 throw new CMSException("unable to perform digest calculation: " + e.getMessage(), e);
             }
 
             Map parameters = Collections.unmodifiableMap(getBaseParameters(typedData.getContentType(), digestCalculator.getAlgorithmIdentifier(), macCalculator.getAlgorithmIdentifier(), digestCalculator.getDigest()));
 
-            if (authGen == null)
-            {
+            if (authGen == null) {
                 authGen = new DefaultAuthenticatedAttributeTableGenerator();
             }
             ASN1Set authed = new DERSet(authGen.getAttributes(parameters).toASN1EncodableVector());
 
-            try
-            {
+            try {
                 OutputStream mOut = macCalculator.getOutputStream();
 
                 mOut.write(authed.getEncoded(ASN1Encoding.DER));
@@ -115,23 +99,18 @@ public class CMSAuthenticatedDataGenerator
                 mOut.close();
 
                 macResult = new DEROctetString(macCalculator.getMac());
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 throw new CMSException("unable to perform MAC calculation: " + e.getMessage(), e);
             }
             ASN1Set unauthed = CMSUtils.getAttrBERSet(unauthGen);
 
             ContentInfo eci = new ContentInfo(
-                typedData.getContentType(),
-                encContent);
+                    typedData.getContentType(),
+                    encContent);
 
             authData = new AuthenticatedData(originatorInfo, new DERSet(recipientInfos), macCalculator.getAlgorithmIdentifier(), digestCalculator.getAlgorithmIdentifier(), eci, authed, macResult, unauthed);
-        }
-        else
-        {
-            try
-            {
+        } else {
+            try {
                 ByteArrayOutputStream bOut = new ByteArrayOutputStream();
                 OutputStream mOut = new TeeOutputStream(bOut, macCalculator.getOutputStream());
 
@@ -142,29 +121,25 @@ public class CMSAuthenticatedDataGenerator
                 encContent = new BEROctetString(bOut.toByteArray());
 
                 macResult = new DEROctetString(macCalculator.getMac());
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 throw new CMSException("unable to perform MAC calculation: " + e.getMessage(), e);
             }
 
             ASN1Set unauthed = CMSUtils.getAttrBERSet(unauthGen);
 
             ContentInfo eci = new ContentInfo(
-                typedData.getContentType(),
-                encContent);
+                    typedData.getContentType(),
+                    encContent);
 
             authData = new AuthenticatedData(originatorInfo, new DERSet(recipientInfos), macCalculator.getAlgorithmIdentifier(), null, eci, null, macResult, unauthed);
         }
 
         ContentInfo contentInfo = new ContentInfo(
-            CMSObjectIdentifiers.authenticatedData, authData);
+                CMSObjectIdentifiers.authenticatedData, authData);
 
-        return new CMSAuthenticatedData(contentInfo, new DigestCalculatorProvider()
-        {
+        return new CMSAuthenticatedData(contentInfo, new DigestCalculatorProvider() {
             public DigestCalculator get(AlgorithmIdentifier digestAlgorithmIdentifier)
-                throws OperatorCreationException
-            {
+                    throws OperatorCreationException {
                 return digestCalculator;
             }
         });

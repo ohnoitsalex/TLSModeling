@@ -1,13 +1,13 @@
 package org.bouncycastle.gpg.keybox.jcajce;
 
+import org.bouncycastle.gpg.keybox.BlobVerifier;
+import org.bouncycastle.gpg.keybox.KeyBox;
+import org.bouncycastle.openpgp.operator.KeyFingerPrintCalculator;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-
-import org.bouncycastle.gpg.keybox.BlobVerifier;
-import org.bouncycastle.gpg.keybox.KeyBox;
-import org.bouncycastle.openpgp.operator.KeyFingerPrintCalculator;
 
 public class JcaKeyBox
     extends KeyBox

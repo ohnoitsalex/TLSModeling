@@ -1,5 +1,6 @@
 package application.information_capture.tls_information_capture;
 
+import application.config.Config;
 import application.information_holder.tls_information_holder.TLSClientInformationHolder;
 import application.information_holder.tls_information_holder.TLSServerInformationHolder;
 
@@ -12,8 +13,6 @@ import static application.information_capture.tls_information_capture.PacketLogg
 
 public class TlsHandshakeParser {
 
-    public static final String writerFilePath = "src/main/resources/data/tls_handshake_data.txt";
-
     public static TLSClientInformationHolder tlsClientInformationHolder;
     public static TLSServerInformationHolder tlsServerInformationHolder;
 
@@ -21,18 +20,16 @@ public class TlsHandshakeParser {
     public static void parseTlsHandshakeRecord(byte[] rawData) {
 
         if (rawData.length < 6 || rawData[0] != (byte) 0x16) { // 0x16 = TLS Handshake
-            writeData("Not a TLS Handshake Record.", writerFilePath);
+            writeData("Not a TLS Handshake Record.", Config.WRITERFILEPATH);
             System.out.println("Not a TLS Handshake Record.");
             return;
         }
 
         int handshakeType = rawData[5] & 0xFF; // Byte 5: Handshake Type
-        writeData("Handshake Type: " + getHandshakeType(handshakeType), writerFilePath);
-//        System.out.println("Handshake Type: " + getHandshakeType(handshakeType));
+        writeData("Handshake Type: " + getHandshakeType(handshakeType), Config.WRITERFILEPATH);
 
         int length = ((rawData[6] & 0xFF) << 16) | ((rawData[7] & 0xFF) << 8) | (rawData[8] & 0xFF);
-        writeData("Handshake Length: " + length, writerFilePath);
-//        System.out.println("Handshake Length: " + length);
+        writeData("Handshake Length: " + length, Config.WRITERFILEPATH);
 
         ByteBuffer buffer = ByteBuffer.wrap(rawData, 9, length); // Start parsing from byte 9
 
@@ -44,7 +41,7 @@ public class TlsHandshakeParser {
                 parseServerHello(buffer);
                 break;
             default:
-                writeData("Unsupported Handshake Type.", writerFilePath);
+                writeData("Unsupported Handshake Type.", Config.WRITERFILEPATH);
                 System.out.println("Unsupported Handshake Type.");
         }
     }
@@ -52,14 +49,13 @@ public class TlsHandshakeParser {
     // Parse ClientHello
     private static void parseClientHello(ByteBuffer buffer) {
         tlsClientInformationHolder = new TLSClientInformationHolder();
-        writeData("=== ClientHello ===", writerFilePath);
+        writeData("=== ClientHello ===", Config.WRITERFILEPATH);
         System.out.println("=== ClientHello ===");
 
         // Protocol Version (2 bytes)
         int versionMajor = buffer.get() & 0xFF;
         int versionMinor = buffer.get() & 0xFF;
         String convertedVersionValue = String.format("0%d0%d", versionMajor, versionMinor);
-        //System.out.println("version value 1 = " + convertedVersionValue);
         if (convertedVersionValue.equals("0301"))
             convertedVersionValue = "x0301";
         else if (convertedVersionValue.equals("0302"))
@@ -70,30 +66,25 @@ public class TlsHandshakeParser {
             convertedVersionValue = "x0304";
         else
             convertedVersionValue = "NOT_SUPPORTED";
-        writeData(convertedVersionValue, writerFilePath);
+        writeData(convertedVersionValue, Config.WRITERFILEPATH);
         System.out.println("version value = x" + convertedVersionValue);
-//        System.out.printf("Version: 0%d0%d%n", versionMajor, versionMinor);
         tlsClientInformationHolder.updateClientHelloLegacyVersion(convertedVersionValue);
 
         // Random (32 bytes)
         byte[] random = new byte[32];
         buffer.get(random);
-        writeData("Random: " + bytesToHex(random), writerFilePath);
-//        System.out.println("Random: " + bytesToHex(random));
+        writeData("Random: " + bytesToHex(random), Config.WRITERFILEPATH);
         tlsClientInformationHolder.updateClientHelloRandom(bytesToHex(random));
 
         // Session ID Length (1 byte) + Session ID
         int sessionIdLength = buffer.get() & 0xFF;
         byte[] sessionId = new byte[sessionIdLength];
         buffer.get(sessionId);
-        writeData("Session ID: " + bytesToHex(sessionId), writerFilePath);
-//        System.out.println("Session ID: " + bytesToHex(sessionId));
+        writeData("Session ID: " + bytesToHex(sessionId), Config.WRITERFILEPATH);
 
         // Cipher Suites Length (2 bytes) + Cipher Suites
         int cipherSuitesLength = buffer.getShort() & 0xFFFF;
-        writeData("Cipher Suites Length: " + cipherSuitesLength, writerFilePath);
-//        System.out.println("Cipher Suites Length: " + cipherSuitesLength);
-
+        writeData("Cipher Suites Length: " + cipherSuitesLength, Config.WRITERFILEPATH);
         ArrayList<String> supported_ciphersuites = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         StringBuilder convertsb = new StringBuilder();
@@ -104,14 +95,12 @@ public class TlsHandshakeParser {
             convertsb.append(String.format("%s, "/* + " (0x%04x), "*/ , getCipherSuite(cipherId), cipherId));
             supported_ciphersuites.add(String.format("%s"/* + " (0x%04x), "*/ , getCipherSuite(cipherId), cipherId));
         }
-        writeData(sb.toString(), writerFilePath);
+        writeData(sb.toString(), Config.WRITERFILEPATH);
         tlsClientInformationHolder.updateClientHelloCipherSuites("{" + String.join(", ", supported_ciphersuites) + "}");
-//        System.out.println(sb);
 
         // Compression Methods Length (1 byte) + Compression Methods
         int compressionMethodsLength = buffer.get() & 0xFF;
-        writeData("Compression Methods Length: " + compressionMethodsLength, writerFilePath);
-//        System.out.println("Compression Methods Length: " + compressionMethodsLength);
+        writeData("Compression Methods Length: " + compressionMethodsLength, Config.WRITERFILEPATH);
         byte[] compressionMethods = new byte[compressionMethodsLength];
         buffer.get(compressionMethods);
 
@@ -120,14 +109,13 @@ public class TlsHandshakeParser {
             convertedCompressionMethods = "0";
         else
             convertedCompressionMethods = "1";
-        writeData("Compression Methods: " + convertedCompressionMethods, writerFilePath);
-//        System.out.println("Compression Methods: " + bytesToHex(compressionMethods));
+        writeData("Compression Methods: " + convertedCompressionMethods, Config.WRITERFILEPATH);
         tlsClientInformationHolder.updateClientHelloLegacyCompressionMethods(convertedCompressionMethods);
 
         // Extensions Length (2 bytes) + Extensions
         if (buffer.remaining() > 2) {
             int extensionsLength = buffer.getShort() & 0xFFFF;
-            writeData("Extensions Length: " + extensionsLength, writerFilePath);
+            writeData("Extensions Length: " + extensionsLength, Config.WRITERFILEPATH);
 //            System.out.println("Extensions Length: " + extensionsLength);
             parseExtensions(true, buffer, extensionsLength, false);
         }
@@ -138,14 +126,13 @@ public class TlsHandshakeParser {
 
         tlsServerInformationHolder = new TLSServerInformationHolder();
 
-        writeData("=== ServerHello ===", writerFilePath);
+        writeData("=== ServerHello ===", Config.WRITERFILEPATH);
         System.out.println("=== ServerHello ===");
 
         // Protocol Version (2 bytes)
         int versionMajor = buffer.get() & 0xFF;
         int versionMinor = buffer.get() & 0xFF;
         String convertedVersionValue = String.format("0%d0%d", versionMajor, versionMinor);
-        //System.out.println("version value 1 = " + convertedVersionValue);
         if (convertedVersionValue.equals("0301"))
             convertedVersionValue = "x0301";
         else if (convertedVersionValue.equals("0302"))
@@ -156,53 +143,45 @@ public class TlsHandshakeParser {
             convertedVersionValue = "x0304";
         else
             convertedVersionValue = "NOT_SUPPORTED";
-        writeData(String.format("Version: 0%d0%d%n", versionMajor, versionMinor), writerFilePath);
-//        System.out.printf("Version: 0%d0%d%n", versionMajor, versionMinor);
+        writeData(String.format("Version: 0%d0%d%n", versionMajor, versionMinor), Config.WRITERFILEPATH);
         tlsServerInformationHolder.updateServerHelloLegacyVersion(convertedVersionValue);
 
 
         // Random (32 bytes)
         byte[] random = new byte[32];
         buffer.get(random);
-        writeData("Random: " + bytesToHex(random), writerFilePath);
-//        System.out.println("Random: " + bytesToHex(random));
+        writeData("Random: " + bytesToHex(random), Config.WRITERFILEPATH);
         tlsServerInformationHolder.updateServerHelloRandom(bytesToHex(random));
 
         // Session ID Length (1 byte) + Session ID
         int sessionIdLength = buffer.get() & 0xFF;
         byte[] sessionId = new byte[sessionIdLength];
         buffer.get(sessionId);
-        writeData("Session ID Length: " + sessionIdLength, writerFilePath);
-        writeData("Session ID: " + bytesToHex(sessionId), writerFilePath);
-//        System.out.println("Session ID Length: " + sessionIdLength);
-//        System.out.println("Session ID: " + bytesToHex(sessionId));
+        writeData("Session ID Length: " + sessionIdLength, Config.WRITERFILEPATH);
+        writeData("Session ID: " + bytesToHex(sessionId), Config.WRITERFILEPATH);
         tlsServerInformationHolder.updateServerHelloLegacySessionIdEcho(bytesToHex(sessionId));
 
         // Cipher Suite (2 bytes)
         int cipherSuite = buffer.getShort() & 0xFFFF;
-        writeData(String.format("Cipher Suite: %s%n", getCipherSuite(cipherSuite)), writerFilePath);
-//        System.out.printf("Cipher Suite: %s%n", getCipherSuite(cipherSuite));
+        writeData(String.format("Cipher Suite: %s%n", getCipherSuite(cipherSuite)), Config.WRITERFILEPATH);
         tlsServerInformationHolder.updateServerHelloCipherSuites(getCipherSuite(cipherSuite));
 
         // Compression Method (1 byte)
         int compressionMethod = buffer.get() & 0xFF;
-        writeData(String.format("Compression Method: 0x%02x%n", compressionMethod), writerFilePath);
-//        System.out.printf("Compression Method: 0x%02x%n", compressionMethod);
+        writeData(String.format("Compression Method: 0x%02x%n", compressionMethod), Config.WRITERFILEPATH);
         tlsServerInformationHolder.updateServerHelloLegacyCompressionMethods(String.valueOf(compressionMethod));
 
         // Extensions Length (2 bytes) + Extensions
         if (buffer.remaining() > 2) {
             int extensionsLength = buffer.getShort() & 0xFFFF;
-            writeData("Extensions Length: " + extensionsLength, writerFilePath);
-//            System.out.println("Extensions Length: " + extensionsLength);
+            writeData("Extensions Length: " + extensionsLength, Config.WRITERFILEPATH);
             parseExtensions(false, buffer, extensionsLength, true);
         }
     }
 
     // Parse TLS Extensions
     private static void parseExtensions(Boolean isClient, ByteBuffer buffer, int extensionsLength, boolean server) {
-        writeData("=== Extensions ===", writerFilePath);
-//        System.out.println("=== Extensions ===");
+        writeData("=== Extensions ===", Config.WRITERFILEPATH);
         int bytesRead = 0;
         while (bytesRead < extensionsLength) {
             int extensionType = buffer.getShort() & 0xFFFF;
@@ -274,10 +253,8 @@ public class TlsHandshakeParser {
                 default:
                     type = String.format("unknown (0x%04x)", extensionType);
             }
-            writeData(String.format("* Extension: %s (len=%d) \n", type, extensionLength), writerFilePath);
-            writeData(String.format("\tType: %s (%d)\n\tLength: %d\n%s\n", type, extensionType, extensionLength, data), writerFilePath);
-//            System.out.printf("* Extension: %s (len=%d) \n", type, extensionLength);
-//            System.out.printf("\tType: %s (%d)\n\tLength: %d\n%s\n", type, extensionType, extensionLength, data);
+            writeData(String.format("* Extension: %s (len=%d) \n", type, extensionLength), Config.WRITERFILEPATH);
+            writeData(String.format("\tType: %s (%d)\n\tLength: %d\n%s\n", type, extensionType, extensionLength, data), Config.WRITERFILEPATH);
 
             bytesRead += 4 + extensionLength; // 4 bytes for type + length, plus data
         }
@@ -311,14 +288,12 @@ public class TlsHandshakeParser {
         ArrayList<String> supported_versions = new ArrayList<>();
         int i = 0;
         if (dataLength % 2 != 0) {
-            //sb.append(String.format("\tSupportedVersion length: %d \n", dataLength - 1));
             i++;
         }
         while (i < dataLength) {
             int versionMajor = data[i] & 0xFF;
             int versionMinor = data[i + 1] & 0xFF;
             String convertedVersionValue = String.format("0%d0%d ", versionMajor, versionMinor);
-            //System.out.println("Version Value in supported Version: " + convertedVersionValue + ".");
             if (convertedVersionValue.equals("0301 "))
                 convertedVersionValue = "TLS_1_0";
             else if (convertedVersionValue.equals("0302 "))
@@ -329,9 +304,6 @@ public class TlsHandshakeParser {
                 convertedVersionValue = "TLS_1_3";
             else
                 convertedVersionValue = "NOT_SUPPORTED";
-
-           // System.out.println("Converted Version Value in supported Version: " + convertedVersionValue);
-            //sb.append(String.format("\tVersion: 0%d0%d%n", versionMajor, versionMinor));
             supported_versions.add(convertedVersionValue);
             i = i + 2;
         }
@@ -344,11 +316,9 @@ public class TlsHandshakeParser {
 
     private static String parseKeyShareExtension(boolean isClient, byte[] data) {
         StringBuilder sb = new StringBuilder();
-        //sb.append("\tKey Share Extension\n");
         int i = 0;
         if (isClient) {
             int keyShareLength = ((data[i] & 0xff) << 8) | (data[i + 1] & 0xff);
-            //sb.append(String.format("\tClient Key Share Length: %d\n", keyShareLength));
             i += 2;
         }
         while (i < data.length) {
@@ -356,7 +326,6 @@ public class TlsHandshakeParser {
             int first = data[i] & 0xff;
             int second = data[i + 1] & 0xff;
             int group = ((first & 0xff) << 8) | (second & 0xff);
-            //sb.append(String.format("\t* Group: 0x%04x\n", group));
             i += 2;
 
             // Key exchange length
@@ -365,8 +334,6 @@ public class TlsHandshakeParser {
 
             // Key data
             byte[] keyData = Arrays.copyOfRange(data, i, i + keyLength);
-            //sb.append(String.format("\t\tKey Exchange Length: %d\n", keyLength));
-            //sb.append(String.format("\t\tKey: %s\n", bytesToHex(keyData)));
             sb.append(String.format("%s ", bytesToHex(keyData)));
             i += keyLength;
         }
@@ -385,15 +352,9 @@ public class TlsHandshakeParser {
     private static String parseSupportedGroupsExtension(byte[] data) {
         StringBuilder sb = new StringBuilder();
         ArrayList<String> supported_groups = new ArrayList<>();
-
-        int listLength = ((data[0] & 0xff) << 8) | (data[1] & 0xff);
-        //sb.append(String.format("\tSupported Groups List Length: %d\n", listLength));
-
-        //sb.append("\tSupported Groups:\n");
         int i = 2;
         while (i < data.length) {
             int groupId = ((data[i] & 0xff) << 8) | (data[i + 1] & 0xff);
-            //sb.append(String.format("\t\t* Supported Group: %s\n", getGroupValue(groupId)));
             sb.append(String.format("%s, ", getGroupValue(groupId)));
             supported_groups.add(String.format("%s", getGroupValue(groupId)));
             i += 2;

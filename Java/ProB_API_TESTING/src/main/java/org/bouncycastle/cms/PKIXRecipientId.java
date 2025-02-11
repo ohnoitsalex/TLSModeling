@@ -6,60 +6,49 @@ import org.bouncycastle.cert.selector.X509CertificateHolderSelector;
 import java.math.BigInteger;
 
 public class PKIXRecipientId
-    extends RecipientId
-{
+        extends RecipientId {
     protected final X509CertificateHolderSelector baseSelector;
 
-    protected PKIXRecipientId(int type, X509CertificateHolderSelector baseSelector)
-    {
+    protected PKIXRecipientId(int type, X509CertificateHolderSelector baseSelector) {
         super(type);
 
         this.baseSelector = baseSelector;
     }
 
-    protected PKIXRecipientId(int type, X500Name issuer, BigInteger serialNumber, byte[] subjectKeyId)
-    {
+    protected PKIXRecipientId(int type, X500Name issuer, BigInteger serialNumber, byte[] subjectKeyId) {
         this(type, new X509CertificateHolderSelector(issuer, serialNumber, subjectKeyId));
     }
 
-    public X500Name getIssuer()
-    {
+    public X500Name getIssuer() {
         return baseSelector.getIssuer();
     }
 
-    public BigInteger getSerialNumber()
-    {
+    public BigInteger getSerialNumber() {
         return baseSelector.getSerialNumber();
     }
 
-    public byte[] getSubjectKeyIdentifier()
-    {
+    public byte[] getSubjectKeyIdentifier() {
         return baseSelector.getSubjectKeyIdentifier();
     }
 
-    public Object clone()
-    {
+    public Object clone() {
         return new PKIXRecipientId(getType(), baseSelector);
     }
 
-    public int hashCode()
-    {
+    public int hashCode() {
         return baseSelector.hashCode();
     }
 
     public boolean equals(
-        Object  o)
-    {
-        if (!(o instanceof PKIXRecipientId id))
-        {
+            Object o) {
+        if (!(o instanceof PKIXRecipientId id)) {
             return false;
         }
 
         return this.baseSelector.equals(id.baseSelector);
     }
 
-    public boolean match(Object obj)
-    {
+    public boolean match(Object obj) {
         return baseSelector.match(obj);
     }
 }

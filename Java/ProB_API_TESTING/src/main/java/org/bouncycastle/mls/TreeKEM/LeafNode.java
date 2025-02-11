@@ -1,18 +1,13 @@
 package org.bouncycastle.mls.TreeKEM;
 
+import org.bouncycastle.mls.codec.*;
+import org.bouncycastle.mls.crypto.MlsCipherSuite;
+import org.bouncycastle.mls.protocol.Group;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.bouncycastle.mls.codec.Capabilities;
-import org.bouncycastle.mls.codec.Credential;
-import org.bouncycastle.mls.codec.CredentialType;
-import org.bouncycastle.mls.codec.Extension;
-import org.bouncycastle.mls.codec.MLSInputStream;
-import org.bouncycastle.mls.codec.MLSOutputStream;
-import org.bouncycastle.mls.crypto.MlsCipherSuite;
-import org.bouncycastle.mls.protocol.Group;
 
 public class LeafNode
     implements MLSInputStream.Readable, MLSOutputStream.Writable

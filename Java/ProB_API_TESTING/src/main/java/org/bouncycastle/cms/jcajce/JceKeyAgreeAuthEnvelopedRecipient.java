@@ -15,16 +15,13 @@ import java.security.PrivateKey;
  * Handles private key-based key extraction and content decryption.
  */
 public class JceKeyAgreeAuthEnvelopedRecipient
-    extends JceKeyAgreeRecipient
-{
-    public JceKeyAgreeAuthEnvelopedRecipient(PrivateKey recipientKey)
-    {
+        extends JceKeyAgreeRecipient {
+    public JceKeyAgreeAuthEnvelopedRecipient(PrivateKey recipientKey) {
         super(recipientKey);
     }
 
     public RecipientOperator getRecipientOperator(AlgorithmIdentifier keyEncryptionAlgorithm, final AlgorithmIdentifier contentEncryptionAlgorithm, SubjectPublicKeyInfo senderPublicKey, ASN1OctetString userKeyingMaterial, byte[] encryptedContentKey)
-        throws CMSException
-    {
+            throws CMSException {
         Key secretKey = extractSecretKey(keyEncryptionAlgorithm, contentEncryptionAlgorithm, senderPublicKey, userKeyingMaterial, encryptedContentKey);
 
         final Cipher dataCipher = contentHelper.createContentCipher(secretKey, contentEncryptionAlgorithm);

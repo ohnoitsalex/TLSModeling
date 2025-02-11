@@ -1,10 +1,10 @@
 package org.bouncycastle.mls.TreeKEM;
 
-import java.io.IOException;
-
 import org.bouncycastle.mls.codec.MLSInputStream;
 import org.bouncycastle.mls.codec.MLSOutputStream;
 import org.bouncycastle.mls.codec.NodeType;
+
+import java.io.IOException;
 
 public class TreeHashInput
     implements MLSInputStream.Readable, MLSOutputStream.Writable

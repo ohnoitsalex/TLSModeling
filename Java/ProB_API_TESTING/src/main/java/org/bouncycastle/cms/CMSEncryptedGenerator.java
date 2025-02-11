@@ -3,19 +3,16 @@ package org.bouncycastle.cms;
 /**
  * General class for generating a CMS encrypted-data message.
  */
-public class CMSEncryptedGenerator
-{
+public class CMSEncryptedGenerator {
     protected CMSAttributeTableGenerator unprotectedAttributeGenerator = null;
 
     /**
      * base constructor
      */
-    protected CMSEncryptedGenerator()
-    {
+    protected CMSEncryptedGenerator() {
     }
 
-    public void setUnprotectedAttributeGenerator(CMSAttributeTableGenerator unprotectedAttributeGenerator)
-    {
+    public void setUnprotectedAttributeGenerator(CMSAttributeTableGenerator unprotectedAttributeGenerator) {
         this.unprotectedAttributeGenerator = unprotectedAttributeGenerator;
     }
 }

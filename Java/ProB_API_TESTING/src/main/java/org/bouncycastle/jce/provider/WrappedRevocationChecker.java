@@ -1,11 +1,11 @@
 package org.bouncycastle.jce.provider;
 
+import org.bouncycastle.jcajce.PKIXCertRevocationChecker;
+import org.bouncycastle.jcajce.PKIXCertRevocationCheckerParameters;
+
 import java.security.cert.CertPathValidatorException;
 import java.security.cert.Certificate;
 import java.security.cert.PKIXCertPathChecker;
-
-import org.bouncycastle.jcajce.PKIXCertRevocationChecker;
-import org.bouncycastle.jcajce.PKIXCertRevocationCheckerParameters;
 
 class WrappedRevocationChecker
     implements PKIXCertRevocationChecker

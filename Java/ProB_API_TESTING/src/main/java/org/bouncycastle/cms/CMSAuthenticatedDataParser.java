@@ -1,24 +1,15 @@
 package org.bouncycastle.cms;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.bouncycastle.asn1.ASN1OctetString;
-import org.bouncycastle.asn1.ASN1OctetStringParser;
-import org.bouncycastle.asn1.ASN1SequenceParser;
-import org.bouncycastle.asn1.ASN1Set;
-import org.bouncycastle.asn1.ASN1SetParser;
-import org.bouncycastle.asn1.BERTags;
-import org.bouncycastle.asn1.cms.AttributeTable;
-import org.bouncycastle.asn1.cms.AuthenticatedDataParser;
-import org.bouncycastle.asn1.cms.CMSAttributes;
-import org.bouncycastle.asn1.cms.ContentInfoParser;
-import org.bouncycastle.asn1.cms.OriginatorInfo;
+import org.bouncycastle.asn1.*;
+import org.bouncycastle.asn1.cms.*;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.operator.DigestCalculatorProvider;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.util.Arrays;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Parsing class for an CMS Authenticated Data object from an input stream.
@@ -58,62 +49,53 @@ import org.bouncycastle.util.Arrays;
  * where bufSize is a suitably large buffer size.
  */
 public class CMSAuthenticatedDataParser
-    extends CMSContentInfoParser
-{
+        extends CMSContentInfoParser {
+    private final AlgorithmIdentifier macAlg;
+    private final CMSSecureReadable secureReadable;
     RecipientInformationStore recipientInfoStore;
     AuthenticatedDataParser authData;
-
-    private final AlgorithmIdentifier macAlg;
     private byte[] mac;
     private AttributeTable authAttrs;
     private ASN1Set authAttrSet;
     private AttributeTable unauthAttrs;
-
     private boolean authAttrNotRead;
     private boolean unauthAttrNotRead;
     private OriginatorInformation originatorInfo;
 
-    private final CMSSecureReadable secureReadable;
-
     public CMSAuthenticatedDataParser(
-        byte[] envelopedData)
-        throws CMSException, IOException
-    {
+            byte[] envelopedData)
+            throws CMSException, IOException {
         this(new ByteArrayInputStream(envelopedData));
     }
 
     public CMSAuthenticatedDataParser(
-        byte[] envelopedData,
-        DigestCalculatorProvider digestCalculatorProvider)
-        throws CMSException, IOException
-    {
+            byte[] envelopedData,
+            DigestCalculatorProvider digestCalculatorProvider)
+            throws CMSException, IOException {
         this(new ByteArrayInputStream(envelopedData), digestCalculatorProvider);
     }
 
     public CMSAuthenticatedDataParser(
-        InputStream envelopedData)
-        throws CMSException, IOException
-    {
+            InputStream envelopedData)
+            throws CMSException, IOException {
         this(envelopedData, null);
     }
 
     public CMSAuthenticatedDataParser(
-        InputStream envelopedData,
-        DigestCalculatorProvider digestCalculatorProvider)
-        throws CMSException, IOException
-    {
+            InputStream envelopedData,
+            DigestCalculatorProvider digestCalculatorProvider)
+            throws CMSException, IOException {
         super(envelopedData);
 
         this.authAttrNotRead = true;
-        this.authData = new AuthenticatedDataParser((ASN1SequenceParser)_contentInfo.getContent(BERTags.SEQUENCE));
+        this.authData = new AuthenticatedDataParser((ASN1SequenceParser) _contentInfo.getContent(BERTags.SEQUENCE));
 
         // TODO Validate version?
         //ASN1Integer version = this.authData.getVersion();
 
         OriginatorInfo info = authData.getOriginatorInfo();
 
-        if (info != null)
-        {
+        if (info != null) {
             this.originatorInfo = new OriginatorInformation(info);
         }
         //
@@ -128,10 +110,8 @@ public class CMSAuthenticatedDataParser
         //
         AlgorithmIdentifier digestAlgorithm = authData.getDigestAlgorithm();
 
-        if (digestAlgorithm != null)
-        {
-            if (digestCalculatorProvider == null)
-            {
+        if (digestAlgorithm != null) {
+            if (digestCalculatorProvider == null) {
                 throw new CMSException("a digest calculator provider is required if authenticated attributes are present");
             }
 
@@ -140,27 +120,22 @@ public class CMSAuthenticatedDataParser
             //
             ContentInfoParser data = authData.getEncapsulatedContentInfo();
             CMSReadable readable = new CMSProcessableInputStream(
-                ((ASN1OctetStringParser)data.getContent(BERTags.OCTET_STRING)).getOctetStream());
+                    ((ASN1OctetStringParser) data.getContent(BERTags.OCTET_STRING)).getOctetStream());
 
-            try
-            {
+            try {
                 secureReadable = new CMSEnvelopedHelper.CMSDigestAuthenticatedSecureReadable(digestCalculatorProvider.get(digestAlgorithm), data.getContentType(), readable);
 
                 this.recipientInfoStore = CMSEnvelopedHelper.buildRecipientInformationStore(recipientInfos, this.macAlg, secureReadable);
-            }
-            catch (OperatorCreationException e)
-            {
+            } catch (OperatorCreationException e) {
                 throw new CMSException("unable to create digest calculator: " + e.getMessage(), e);
             }
-        }
-        else
-        {
+        } else {
             //
             // read the authenticated content info
             //
             ContentInfoParser data = authData.getEncapsulatedContentInfo();
             CMSReadable readable = new CMSProcessableInputStream(
-                ((ASN1OctetStringParser)data.getContent(BERTags.OCTET_STRING)).getOctetStream());
+                    ((ASN1OctetStringParser) data.getContent(BERTags.OCTET_STRING)).getOctetStream());
 
             secureReadable = new CMSEnvelopedHelper.CMSAuthEnveSecureReadable(this.macAlg, data.getContentType(), readable);
 
@@ -175,8 +150,7 @@ public class CMSAuthenticatedDataParser
      *
      * @return OriginatorInformation, null if not present.
      */
-    public OriginatorInformation getOriginatorInfo()
-    {
+    public OriginatorInformation getOriginatorInfo() {
         return originatorInfo;
     }
 
@@ -185,16 +159,14 @@ public class CMSAuthenticatedDataParser
      *
      * @return AlgorithmIdentifier representing the MAC algorithm.
      */
-    public AlgorithmIdentifier getMacAlgorithm()
-    {
+    public AlgorithmIdentifier getMacAlgorithm() {
         return macAlg;
     }
 
     /**
      * return the object identifier for the mac algorithm.
      */
-    public String getMacAlgOID()
-    {
+    public String getMacAlgOID() {
         return macAlg.getAlgorithm().toString();
     }
 
@@ -202,14 +174,10 @@ public class CMSAuthenticatedDataParser
      * return the ASN.1 encoded encryption algorithm parameters, or null if
      * there aren't any.
      */
-    public byte[] getMacAlgParams()
-    {
-        try
-        {
+    public byte[] getMacAlgParams() {
+        try {
             return CMSUtils.encodeObj(macAlg.getParameters());
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new RuntimeException("exception getting encryption parameters " + e);
         }
     }
@@ -217,16 +185,13 @@ public class CMSAuthenticatedDataParser
     /**
      * return a store of the intended recipients for this message
      */
-    public RecipientInformationStore getRecipientInfos()
-    {
+    public RecipientInformationStore getRecipientInfos() {
         return recipientInfoStore;
     }
 
     public byte[] getMac()
-        throws IOException
-    {
-        if (mac == null)
-        {
+            throws IOException {
+        if (mac == null) {
             getAuthAttrs();
             mac = authData.getMac().getOctets();
         }
@@ -234,15 +199,12 @@ public class CMSAuthenticatedDataParser
     }
 
     private ASN1Set getAuthAttrSet()
-        throws IOException
-    {
-        if (authAttrs == null && authAttrNotRead)
-        {
+            throws IOException {
+        if (authAttrs == null && authAttrNotRead) {
             ASN1SetParser set = authData.getAuthAttrs();
 
-            if (set != null)
-            {
-                authAttrSet = (ASN1Set)set.toASN1Primitive();
+            if (set != null) {
+                authAttrSet = (ASN1Set) set.toASN1Primitive();
             }
 
             authAttrNotRead = false;
@@ -259,14 +221,11 @@ public class CMSAuthenticatedDataParser
      * @throws java.io.IOException
      */
     public AttributeTable getAuthAttrs()
-        throws IOException
-    {
-        if (authAttrs == null && authAttrNotRead)
-        {
+            throws IOException {
+        if (authAttrs == null && authAttrNotRead) {
             ASN1Set set = getAuthAttrSet();
 
-            if (set != null)
-            {
+            if (set != null) {
                 authAttrs = new AttributeTable(set);
             }
         }
@@ -281,10 +240,8 @@ public class CMSAuthenticatedDataParser
      * @throws java.io.IOException
      */
     public AttributeTable getUnauthAttrs()
-        throws IOException
-    {
-        if (unauthAttrs == null && unauthAttrNotRead)
-        {
+            throws IOException {
+        if (unauthAttrs == null && unauthAttrNotRead) {
             unauthAttrNotRead = false;
             unauthAttrs = CMSUtils.getAttributesTable(authData.getUnauthAttrs());
         }
@@ -297,10 +254,8 @@ public class CMSAuthenticatedDataParser
      *
      * @return the contents of the messageDigest attribute, if available. Null if not present.
      */
-    public byte[] getContentDigest()
-    {
-        if (authAttrs != null)
-        {
+    public byte[] getContentDigest() {
+        if (authAttrs != null) {
             return ASN1OctetString.getInstance(authAttrs.get(CMSAttributes.messageDigest).getAttrValues().getObjectAt(0)).getOctets();
         }
 

@@ -1,17 +1,16 @@
 package org.bouncycastle.its.jcajce;
 
-import java.security.PrivateKey;
-import java.security.Provider;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-
 import org.bouncycastle.its.operator.ETSIDataDecryptor;
 import org.bouncycastle.jcajce.spec.IESKEMParameterSpec;
 import org.bouncycastle.jcajce.util.JcaJceHelper;
 import org.bouncycastle.jcajce.util.NamedJcaJceHelper;
 import org.bouncycastle.jcajce.util.ProviderJcaJceHelper;
 import org.bouncycastle.util.Arrays;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import java.security.PrivateKey;
+import java.security.Provider;
 
 
 public class JcaETSIDataDecryptor

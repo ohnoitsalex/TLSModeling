@@ -1,8 +1,8 @@
 package org.bouncycastle.mls.codec;
 
-import java.io.IOException;
-
 import org.bouncycastle.mls.TreeKEM.LeafIndex;
+
+import java.io.IOException;
 
 public class Sender
     implements MLSInputStream.Readable, MLSOutputStream.Writable

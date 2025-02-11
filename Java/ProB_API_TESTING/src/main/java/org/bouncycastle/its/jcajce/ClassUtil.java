@@ -1,8 +1,7 @@
 package org.bouncycastle.its.jcajce;
 
-import java.security.spec.AlgorithmParameterSpec;
-
 import javax.crypto.spec.GCMParameterSpec;
+import java.security.spec.AlgorithmParameterSpec;
 
 class ClassUtil
 {

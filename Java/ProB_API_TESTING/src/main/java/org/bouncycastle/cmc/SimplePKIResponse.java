@@ -19,22 +19,8 @@ import java.io.IOException;
  * </p>
  */
 public class SimplePKIResponse
-    implements Encodable
-{
+        implements Encodable {
     private final CMSSignedData certificateResponse;
-
-    private static ContentInfo parseBytes(byte[] responseEncoding)
-        throws CMCException
-    {
-        try
-        {
-            return ContentInfo.getInstance(ASN1Primitive.fromByteArray(responseEncoding));
-        }
-        catch (Exception e)
-        {
-            throw new CMCException("malformed data: " + e.getMessage(), e);
-        }
-    }
 
     /**
      * Create a SimplePKIResponse from the passed in bytes.
@@ -43,8 +29,7 @@ public class SimplePKIResponse
      * @throws CMCException in the event of corrupted data, or an incorrect structure.
      */
     public SimplePKIResponse(byte[] responseEncoding)
-        throws CMCException
-    {
+            throws CMCException {
         this(parseBytes(responseEncoding));
     }
 
@@ -54,24 +39,27 @@ public class SimplePKIResponse
      * @param signedData a ContentInfo containing a SignedData.
      */
     public SimplePKIResponse(ContentInfo signedData)
-        throws CMCException
-    {
-        try
-        {
+            throws CMCException {
+        try {
             this.certificateResponse = new CMSSignedData(signedData);
-        }
-        catch (CMSException e)
-        {
+        } catch (CMSException e) {
             throw new CMCException("malformed response: " + e.getMessage(), e);
         }
 
-        if (certificateResponse.getSignerInfos().size() != 0)
-        {
+        if (certificateResponse.getSignerInfos().size() != 0) {
             throw new CMCException("malformed response: SignerInfo structures found");
         }
-        if (certificateResponse.getSignedContent() != null)
-        {
+        if (certificateResponse.getSignedContent() != null) {
             throw new CMCException("malformed response: Signed Content found");
+        }
+    }
+
+    private static ContentInfo parseBytes(byte[] responseEncoding)
+            throws CMCException {
+        try {
+            return ContentInfo.getInstance(ASN1Primitive.fromByteArray(responseEncoding));
+        } catch (Exception e) {
+            throw new CMCException("malformed data: " + e.getMessage(), e);
         }
     }
 
@@ -80,8 +68,7 @@ public class SimplePKIResponse
      *
      * @return a Store of X509CertificateHolder objects.
      */
-    public Store<X509CertificateHolder> getCertificates()
-    {
+    public Store<X509CertificateHolder> getCertificates() {
         return certificateResponse.getCertificates();
     }
 
@@ -90,8 +77,7 @@ public class SimplePKIResponse
      *
      * @return a Store of X509CRLHolder objects.
      */
-    public Store<X509CRLHolder> getCRLs()
-    {
+    public Store<X509CRLHolder> getCRLs() {
         return certificateResponse.getCRLs();
     }
 
@@ -99,8 +85,7 @@ public class SimplePKIResponse
      * return the ASN.1 encoded representation of this object.
      */
     public byte[] getEncoded()
-        throws IOException
-    {
+            throws IOException {
         return certificateResponse.getEncoded();
     }
 }

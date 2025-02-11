@@ -1,10 +1,10 @@
 package org.bouncycastle.mls.crypto;
 
+import org.bouncycastle.mls.codec.MLSOutputStream;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-
-import org.bouncycastle.mls.codec.MLSOutputStream;
 
 public class Secret
 {

@@ -1,8 +1,8 @@
 package org.bouncycastle.mls;
 
-import java.util.Arrays;
-
 import org.bouncycastle.mls.crypto.Secret;
+
+import java.util.Arrays;
 
 public class KeyGeneration
 {

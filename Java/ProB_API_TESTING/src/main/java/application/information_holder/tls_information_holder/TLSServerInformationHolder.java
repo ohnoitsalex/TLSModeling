@@ -7,13 +7,6 @@ import java.util.Map;
 
 public class TLSServerInformationHolder {
 
-    public static void main(String[] args) {
-        TLSClientInformationHolder test = new TLSClientInformationHolder();
-        test.updateClientHelloInformation("test","test","test","test","test","test","test", "test");
-        InformationConvertertoAbstract.configureYAML();
-        InformationConvertertoAbstract.serializeToYAML(test, "");
-    }
-
     // Create a HashMap
     private static Map<String, String> serverHelloInformation = new HashMap<>();
 

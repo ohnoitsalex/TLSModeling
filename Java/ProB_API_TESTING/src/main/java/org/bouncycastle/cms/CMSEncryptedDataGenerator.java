@@ -16,7 +16,7 @@ import java.io.OutputStream;
 
 /**
  * General class for generating a CMS encrypted-data message.
- *
+ * <p>
  * A simple example of usage.
  *
  * <pre>
@@ -32,35 +32,29 @@ import java.io.OutputStream;
  * </pre>
  */
 public class CMSEncryptedDataGenerator
-    extends CMSEncryptedGenerator
-{
+        extends CMSEncryptedGenerator {
     /**
      * base constructor
      */
-    public CMSEncryptedDataGenerator()
-    {
+    public CMSEncryptedDataGenerator() {
     }
 
     private CMSEncryptedData doGenerate(
-        CMSTypedData content,
-        OutputEncryptor contentEncryptor)
-        throws CMSException
-    {
-        AlgorithmIdentifier     encAlgId;
-        ASN1OctetString         encContent;
+            CMSTypedData content,
+            OutputEncryptor contentEncryptor)
+            throws CMSException {
+        AlgorithmIdentifier encAlgId;
+        ASN1OctetString encContent;
 
         ByteArrayOutputStream bOut = new ByteArrayOutputStream();
 
-        try
-        {
+        try {
             OutputStream cOut = contentEncryptor.getOutputStream(bOut);
 
             content.write(cOut);
 
             cOut.close();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new CMSException("");
         }
 
@@ -70,10 +64,10 @@ public class CMSEncryptedDataGenerator
 
         encContent = new BEROctetString(encryptedContent);
 
-        EncryptedContentInfo  eci = CMSUtils.getEncryptedContentInfo(
-                        content.getContentType(),
-                        encAlgId,
-                        encryptedContent);
+        EncryptedContentInfo eci = CMSUtils.getEncryptedContentInfo(
+                content.getContentType(),
+                encAlgId,
+                encryptedContent);
 
         ASN1Set unprotectedAttrSet = CMSUtils.getAttrBERSet(unprotectedAttributeGenerator);
 
@@ -87,14 +81,13 @@ public class CMSEncryptedDataGenerator
     /**
      * generate an encrypted object that contains an CMS Encrypted Data structure.
      *
-     * @param content the content to be encrypted
+     * @param content          the content to be encrypted
      * @param contentEncryptor the symmetric key based encryptor to encrypt the content with.
      */
     public CMSEncryptedData generate(
-        CMSTypedData content,
-        OutputEncryptor contentEncryptor)
-        throws CMSException
-    {
+            CMSTypedData content,
+            OutputEncryptor contentEncryptor)
+            throws CMSException {
         return doGenerate(content, contentEncryptor);
     }
 }

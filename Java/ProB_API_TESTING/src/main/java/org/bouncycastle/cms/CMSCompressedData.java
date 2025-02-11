@@ -20,62 +20,50 @@ import java.io.InputStream;
  * </pre>
  */
 public class CMSCompressedData
-    implements Encodable
-{
-    ContentInfo                 contentInfo;
-    CompressedData              comData;
+        implements Encodable {
+    ContentInfo contentInfo;
+    CompressedData comData;
 
     public CMSCompressedData(
-        byte[]    compressedData) 
-        throws CMSException
-    {
+            byte[] compressedData)
+            throws CMSException {
         this(CMSUtils.readContentInfo(compressedData));
     }
 
     public CMSCompressedData(
-        InputStream    compressedData) 
-        throws CMSException
-    {
+            InputStream compressedData)
+            throws CMSException {
         this(CMSUtils.readContentInfo(compressedData));
     }
 
     public CMSCompressedData(
-        ContentInfo contentInfo)
-        throws CMSException
-    {
+            ContentInfo contentInfo)
+            throws CMSException {
         this.contentInfo = contentInfo;
 
-        try
-        {
+        try {
             this.comData = CompressedData.getInstance(contentInfo.getContent());
-        }
-        catch (ClassCastException e)
-        {
+        } catch (ClassCastException e) {
             throw new CMSException("Malformed content.", e);
-        }
-        catch (IllegalArgumentException e)
-        {
+        } catch (IllegalArgumentException e) {
             throw new CMSException("Malformed content.", e);
         }
     }
 
-    public ASN1ObjectIdentifier getContentType()
-    {
+    public ASN1ObjectIdentifier getContentType() {
         return contentInfo.getContentType();
     }
 
-    public ASN1ObjectIdentifier getCompressedContentType()
-    {
+    public ASN1ObjectIdentifier getCompressedContentType() {
         return comData.getEncapContentInfo().getContentType();
     }
 
-    public CMSTypedStream getContentStream(InputExpanderProvider expanderProvider)
-    {
-        ContentInfo     content = comData.getEncapContentInfo();
+    public CMSTypedStream getContentStream(InputExpanderProvider expanderProvider) {
+        ContentInfo content = comData.getEncapContentInfo();
 
-        ASN1OctetString bytes = (ASN1OctetString)content.getContent();
-        InputExpander   expander = expanderProvider.get(comData.getCompressionAlgorithmIdentifier());
-        InputStream     zIn = expander.getInputStream(bytes.getOctetStream());
+        ASN1OctetString bytes = (ASN1OctetString) content.getContent();
+        InputExpander expander = expanderProvider.get(comData.getCompressionAlgorithmIdentifier());
+        InputStream zIn = expander.getInputStream(bytes.getOctetStream());
 
         return new CMSTypedStream(content.getContentType(), zIn);
     }
@@ -88,20 +76,16 @@ public class CMSCompressedData
      * @throws CMSException if there is an exception un-compressing the data.
      */
     public byte[] getContent(InputExpanderProvider expanderProvider)
-        throws CMSException
-    {
-        ContentInfo     content = comData.getEncapContentInfo();
+            throws CMSException {
+        ContentInfo content = comData.getEncapContentInfo();
 
-        ASN1OctetString bytes = (ASN1OctetString)content.getContent();
-        InputExpander   expander = expanderProvider.get(comData.getCompressionAlgorithmIdentifier());
-        InputStream     zIn = expander.getInputStream(bytes.getOctetStream());
+        ASN1OctetString bytes = (ASN1OctetString) content.getContent();
+        InputExpander expander = expanderProvider.get(comData.getCompressionAlgorithmIdentifier());
+        InputStream zIn = expander.getInputStream(bytes.getOctetStream());
 
-        try
-        {
+        try {
             return CMSUtils.streamToByteArray(zIn);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new CMSException("exception reading compressed stream.", e);
         }
     }
@@ -109,17 +93,15 @@ public class CMSCompressedData
     /**
      * return the ContentInfo
      */
-    public ContentInfo toASN1Structure()
-    {
+    public ContentInfo toASN1Structure() {
         return contentInfo;
     }
-    
+
     /**
      * return the ASN.1 encoded representation of this object.
      */
     public byte[] getEncoded()
-        throws IOException
-    {
+            throws IOException {
         return contentInfo.getEncoded();
     }
 }

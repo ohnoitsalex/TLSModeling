@@ -9,16 +9,13 @@ import java.security.Key;
 import java.security.PrivateKey;
 
 public class JceKeyTransAuthEnvelopedRecipient
-    extends JceKeyTransRecipient
-{
-    public JceKeyTransAuthEnvelopedRecipient(PrivateKey recipientKey)
-    {
+        extends JceKeyTransRecipient {
+    public JceKeyTransAuthEnvelopedRecipient(PrivateKey recipientKey) {
         super(recipientKey);
     }
 
     public RecipientOperator getRecipientOperator(AlgorithmIdentifier keyEncryptionAlgorithm, final AlgorithmIdentifier contentEncryptionAlgorithm, byte[] encryptedContentEncryptionKey)
-        throws CMSException
-    {
+            throws CMSException {
         Key secretKey = extractSecretKey(keyEncryptionAlgorithm, contentEncryptionAlgorithm, encryptedContentEncryptionKey);
 
         final Cipher dataCipher = contentHelper.createContentCipher(secretKey, contentEncryptionAlgorithm);

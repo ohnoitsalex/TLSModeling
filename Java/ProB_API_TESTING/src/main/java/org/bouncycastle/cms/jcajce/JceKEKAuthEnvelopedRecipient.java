@@ -13,16 +13,13 @@ import java.security.Key;
  * Handles key extraction and decryption of the content.
  */
 public class JceKEKAuthEnvelopedRecipient
-    extends JceKEKRecipient
-{
-    public JceKEKAuthEnvelopedRecipient(SecretKey recipientKey)
-    {
+        extends JceKEKRecipient {
+    public JceKEKAuthEnvelopedRecipient(SecretKey recipientKey) {
         super(recipientKey);
     }
 
     public RecipientOperator getRecipientOperator(AlgorithmIdentifier keyEncryptionAlgorithm, final AlgorithmIdentifier contentEncryptionAlgorithm, byte[] encryptedContentEncryptionKey)
-        throws CMSException
-    {
+            throws CMSException {
         Key secretKey = extractSecretKey(keyEncryptionAlgorithm, contentEncryptionAlgorithm, encryptedContentEncryptionKey);
 
         final Cipher dataCipher = contentHelper.createContentCipher(secretKey, contentEncryptionAlgorithm);

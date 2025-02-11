@@ -1,32 +1,27 @@
 package org.bouncycastle.cms;
 
 public class CMSRuntimeException
-    extends RuntimeException
-{
-    Exception   e;
+        extends RuntimeException {
+    Exception e;
 
     public CMSRuntimeException(
-        String name)
-    {
+            String name) {
         super(name);
     }
 
     public CMSRuntimeException(
-        String name,
-        Exception e)
-    {
+            String name,
+            Exception e) {
         super(name);
 
         this.e = e;
     }
 
-    public Exception getUnderlyingException()
-    {
+    public Exception getUnderlyingException() {
         return e;
     }
-    
-    public Throwable getCause()
-    {
+
+    public Throwable getCause() {
         return e;
     }
 }

@@ -1,9 +1,5 @@
 package org.bouncycastle.cms;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
 import org.bouncycastle.asn1.ASN1OctetString;
 import org.bouncycastle.asn1.BEROctetString;
 import org.bouncycastle.asn1.cms.CMSObjectIdentifiers;
@@ -11,6 +7,10 @@ import org.bouncycastle.asn1.cms.CompressedData;
 import org.bouncycastle.asn1.cms.ContentInfo;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.operator.OutputCompressor;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * General class for generating a compressed CMS message.
@@ -23,30 +23,26 @@ import org.bouncycastle.operator.OutputCompressor;
  *      CMSCompressedData           data = fact.generate(content, new ZlibCompressor());
  * </pre>
  */
-public class CMSCompressedDataGenerator
-{
+public class CMSCompressedDataGenerator {
     public static final String ZLIB = CMSObjectIdentifiers.zlibCompress.getId();
 
     /**
      * base constructor
      */
-    public CMSCompressedDataGenerator()
-    {
+    public CMSCompressedDataGenerator() {
     }
 
     /**
      * generate an object that contains an CMS Compressed Data
      */
     public CMSCompressedData generate(
-        CMSTypedData content,
-        OutputCompressor compressor)
-        throws CMSException
-    {
-        AlgorithmIdentifier     comAlgId;
-        ASN1OctetString         comOcts;
+            CMSTypedData content,
+            OutputCompressor compressor)
+            throws CMSException {
+        AlgorithmIdentifier comAlgId;
+        ASN1OctetString comOcts;
 
-        try
-        {
+        try {
             ByteArrayOutputStream bOut = new ByteArrayOutputStream();
             OutputStream zOut = compressor.getOutputStream(bOut);
 
@@ -56,18 +52,16 @@ public class CMSCompressedDataGenerator
 
             comAlgId = compressor.getAlgorithmIdentifier();
             comOcts = new BEROctetString(bOut.toByteArray());
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new CMSException("exception encoding data.", e);
         }
 
-        ContentInfo     comContent = new ContentInfo(
-                                    content.getContentType(), comOcts);
+        ContentInfo comContent = new ContentInfo(
+                content.getContentType(), comOcts);
 
-        ContentInfo     contentInfo = new ContentInfo(
-                                    CMSObjectIdentifiers.compressedData,
-                                    new CompressedData(comAlgId, comContent));
+        ContentInfo contentInfo = new ContentInfo(
+                CMSObjectIdentifiers.compressedData,
+                new CompressedData(comAlgId, comContent));
 
         return new CMSCompressedData(contentInfo);
     }

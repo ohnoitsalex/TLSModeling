@@ -3,11 +3,10 @@ package org.bouncycastle.cms;
 import java.io.OutputStream;
 
 interface CMSSecureReadableWithAAD
-    extends CMSSecureReadable
-{
-    void setAADStream(OutputStream stream);
-
+        extends CMSSecureReadable {
     OutputStream getAADStream();
+
+    void setAADStream(OutputStream stream);
 
     byte[] getMAC();
 }

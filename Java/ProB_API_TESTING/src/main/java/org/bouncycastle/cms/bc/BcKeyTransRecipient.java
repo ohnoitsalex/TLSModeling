@@ -10,26 +10,20 @@ import org.bouncycastle.operator.OperatorException;
 import org.bouncycastle.operator.bc.BcRSAAsymmetricKeyUnwrapper;
 
 public abstract class BcKeyTransRecipient
-    implements KeyTransRecipient
-{
+        implements KeyTransRecipient {
     private AsymmetricKeyParameter recipientKey;
 
-    public BcKeyTransRecipient(AsymmetricKeyParameter recipientKey)
-    {
+    public BcKeyTransRecipient(AsymmetricKeyParameter recipientKey) {
         this.recipientKey = recipientKey;
     }
 
     protected CipherParameters extractSecretKey(AlgorithmIdentifier keyEncryptionAlgorithm, AlgorithmIdentifier encryptedKeyAlgorithm, byte[] encryptedEncryptionKey)
-        throws CMSException
-    {
+            throws CMSException {
         AsymmetricKeyUnwrapper unwrapper = new BcRSAAsymmetricKeyUnwrapper(keyEncryptionAlgorithm, recipientKey);
 
-        try
-        {
+        try {
             return CMSUtils.getBcKey(unwrapper.generateUnwrappedKey(encryptedKeyAlgorithm, encryptedEncryptionKey));
-        }
-        catch (OperatorException e)
-        {
+        } catch (OperatorException e) {
             throw new CMSException("exception unwrapping key: " + e.getMessage(), e);
         }
     }

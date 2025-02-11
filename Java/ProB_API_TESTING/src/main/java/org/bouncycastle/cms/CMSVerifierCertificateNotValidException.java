@@ -1,11 +1,9 @@
 package org.bouncycastle.cms;
 
 public class CMSVerifierCertificateNotValidException
-    extends CMSException
-{
+        extends CMSException {
     public CMSVerifierCertificateNotValidException(
-        String msg)
-    {
+            String msg) {
         super(msg);
     }
 }

@@ -1,21 +1,10 @@
 package org.bouncycastle.pqc.asn1;
 
-import java.util.Vector;
-
-import org.bouncycastle.asn1.ASN1Encodable;
-import org.bouncycastle.asn1.ASN1EncodableVector;
-import org.bouncycastle.asn1.ASN1Integer;
-import org.bouncycastle.asn1.ASN1Object;
-import org.bouncycastle.asn1.ASN1Primitive;
-import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.DEROctetString;
-import org.bouncycastle.asn1.DERSequence;
+import org.bouncycastle.asn1.*;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
-import org.bouncycastle.pqc.legacy.crypto.gmss.GMSSLeaf;
-import org.bouncycastle.pqc.legacy.crypto.gmss.GMSSParameters;
-import org.bouncycastle.pqc.legacy.crypto.gmss.GMSSRootCalc;
-import org.bouncycastle.pqc.legacy.crypto.gmss.GMSSRootSig;
-import org.bouncycastle.pqc.legacy.crypto.gmss.Treehash;
+import org.bouncycastle.pqc.legacy.crypto.gmss.*;
+
+import java.util.Vector;
 
 public class GMSSPrivateKey
     extends ASN1Object

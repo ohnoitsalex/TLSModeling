@@ -6,16 +6,14 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public final class InputStreamWithMAC
-    extends InputStream
-{
+        extends InputStream {
     private final InputStream base;
     private MACProvider macProvider;
     private byte[] mac;
     private boolean baseFinished;
     private int index;
 
-    InputStreamWithMAC(InputStream base, MACProvider macProvider)
-    {
+    InputStreamWithMAC(InputStream base, MACProvider macProvider) {
         this.base = base;
         this.macProvider = macProvider;
 
@@ -23,8 +21,7 @@ public final class InputStreamWithMAC
         index = 0;
     }
 
-    public InputStreamWithMAC(InputStream base, byte[] mac)
-    {
+    public InputStreamWithMAC(InputStream base, byte[] mac) {
         this.base = base;
         this.mac = mac;
         baseFinished = false;
@@ -33,27 +30,20 @@ public final class InputStreamWithMAC
 
     @Override
     public int read()
-        throws IOException
-    {
+            throws IOException {
         int ch;
-        if (!baseFinished)
-        {
+        if (!baseFinished) {
             ch = base.read();
-            if (ch < 0)
-            {
+            if (ch < 0) {
                 baseFinished = true;
-                if (macProvider != null)
-                {
+                if (macProvider != null) {
                     macProvider.init();
                     mac = macProvider.getMAC();
                 }
                 return mac[index++] & 0xFF;
             }
-        }
-        else
-        {
-            if (index >= mac.length)
-            {
+        } else {
+            if (index >= mac.length) {
                 return -1;
             }
             return mac[index++] & 0xFF;
@@ -61,10 +51,8 @@ public final class InputStreamWithMAC
         return ch;
     }
 
-    public byte[] getMAC()
-    {
-        if (!baseFinished)
-        {
+    public byte[] getMAC() {
+        if (!baseFinished) {
             throw new IllegalStateException("input stream not fully processed");
         }
         return Arrays.clone(mac);
@@ -72,54 +60,40 @@ public final class InputStreamWithMAC
 
     @Override
     public int read(byte[] b, int off, int len)
-        throws IOException
-    {
-        if (b == null)
-        {
+            throws IOException {
+        if (b == null) {
             throw new NullPointerException("input array is null");
         }
-        if (off < 0 || b.length < off + len)
-        {
+        if (off < 0 || b.length < off + len) {
             throw new IndexOutOfBoundsException("invalid off(" + off + ") and len(" + len + ")");
         }
         int ch;
-        if (!baseFinished)
-        {
+        if (!baseFinished) {
             ch = base.read(b, off, len);
-            if (ch < 0)
-            {
+            if (ch < 0) {
                 baseFinished = true;
-                if (macProvider != null)
-                {
+                if (macProvider != null) {
                     macProvider.init();
                     mac = macProvider.getMAC();
                 }
-                if (len >= mac.length)
-                {
+                if (len >= mac.length) {
                     System.arraycopy(mac, 0, b, off, mac.length);
                     index = mac.length;
                     return mac.length;
-                }
-                else
-                {
+                } else {
                     System.arraycopy(mac, 0, b, off, len);
                     index += len;
                     return len;
                 }
             }
             return ch;
-        }
-        else if (index < mac.length)
-        {
-            if (len >= mac.length - index)
-            {
+        } else if (index < mac.length) {
+            if (len >= mac.length - index) {
                 System.arraycopy(mac, index, b, off, mac.length - index);
                 int tmp = mac.length - index;
                 index = mac.length;
                 return tmp;
-            }
-            else
-            {
+            } else {
                 System.arraycopy(mac, index, b, off, len);
                 index += len;
                 return len;

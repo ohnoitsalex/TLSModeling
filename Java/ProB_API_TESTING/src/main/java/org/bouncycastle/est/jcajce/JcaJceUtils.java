@@ -1,32 +1,17 @@
 package org.bouncycastle.est.jcajce;
 
-import java.security.GeneralSecurityException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CRL;
-import java.security.cert.CertPathBuilder;
-import java.security.cert.CertStore;
-import java.security.cert.CertificateException;
-import java.security.cert.CollectionCertStoreParameters;
-import java.security.cert.PKIXBuilderParameters;
-import java.security.cert.PKIXCertPathValidatorResult;
-import java.security.cert.TrustAnchor;
-import java.security.cert.X509CertSelector;
-import java.security.cert.X509Certificate;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Set;
-
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.X509TrustManager;
-
 import org.bouncycastle.asn1.x509.ExtendedKeyUsage;
 import org.bouncycastle.asn1.x509.KeyPurposeId;
 import org.bouncycastle.asn1.x509.KeyUsage;
 import org.bouncycastle.cert.X509CertificateHolder;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.X509TrustManager;
+import java.security.*;
+import java.security.cert.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Set;
 
 
 /**

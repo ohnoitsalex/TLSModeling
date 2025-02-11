@@ -9,45 +9,35 @@ import org.bouncycastle.operator.InputDecryptorProvider;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-public class CMSEncryptedData
-{
+public class CMSEncryptedData {
     private final ContentInfo contentInfo;
     private final EncryptedData encryptedData;
 
-    public CMSEncryptedData(ContentInfo contentInfo)
-    {
+    public CMSEncryptedData(ContentInfo contentInfo) {
         this.contentInfo = contentInfo;
 
         this.encryptedData = EncryptedData.getInstance(contentInfo.getContent());
     }
 
     public byte[] getContent(InputDecryptorProvider inputDecryptorProvider)
-        throws CMSException
-    {
-        try
-        {
+            throws CMSException {
+        try {
             return CMSUtils.streamToByteArray(getContentStream(inputDecryptorProvider).getContentStream());
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new CMSException("unable to parse internal stream: " + e.getMessage(), e);
         }
     }
 
     public CMSTypedStream getContentStream(InputDecryptorProvider inputDecryptorProvider)
-        throws CMSException
-    {
-        try
-        {
+            throws CMSException {
+        try {
             EncryptedContentInfo encContentInfo = encryptedData.getEncryptedContentInfo();
             InputDecryptor decrytor = inputDecryptorProvider.get(encContentInfo.getContentEncryptionAlgorithm());
 
             ByteArrayInputStream encIn = new ByteArrayInputStream(encContentInfo.getEncryptedContent().getOctets());
 
             return new CMSTypedStream(encContentInfo.getContentType(), decrytor.getInputStream(encIn));
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new CMSException("unable to create stream: " + e.getMessage(), e);
         }
     }
@@ -55,8 +45,7 @@ public class CMSEncryptedData
     /**
      * return the ContentInfo
      */
-    public ContentInfo toASN1Structure()
-    {
+    public ContentInfo toASN1Structure() {
         return contentInfo;
     }
 }

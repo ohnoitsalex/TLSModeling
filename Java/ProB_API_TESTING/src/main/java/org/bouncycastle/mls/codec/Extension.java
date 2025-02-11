@@ -1,10 +1,10 @@
 package org.bouncycastle.mls.codec;
 
+import org.bouncycastle.mls.TreeKEM.TreeKEMPublicKey;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.bouncycastle.mls.TreeKEM.TreeKEMPublicKey;
 
 public class Extension
     implements MLSInputStream.Readable, MLSOutputStream.Writable

@@ -1,8 +1,5 @@
 package org.bouncycastle.mls.crypto;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.CryptoException;
 import org.bouncycastle.crypto.Digest;
@@ -16,6 +13,9 @@ import org.bouncycastle.mls.codec.MLSOutputStream;
 import org.bouncycastle.mls.crypto.bc.BcMlsAead;
 import org.bouncycastle.mls.crypto.bc.BcMlsKdf;
 import org.bouncycastle.mls.crypto.bc.BcMlsSigner;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class MlsCipherSuite
 {

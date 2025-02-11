@@ -1,18 +1,5 @@
 package org.bouncycastle.eac.operator.jcajce;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.math.BigInteger;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
-import java.security.Provider;
-import java.security.Signature;
-import java.security.SignatureException;
-import java.util.Arrays;
-import java.util.Hashtable;
-
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1Sequence;
@@ -21,6 +8,13 @@ import org.bouncycastle.eac.operator.EACSigner;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.OperatorStreamException;
 import org.bouncycastle.operator.RuntimeOperatorException;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.math.BigInteger;
+import java.security.*;
+import java.util.Arrays;
+import java.util.Hashtable;
 
 public class JcaEACSignerBuilder
 {

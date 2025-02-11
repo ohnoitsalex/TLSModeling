@@ -3,8 +3,7 @@ package org.bouncycastle.cms;
 import java.io.IOException;
 import java.io.InputStream;
 
-interface CMSReadable
-{
+interface CMSReadable {
     InputStream getInputStream()
-        throws IOException, CMSException;
+            throws IOException, CMSException;
 }

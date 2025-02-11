@@ -1,31 +1,16 @@
 package org.bouncycastle.its;
 
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.its.operator.ECDSAEncoder;
 import org.bouncycastle.its.operator.ITSContentSigner;
 import org.bouncycastle.oer.Element;
 import org.bouncycastle.oer.OEREncoder;
-import org.bouncycastle.oer.its.ieee1609dot2.Certificate;
-import org.bouncycastle.oer.its.ieee1609dot2.HashedData;
-import org.bouncycastle.oer.its.ieee1609dot2.HeaderInfo;
-import org.bouncycastle.oer.its.ieee1609dot2.Ieee1609Dot2Content;
-import org.bouncycastle.oer.its.ieee1609dot2.Ieee1609Dot2Data;
-import org.bouncycastle.oer.its.ieee1609dot2.Opaque;
-import org.bouncycastle.oer.its.ieee1609dot2.SequenceOfCertificate;
-import org.bouncycastle.oer.its.ieee1609dot2.SignedData;
-import org.bouncycastle.oer.its.ieee1609dot2.SignedDataPayload;
-import org.bouncycastle.oer.its.ieee1609dot2.SignerIdentifier;
-import org.bouncycastle.oer.its.ieee1609dot2.ToBeSignedData;
-import org.bouncycastle.oer.its.ieee1609dot2.basetypes.HashedId8;
-import org.bouncycastle.oer.its.ieee1609dot2.basetypes.Psid;
-import org.bouncycastle.oer.its.ieee1609dot2.basetypes.Signature;
-import org.bouncycastle.oer.its.ieee1609dot2.basetypes.Time64;
-import org.bouncycastle.oer.its.ieee1609dot2.basetypes.UINT8;
+import org.bouncycastle.oer.its.ieee1609dot2.*;
+import org.bouncycastle.oer.its.ieee1609dot2.basetypes.*;
 import org.bouncycastle.oer.its.template.ieee1609dot2.IEEE1609dot2;
+
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ETSISignedDataBuilder
 {

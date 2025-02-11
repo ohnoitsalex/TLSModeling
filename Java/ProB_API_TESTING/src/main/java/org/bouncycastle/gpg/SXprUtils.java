@@ -1,11 +1,11 @@
 package org.bouncycastle.gpg;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.bouncycastle.bcpg.HashAlgorithmTags;
 import org.bouncycastle.bcpg.S2K;
 import org.bouncycastle.util.io.Streams;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Utility functions for looking a S-expression keys. This class will move when it finds a better home!

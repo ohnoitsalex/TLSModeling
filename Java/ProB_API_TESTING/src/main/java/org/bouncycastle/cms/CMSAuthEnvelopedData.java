@@ -20,38 +20,32 @@ import java.io.OutputStream;
  * containing class for an CMS AuthEnveloped Data object
  */
 public class CMSAuthEnvelopedData
-    implements Encodable
-{
-    RecipientInformationStore recipientInfoStore;
-    ContentInfo contentInfo;
-
-    private OriginatorInformation originatorInfo;
+        implements Encodable {
     private final AlgorithmIdentifier authEncAlg;
     private final ASN1Set authAttrs;
     private final byte[] mac;
     private final ASN1Set unauthAttrs;
+    RecipientInformationStore recipientInfoStore;
+    ContentInfo contentInfo;
+    private OriginatorInformation originatorInfo;
 
     public CMSAuthEnvelopedData(byte[] authEnvData)
-        throws CMSException
-    {
+            throws CMSException {
         this(CMSUtils.readContentInfo(authEnvData));
     }
 
     public CMSAuthEnvelopedData(InputStream authEnvData)
-        throws CMSException
-    {
+            throws CMSException {
         this(CMSUtils.readContentInfo(authEnvData));
     }
 
     public CMSAuthEnvelopedData(ContentInfo contentInfo)
-        throws CMSException
-    {
+            throws CMSException {
         this.contentInfo = contentInfo;
 
         AuthEnvelopedData authEnvData = AuthEnvelopedData.getInstance(contentInfo.getContent());
 
-        if (authEnvData.getOriginatorInfo() != null)
-        {
+        if (authEnvData.getOriginatorInfo() != null) {
             this.originatorInfo = new OriginatorInformation(authEnvData.getOriginatorInfo());
         }
 
@@ -68,57 +62,47 @@ public class CMSAuthEnvelopedData
 
         this.mac = authEnvData.getMac().getOctets();
 
-        CMSSecureReadable secureReadable = new CMSSecureReadableWithAAD()
-        {
+        CMSSecureReadable secureReadable = new CMSSecureReadableWithAAD() {
             private OutputStream aadStream;
 
             @Override
-            public ASN1Set getAuthAttrSet()
-            {
+            public ASN1Set getAuthAttrSet() {
                 return authAttrs;
             }
 
             @Override
-            public void setAuthAttrSet(ASN1Set set)
-            {
+            public void setAuthAttrSet(ASN1Set set) {
 
             }
 
             @Override
-            public boolean hasAdditionalData()
-            {
+            public boolean hasAdditionalData() {
                 return (aadStream != null && authAttrs != null);
             }
 
-            public ASN1ObjectIdentifier getContentType()
-            {
+            public ASN1ObjectIdentifier getContentType() {
                 return authEncInfo.getContentType();
             }
 
             public InputStream getInputStream()
-                throws IOException
-            {
-                if (aadStream != null && authAttrs != null)
-                {
+                    throws IOException {
+                if (aadStream != null && authAttrs != null) {
                     aadStream.write(authAttrs.getEncoded(ASN1Encoding.DER));
                 }
                 return new InputStreamWithMAC(new ByteArrayInputStream(authEncInfo.getEncryptedContent().getOctets()), mac);
             }
 
-            @Override
-            public void setAADStream(OutputStream stream)
-            {
-                aadStream = stream;
-            }
-
-            public OutputStream getAADStream()
-            {
+            public OutputStream getAADStream() {
                 return aadStream;
             }
 
             @Override
-            public byte[] getMAC()
-            {
+            public void setAADStream(OutputStream stream) {
+                aadStream = stream;
+            }
+
+            @Override
+            public byte[] getMAC() {
                 return Arrays.clone(mac);
             }
         };
@@ -131,15 +115,14 @@ public class CMSAuthEnvelopedData
         // build the RecipientInformationStore
         //
         this.recipientInfoStore = CMSEnvelopedHelper.buildRecipientInformationStore(
-            recipientInfos, this.authEncAlg, secureReadable);
+                recipientInfos, this.authEncAlg, secureReadable);
     }
 
 
     /**
      * return the object identifier for the content encryption algorithm.
      */
-    public String getEncryptionAlgOID()
-    {
+    public String getEncryptionAlgOID() {
         return authEncAlg.getAlgorithm().getId();
     }
 
@@ -148,16 +131,14 @@ public class CMSAuthEnvelopedData
      *
      * @return OriginatorInformation, null if not present.
      */
-    public OriginatorInformation getOriginatorInfo()
-    {
+    public OriginatorInformation getOriginatorInfo() {
         return originatorInfo;
     }
 
     /**
      * return a store of the intended recipients for this message
      */
-    public RecipientInformationStore getRecipientInfos()
-    {
+    public RecipientInformationStore getRecipientInfos() {
         return recipientInfoStore;
     }
 
@@ -167,10 +148,8 @@ public class CMSAuthEnvelopedData
      *
      * @return the authenticated attributes.
      */
-    public AttributeTable getAuthAttrs()
-    {
-        if (authAttrs == null)
-        {
+    public AttributeTable getAuthAttrs() {
+        if (authAttrs == null) {
             return null;
         }
 
@@ -183,10 +162,8 @@ public class CMSAuthEnvelopedData
      *
      * @return the unauthenticated attributes.
      */
-    public AttributeTable getUnauthAttrs()
-    {
-        if (unauthAttrs == null)
-        {
+    public AttributeTable getUnauthAttrs() {
+        if (unauthAttrs == null) {
             return null;
         }
 
@@ -198,16 +175,14 @@ public class CMSAuthEnvelopedData
      *
      * @return the MAC data associated with the stream.
      */
-    public byte[] getMac()
-    {
+    public byte[] getMac() {
         return Arrays.clone(mac);
     }
 
     /**
      * return the ContentInfo
      */
-    public ContentInfo toASN1Structure()
-    {
+    public ContentInfo toASN1Structure() {
         return contentInfo;
     }
 
@@ -215,8 +190,7 @@ public class CMSAuthEnvelopedData
      * return the ASN.1 encoded representation of this object.
      */
     public byte[] getEncoded()
-        throws IOException
-    {
+            throws IOException {
         return contentInfo.getEncoded();
     }
 }

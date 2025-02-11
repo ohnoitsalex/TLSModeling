@@ -63,36 +63,6 @@ public class BCServer {
                 return enabled_cipher_suites;
             }
 
-
-//            @Override
-//            public Hashtable getServerExtensions() {
-//
-//                Hashtable extensions = new Hashtable();
-//                try {
-//                    // Signature Algorithms
-//                    signature_algorithms.addElement(SignatureAndHashAlgorithm.ed448);
-//                    signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_rsae_sha256);
-//                    signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_rsae_sha384);
-//                    signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_rsae_sha512);
-//                    signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_pss_sha256);
-//                    signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_pss_sha384);
-//                    signature_algorithms.addElement(SignatureAndHashAlgorithm.rsa_pss_pss_sha512);
-//
-//                    TlsExtensionsUtils.addSignatureAlgorithmsExtension(extensions, signature_algorithms);
-//
-//                    // Signature Algorithm Certificates
-//                    signature_algorithms_cert.addElement(SignatureAndHashAlgorithm.ed448);
-//                    signature_algorithms_cert.addElement(SignatureAndHashAlgorithm.rsa_pss_rsae_sha256);
-//                    signature_algorithms_cert.addElement(SignatureAndHashAlgorithm.rsa_pss_rsae_sha384);
-//
-//                    TlsExtensionsUtils.addSignatureAlgorithmsCertExtension(extensions, signature_algorithms_cert);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                return extensions;
-//            }
-
-
             @Override
             public TlsCredentials getCredentials() throws IOException {
                 try {

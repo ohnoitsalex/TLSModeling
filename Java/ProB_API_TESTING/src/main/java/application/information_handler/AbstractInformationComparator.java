@@ -1,5 +1,6 @@
 package application.information_handler;
 
+import application.config.Config;
 import ch.qos.logback.core.testUtil.TeeOutputStream;
 import org.yaml.snakeyaml.Yaml;
 
@@ -18,7 +19,7 @@ public class AbstractInformationComparator {
         boolean differencesFound = false;
         try {
             // Set up a PrintStream to write to both console and file
-            PrintStream fileOut = new PrintStream(new FileOutputStream("src/main/resources/data/differences.txt", true));
+            PrintStream fileOut = new PrintStream(new FileOutputStream(Config.DIFFERENCES, true));
             PrintStream consoleOut = System.out;
 
             // Wrap both streams
@@ -62,8 +63,8 @@ public class AbstractInformationComparator {
     public static void main(String[] args) {
         Yaml yaml = new Yaml();
 
-        try (InputStream input1 = AbstractInformationComparator.class.getClassLoader().getResourceAsStream("data/ModelClientHello.yaml");
-             InputStream input2 = AbstractInformationComparator.class.getClassLoader().getResourceAsStream("data/SUTClientHello.yaml")) {
+        try (InputStream input1 = AbstractInformationComparator.class.getClassLoader().getResourceAsStream(Config.RESSOURCESMODELCLIENTHELLO);
+             InputStream input2 = AbstractInformationComparator.class.getClassLoader().getResourceAsStream(Config.RESSOURCESSUTCLIENTHELLO)) {
 
             if (input1 == null || input2 == null) {
                 System.out.println("Error: One or both YAML files not found!");

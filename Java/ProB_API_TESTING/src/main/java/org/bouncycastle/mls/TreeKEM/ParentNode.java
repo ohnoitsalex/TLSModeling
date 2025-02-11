@@ -1,11 +1,11 @@
 package org.bouncycastle.mls.TreeKEM;
 
+import org.bouncycastle.mls.codec.MLSInputStream;
+import org.bouncycastle.mls.codec.MLSOutputStream;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.bouncycastle.mls.codec.MLSInputStream;
-import org.bouncycastle.mls.codec.MLSOutputStream;
 
 public class ParentNode
     implements MLSInputStream.Readable, MLSOutputStream.Writable

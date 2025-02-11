@@ -20,39 +20,31 @@ import java.security.PrivateKey;
  * extract the message.
  */
 public class JceKeyTransAuthenticatedRecipient
-    extends JceKeyTransRecipient
-{
-    public JceKeyTransAuthenticatedRecipient(PrivateKey recipientKey)
-    {
+        extends JceKeyTransRecipient {
+    public JceKeyTransAuthenticatedRecipient(PrivateKey recipientKey) {
         super(recipientKey);
     }
 
     public RecipientOperator getRecipientOperator(AlgorithmIdentifier keyEncryptionAlgorithm, final AlgorithmIdentifier contentMacAlgorithm, byte[] encryptedContentEncryptionKey)
-        throws CMSException
-    {
+            throws CMSException {
         final Key secretKey = extractSecretKey(keyEncryptionAlgorithm, contentMacAlgorithm, encryptedContentEncryptionKey);
 
         final Mac dataMac = contentHelper.createContentMac(secretKey, contentMacAlgorithm);
 
-        return new RecipientOperator(new MacCalculator()
-        {
-            public AlgorithmIdentifier getAlgorithmIdentifier()
-            {
+        return new RecipientOperator(new MacCalculator() {
+            public AlgorithmIdentifier getAlgorithmIdentifier() {
                 return contentMacAlgorithm;
             }
 
-            public GenericKey getKey()
-            {
+            public GenericKey getKey() {
                 return new JceGenericKey(contentMacAlgorithm, secretKey);
             }
 
-            public OutputStream getOutputStream()
-            {
+            public OutputStream getOutputStream() {
                 return new MacOutputStream(dataMac);
             }
 
-            public byte[] getMac()
-            {
+            public byte[] getMac() {
                 return dataMac.doFinal();
             }
         });

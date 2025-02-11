@@ -1,5 +1,17 @@
 package org.bouncycastle.jce.provider;
 
+import org.bouncycastle.jcajce.PKIXCRLStore;
+import org.bouncycastle.util.CollectionStore;
+import org.bouncycastle.util.Iterable;
+import org.bouncycastle.util.Selector;
+import org.bouncycastle.util.Store;
+
+import javax.naming.Context;
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,28 +22,7 @@ import java.security.cert.CRL;
 import java.security.cert.CRLException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509CRL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
-
-import javax.naming.Context;
-import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
-
-import org.bouncycastle.jcajce.PKIXCRLStore;
-import org.bouncycastle.util.CollectionStore;
-import org.bouncycastle.util.Iterable;
-import org.bouncycastle.util.Selector;
-import org.bouncycastle.util.Store;
+import java.util.*;
 
 class CrlCache
 {

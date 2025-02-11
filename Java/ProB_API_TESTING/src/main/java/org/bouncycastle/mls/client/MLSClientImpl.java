@@ -1,13 +1,5 @@
 package org.bouncycastle.mls.client;
 
-import java.io.IOException;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.protobuf.ByteString;
 import com.google.protobuf.MessageOrBuilder;
 import io.grpc.Status;
@@ -20,26 +12,15 @@ import org.bouncycastle.mls.TreeKEM.LeafIndex;
 import org.bouncycastle.mls.TreeKEM.LeafNode;
 import org.bouncycastle.mls.TreeKEM.LifeTime;
 import org.bouncycastle.mls.TreeKEM.TreeKEMPublicKey;
-import org.bouncycastle.mls.codec.Capabilities;
-import org.bouncycastle.mls.codec.Credential;
-import org.bouncycastle.mls.codec.Extension;
-import org.bouncycastle.mls.codec.ExtensionType;
-import org.bouncycastle.mls.codec.ExternalSender;
-import org.bouncycastle.mls.codec.GroupInfo;
-import org.bouncycastle.mls.codec.KeyPackage;
-import org.bouncycastle.mls.codec.MLSInputStream;
-import org.bouncycastle.mls.codec.MLSMessage;
-import org.bouncycastle.mls.codec.MLSOutputStream;
-import org.bouncycastle.mls.codec.PreSharedKeyID;
-import org.bouncycastle.mls.codec.Proposal;
-import org.bouncycastle.mls.codec.ProtocolVersion;
-import org.bouncycastle.mls.codec.ResumptionPSKUsage;
-import org.bouncycastle.mls.codec.Welcome;
-import org.bouncycastle.mls.codec.WireFormat;
+import org.bouncycastle.mls.codec.*;
 import org.bouncycastle.mls.crypto.MlsCipherSuite;
 import org.bouncycastle.mls.crypto.Secret;
 import org.bouncycastle.mls.protocol.Group;
 import org.bouncycastle.util.Pack;
+
+import java.io.IOException;
+import java.security.SecureRandom;
+import java.util.*;
 
 import static org.bouncycastle.mls.crypto.MlsCipherSuite.ALL_SUPPORTED_SUITES;
 import static org.bouncycastle.mls.protocol.Group.NORMAL_COMMIT_PARAMS;

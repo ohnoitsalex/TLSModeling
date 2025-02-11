@@ -1,8 +1,5 @@
 package org.bouncycastle.its.bc;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 import org.bouncycastle.asn1.nist.NISTObjectIdentifiers;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.crypto.Digest;
@@ -20,6 +17,9 @@ import org.bouncycastle.operator.ContentVerifier;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.bc.BcDefaultDigestProvider;
 import org.bouncycastle.util.Arrays;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class BcITSContentVerifierProvider
     implements ITSContentVerifierProvider

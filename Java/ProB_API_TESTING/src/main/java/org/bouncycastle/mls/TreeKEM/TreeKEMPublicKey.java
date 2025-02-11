@@ -1,26 +1,17 @@
 package org.bouncycastle.mls.TreeKEM;
 
-import java.io.IOException;
-import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.mls.TreeSize;
-import org.bouncycastle.mls.codec.HPKECiphertext;
-import org.bouncycastle.mls.codec.MLSInputStream;
-import org.bouncycastle.mls.codec.MLSOutputStream;
-import org.bouncycastle.mls.codec.UpdatePath;
-import org.bouncycastle.mls.codec.UpdatePathNode;
+import org.bouncycastle.mls.codec.*;
 import org.bouncycastle.mls.crypto.MlsCipherSuite;
 import org.bouncycastle.mls.crypto.Secret;
 import org.bouncycastle.mls.protocol.Group;
 import org.bouncycastle.util.Strings;
 import org.bouncycastle.util.encoders.Hex;
+
+import java.io.IOException;
+import java.security.InvalidParameterException;
+import java.util.*;
 
 import static org.bouncycastle.mls.TreeKEM.Utils.removeLeaves;
 

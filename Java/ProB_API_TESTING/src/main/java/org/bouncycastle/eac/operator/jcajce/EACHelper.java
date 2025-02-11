@@ -1,12 +1,12 @@
 package org.bouncycastle.eac.operator.jcajce;
 
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.eac.EACObjectIdentifiers;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Signature;
 import java.util.Hashtable;
-
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.eac.EACObjectIdentifiers;
 
 abstract class EACHelper
 {

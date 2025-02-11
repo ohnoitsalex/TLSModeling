@@ -20,62 +20,55 @@ import org.bouncycastle.util.Store;
 
 import java.util.*;
 
-class CMSSignedHelper
-{
+class CMSSignedHelper {
     static final CMSSignedHelper INSTANCE = new CMSSignedHelper();
 
-    private static final Map     encryptionAlgs = new HashMap();
+    private static final Map encryptionAlgs = new HashMap();
 
-    private static void addEntries(ASN1ObjectIdentifier alias, String encryption)
-    {
-        encryptionAlgs.put(alias.getId(), encryption);
-    }
-
-    static
-    {
+    static {
         addEntries(NISTObjectIdentifiers.dsa_with_sha224, "DSA");
         addEntries(NISTObjectIdentifiers.dsa_with_sha256, "DSA");
         addEntries(NISTObjectIdentifiers.dsa_with_sha384, "DSA");
-        addEntries(NISTObjectIdentifiers.dsa_with_sha512,  "DSA");
+        addEntries(NISTObjectIdentifiers.dsa_with_sha512, "DSA");
         addEntries(NISTObjectIdentifiers.id_dsa_with_sha3_224, "DSA");
         addEntries(NISTObjectIdentifiers.id_dsa_with_sha3_256, "DSA");
-        addEntries(NISTObjectIdentifiers.id_dsa_with_sha3_384,  "DSA");
-        addEntries(NISTObjectIdentifiers.id_dsa_with_sha3_512,  "DSA");
-        addEntries(OIWObjectIdentifiers.dsaWithSHA1,  "DSA");
+        addEntries(NISTObjectIdentifiers.id_dsa_with_sha3_384, "DSA");
+        addEntries(NISTObjectIdentifiers.id_dsa_with_sha3_512, "DSA");
+        addEntries(OIWObjectIdentifiers.dsaWithSHA1, "DSA");
         addEntries(OIWObjectIdentifiers.md4WithRSA, "RSA");
         addEntries(OIWObjectIdentifiers.md4WithRSAEncryption, "RSA");
-        addEntries(OIWObjectIdentifiers.md5WithRSA,  "RSA");
-        addEntries(OIWObjectIdentifiers.sha1WithRSA,  "RSA");
-        addEntries(PKCSObjectIdentifiers.md2WithRSAEncryption,  "RSA");
-        addEntries(PKCSObjectIdentifiers.md4WithRSAEncryption,  "RSA");
-        addEntries(PKCSObjectIdentifiers.md5WithRSAEncryption,  "RSA");
-        addEntries(PKCSObjectIdentifiers.sha1WithRSAEncryption,  "RSA");
-        addEntries(PKCSObjectIdentifiers.sha224WithRSAEncryption,  "RSA");
+        addEntries(OIWObjectIdentifiers.md5WithRSA, "RSA");
+        addEntries(OIWObjectIdentifiers.sha1WithRSA, "RSA");
+        addEntries(PKCSObjectIdentifiers.md2WithRSAEncryption, "RSA");
+        addEntries(PKCSObjectIdentifiers.md4WithRSAEncryption, "RSA");
+        addEntries(PKCSObjectIdentifiers.md5WithRSAEncryption, "RSA");
+        addEntries(PKCSObjectIdentifiers.sha1WithRSAEncryption, "RSA");
+        addEntries(PKCSObjectIdentifiers.sha224WithRSAEncryption, "RSA");
         addEntries(PKCSObjectIdentifiers.sha256WithRSAEncryption, "RSA");
-        addEntries(PKCSObjectIdentifiers.sha384WithRSAEncryption,  "RSA");
-        addEntries(PKCSObjectIdentifiers.sha512WithRSAEncryption,  "RSA");
-        addEntries(NISTObjectIdentifiers.id_rsassa_pkcs1_v1_5_with_sha3_224,  "RSA");
-        addEntries(NISTObjectIdentifiers.id_rsassa_pkcs1_v1_5_with_sha3_256,  "RSA");
-        addEntries(NISTObjectIdentifiers.id_rsassa_pkcs1_v1_5_with_sha3_384,  "RSA");
-        addEntries(NISTObjectIdentifiers.id_rsassa_pkcs1_v1_5_with_sha3_512,  "RSA");
-        addEntries(X9ObjectIdentifiers.ecdsa_with_SHA1,  "ECDSA");
-        addEntries(X9ObjectIdentifiers.ecdsa_with_SHA224,  "ECDSA");
-        addEntries(X9ObjectIdentifiers.ecdsa_with_SHA256,  "ECDSA");
-        addEntries(X9ObjectIdentifiers.ecdsa_with_SHA384,  "ECDSA");
+        addEntries(PKCSObjectIdentifiers.sha384WithRSAEncryption, "RSA");
+        addEntries(PKCSObjectIdentifiers.sha512WithRSAEncryption, "RSA");
+        addEntries(NISTObjectIdentifiers.id_rsassa_pkcs1_v1_5_with_sha3_224, "RSA");
+        addEntries(NISTObjectIdentifiers.id_rsassa_pkcs1_v1_5_with_sha3_256, "RSA");
+        addEntries(NISTObjectIdentifiers.id_rsassa_pkcs1_v1_5_with_sha3_384, "RSA");
+        addEntries(NISTObjectIdentifiers.id_rsassa_pkcs1_v1_5_with_sha3_512, "RSA");
+        addEntries(X9ObjectIdentifiers.ecdsa_with_SHA1, "ECDSA");
+        addEntries(X9ObjectIdentifiers.ecdsa_with_SHA224, "ECDSA");
+        addEntries(X9ObjectIdentifiers.ecdsa_with_SHA256, "ECDSA");
+        addEntries(X9ObjectIdentifiers.ecdsa_with_SHA384, "ECDSA");
         addEntries(X9ObjectIdentifiers.ecdsa_with_SHA512, "ECDSA");
-        addEntries(NISTObjectIdentifiers.id_ecdsa_with_sha3_224,  "ECDSA");
-        addEntries(NISTObjectIdentifiers.id_ecdsa_with_sha3_256,  "ECDSA");
+        addEntries(NISTObjectIdentifiers.id_ecdsa_with_sha3_224, "ECDSA");
+        addEntries(NISTObjectIdentifiers.id_ecdsa_with_sha3_256, "ECDSA");
         addEntries(NISTObjectIdentifiers.id_ecdsa_with_sha3_384, "ECDSA");
-        addEntries(NISTObjectIdentifiers.id_ecdsa_with_sha3_512,  "ECDSA");
-        addEntries(X9ObjectIdentifiers.id_dsa_with_sha1,  "DSA");
-        addEntries(EACObjectIdentifiers.id_TA_ECDSA_SHA_1,  "ECDSA");
-        addEntries(EACObjectIdentifiers.id_TA_ECDSA_SHA_224,  "ECDSA");
-        addEntries(EACObjectIdentifiers.id_TA_ECDSA_SHA_256,  "ECDSA");
-        addEntries(EACObjectIdentifiers.id_TA_ECDSA_SHA_384,  "ECDSA");
-        addEntries(EACObjectIdentifiers.id_TA_ECDSA_SHA_512,  "ECDSA");
-        addEntries(EACObjectIdentifiers.id_TA_RSA_v1_5_SHA_1,  "RSA");
+        addEntries(NISTObjectIdentifiers.id_ecdsa_with_sha3_512, "ECDSA");
+        addEntries(X9ObjectIdentifiers.id_dsa_with_sha1, "DSA");
+        addEntries(EACObjectIdentifiers.id_TA_ECDSA_SHA_1, "ECDSA");
+        addEntries(EACObjectIdentifiers.id_TA_ECDSA_SHA_224, "ECDSA");
+        addEntries(EACObjectIdentifiers.id_TA_ECDSA_SHA_256, "ECDSA");
+        addEntries(EACObjectIdentifiers.id_TA_ECDSA_SHA_384, "ECDSA");
+        addEntries(EACObjectIdentifiers.id_TA_ECDSA_SHA_512, "ECDSA");
+        addEntries(EACObjectIdentifiers.id_TA_RSA_v1_5_SHA_1, "RSA");
         addEntries(EACObjectIdentifiers.id_TA_RSA_v1_5_SHA_256, "RSA");
-        addEntries(EACObjectIdentifiers.id_TA_RSA_PSS_SHA_1,  "RSAandMGF1");
+        addEntries(EACObjectIdentifiers.id_TA_RSA_PSS_SHA_1, "RSAandMGF1");
         addEntries(EACObjectIdentifiers.id_TA_RSA_PSS_SHA_256, "RSAandMGF1");
 
         addEntries(X9ObjectIdentifiers.id_dsa, "DSA");
@@ -95,6 +88,9 @@ class CMSSignedHelper
         addEntries(RosstandartObjectIdentifiers.id_tc26_signwithdigest_gost_3410_12_512, "ECGOST3410-2012-512");
     }
 
+    private static void addEntries(ASN1ObjectIdentifier alias, String encryption) {
+        encryptionAlgs.put(alias.getId(), encryption);
+    }
 
     /**
      * Return the digest encryption algorithm using one of the standard
@@ -102,48 +98,37 @@ class CMSSignedHelper
      * possible).
      */
     String getEncryptionAlgName(
-        String encryptionAlgOID)
-    {
-        String algName = (String)encryptionAlgs.get(encryptionAlgOID);
+            String encryptionAlgOID) {
+        String algName = (String) encryptionAlgs.get(encryptionAlgOID);
 
-        if (algName != null)
-        {
+        if (algName != null) {
             return algName;
         }
 
         return encryptionAlgOID;
     }
 
-    AlgorithmIdentifier fixDigestAlgID(AlgorithmIdentifier algId, DigestAlgorithmIdentifierFinder dgstAlgFinder)
-    {
+    AlgorithmIdentifier fixDigestAlgID(AlgorithmIdentifier algId, DigestAlgorithmIdentifierFinder dgstAlgFinder) {
         ASN1Encodable params = algId.getParameters();
-        if (params == null || DERNull.INSTANCE.equals(params))
-        {
+        if (params == null || DERNull.INSTANCE.equals(params)) {
             return dgstAlgFinder.find(algId.getAlgorithm());
-        }
-        else
-        {
+        } else {
             return algId;
         }
     }
 
-    void setSigningEncryptionAlgorithmMapping(ASN1ObjectIdentifier oid, String algorithmName)
-    {
+    void setSigningEncryptionAlgorithmMapping(ASN1ObjectIdentifier oid, String algorithmName) {
         addEntries(oid, algorithmName);
     }
 
-    Store getCertificates(ASN1Set certSet)
-    {
-        if (certSet != null)
-        {
+    Store getCertificates(ASN1Set certSet) {
+        if (certSet != null) {
             List certList = new ArrayList(certSet.size());
 
-            for (Enumeration en = certSet.getObjects(); en.hasMoreElements();)
-            {
-                ASN1Primitive obj = ((ASN1Encodable)en.nextElement()).toASN1Primitive();
+            for (Enumeration en = certSet.getObjects(); en.hasMoreElements(); ) {
+                ASN1Primitive obj = ((ASN1Encodable) en.nextElement()).toASN1Primitive();
 
-                if (obj instanceof ASN1Sequence)
-                {
+                if (obj instanceof ASN1Sequence) {
                     certList.add(new X509CertificateHolder(Certificate.getInstance(obj)));
                 }
             }
@@ -154,18 +139,14 @@ class CMSSignedHelper
         return new CollectionStore(new ArrayList());
     }
 
-    Store getAttributeCertificates(ASN1Set certSet)
-    {
-        if (certSet != null)
-        {
+    Store getAttributeCertificates(ASN1Set certSet) {
+        if (certSet != null) {
             List certList = new ArrayList(certSet.size());
 
-            for (Enumeration en = certSet.getObjects(); en.hasMoreElements();)
-            {
-                ASN1Primitive obj = ((ASN1Encodable)en.nextElement()).toASN1Primitive();
+            for (Enumeration en = certSet.getObjects(); en.hasMoreElements(); ) {
+                ASN1Primitive obj = ((ASN1Encodable) en.nextElement()).toASN1Primitive();
 
-                if (obj instanceof ASN1TaggedObject tObj)
-                {
+                if (obj instanceof ASN1TaggedObject tObj) {
 
                     // CertificateChoices ::= CHOICE {
                     //     certificate Certificate,
@@ -173,8 +154,7 @@ class CMSSignedHelper
                     //     v1AttrCert [1] IMPLICIT AttributeCertificateV1,        -- Obsolete
                     //     v2AttrCert [2] IMPLICIT AttributeCertificateV2,
                     //     other [3] IMPLICIT OtherCertificateFormat }
-                    if (tObj.getTagNo() == 1 || tObj.getTagNo() == 2)
-                    {
+                    if (tObj.getTagNo() == 1 || tObj.getTagNo() == 2) {
                         certList.add(new X509AttributeCertificateHolder(AttributeCertificate.getInstance(tObj.getBaseUniversal(false, BERTags.SEQUENCE))));
                     }
                 }
@@ -186,18 +166,14 @@ class CMSSignedHelper
         return new CollectionStore(new ArrayList());
     }
 
-    Store getCRLs(ASN1Set crlSet)
-    {
-        if (crlSet != null)
-        {
+    Store getCRLs(ASN1Set crlSet) {
+        if (crlSet != null) {
             List crlList = new ArrayList(crlSet.size());
 
-            for (Enumeration en = crlSet.getObjects(); en.hasMoreElements();)
-            {
-                ASN1Primitive obj = ((ASN1Encodable)en.nextElement()).toASN1Primitive();
+            for (Enumeration en = crlSet.getObjects(); en.hasMoreElements(); ) {
+                ASN1Primitive obj = ((ASN1Encodable) en.nextElement()).toASN1Primitive();
 
-                if (obj instanceof ASN1Sequence)
-                {
+                if (obj instanceof ASN1Sequence) {
                     crlList.add(new X509CRLHolder(CertificateList.getInstance(obj)));
                 }
             }
@@ -208,26 +184,20 @@ class CMSSignedHelper
         return new CollectionStore(new ArrayList());
     }
 
-    Store getOtherRevocationInfo(ASN1ObjectIdentifier otherRevocationInfoFormat, ASN1Set crlSet)
-    {
-        if (crlSet != null)
-        {
-            List    crlList = new ArrayList(crlSet.size());
+    Store getOtherRevocationInfo(ASN1ObjectIdentifier otherRevocationInfoFormat, ASN1Set crlSet) {
+        if (crlSet != null) {
+            List crlList = new ArrayList(crlSet.size());
 
-            for (Enumeration en = crlSet.getObjects(); en.hasMoreElements();)
-            {
-                ASN1Primitive obj = ((ASN1Encodable)en.nextElement()).toASN1Primitive();
+            for (Enumeration en = crlSet.getObjects(); en.hasMoreElements(); ) {
+                ASN1Primitive obj = ((ASN1Encodable) en.nextElement()).toASN1Primitive();
 
-                if (obj instanceof ASN1TaggedObject)
-                {
+                if (obj instanceof ASN1TaggedObject) {
                     ASN1TaggedObject tObj = ASN1TaggedObject.getInstance(obj);
 
-                    if (tObj.hasContextTag(1))
-                    {
+                    if (tObj.hasContextTag(1)) {
                         OtherRevocationInfoFormat other = OtherRevocationInfoFormat.getInstance(tObj, false);
 
-                        if (otherRevocationInfoFormat.equals(other.getInfoFormat()))
-                        {
+                        if (otherRevocationInfoFormat.equals(other.getInfoFormat())) {
                             crlList.add(other.getInfo());
                         }
                     }

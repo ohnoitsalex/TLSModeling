@@ -3,8 +3,7 @@ package org.bouncycastle.cms;
 import org.bouncycastle.util.Selector;
 
 public abstract class RecipientId
-    implements Selector
-{
+        implements Selector {
     public static final int keyTrans = 0;
     public static final int kek = 1;
     public static final int keyAgree = 2;
@@ -13,8 +12,7 @@ public abstract class RecipientId
 
     private final int type;
 
-    protected RecipientId(int type)
-    {
+    protected RecipientId(int type) {
         this.type = type;
     }
 
@@ -23,8 +21,7 @@ public abstract class RecipientId
      *
      * @return one of keyTrans, kek, keyAgree, password
      */
-    public int getType()
-    {
+    public int getType() {
         return type;
     }
 

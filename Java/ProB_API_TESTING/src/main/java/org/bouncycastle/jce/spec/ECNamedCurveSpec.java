@@ -1,12 +1,5 @@
 package org.bouncycastle.jce.spec;
 
-import java.math.BigInteger;
-import java.security.spec.ECField;
-import java.security.spec.ECFieldF2m;
-import java.security.spec.ECFieldFp;
-import java.security.spec.ECPoint;
-import java.security.spec.EllipticCurve;
-
 import org.bouncycastle.jcajce.provider.asymmetric.util.EC5Util;
 import org.bouncycastle.math.ec.ECAlgorithms;
 import org.bouncycastle.math.ec.ECCurve;
@@ -14,6 +7,9 @@ import org.bouncycastle.math.field.FiniteField;
 import org.bouncycastle.math.field.Polynomial;
 import org.bouncycastle.math.field.PolynomialExtensionField;
 import org.bouncycastle.util.Arrays;
+
+import java.math.BigInteger;
+import java.security.spec.*;
 
 /**
  * specification signifying that the curve parameters can also be

@@ -26,18 +26,15 @@ import java.util.Iterator;
 import java.util.Map;
 
 public abstract class JceKeyTransRecipient
-    implements KeyTransRecipient
-{
-    private PrivateKey recipientKey;
-
+        implements KeyTransRecipient {
     protected EnvelopedDataHelper helper = new EnvelopedDataHelper(new DefaultJcaJceExtHelper());
     protected EnvelopedDataHelper contentHelper = helper;
     protected Map extraMappings = new HashMap();
     protected boolean validateKeySize = false;
     protected boolean unwrappedKeyMustBeEncodable;
+    private PrivateKey recipientKey;
 
-    public JceKeyTransRecipient(PrivateKey recipientKey)
-    {
+    public JceKeyTransRecipient(PrivateKey recipientKey) {
         this.recipientKey = CMSUtils.cleanPrivateKey(recipientKey);
     }
 
@@ -47,8 +44,7 @@ public abstract class JceKeyTransRecipient
      * @param provider provider to use.
      * @return this recipient.
      */
-    public JceKeyTransRecipient setProvider(Provider provider)
-    {
+    public JceKeyTransRecipient setProvider(Provider provider) {
         this.helper = new EnvelopedDataHelper(new ProviderJcaJceExtHelper(provider));
         this.contentHelper = helper;
 
@@ -61,8 +57,7 @@ public abstract class JceKeyTransRecipient
      * @param providerName the name of the provider to use.
      * @return this recipient.
      */
-    public JceKeyTransRecipient setProvider(String providerName)
-    {
+    public JceKeyTransRecipient setProvider(String providerName) {
         this.helper = new EnvelopedDataHelper(new NamedJcaJceExtHelper(providerName));
         this.contentHelper = helper;
 
@@ -83,8 +78,7 @@ public abstract class JceKeyTransRecipient
      * @param algorithmName JCE algorithm name to use.
      * @return the current Recipient.
      */
-    public JceKeyTransRecipient setAlgorithmMapping(ASN1ObjectIdentifier algorithm, String algorithmName)
-    {
+    public JceKeyTransRecipient setAlgorithmMapping(ASN1ObjectIdentifier algorithm, String algorithmName) {
         extraMappings.put(algorithm, algorithmName);
 
         return this;
@@ -97,8 +91,7 @@ public abstract class JceKeyTransRecipient
      * @param provider the provider to use.
      * @return this recipient.
      */
-    public JceKeyTransRecipient setContentProvider(Provider provider)
-    {
+    public JceKeyTransRecipient setContentProvider(Provider provider) {
         this.contentHelper = CMSUtils.createContentHelper(provider);
 
         return this;
@@ -112,8 +105,7 @@ public abstract class JceKeyTransRecipient
      * @param unwrappedKeyMustBeEncodable true if getEncoded() should return key bytes, false if not necessary.
      * @return this recipient.
      */
-    public JceKeyTransRecipient setMustProduceEncodableUnwrappedKey(boolean unwrappedKeyMustBeEncodable)
-    {
+    public JceKeyTransRecipient setMustProduceEncodableUnwrappedKey(boolean unwrappedKeyMustBeEncodable) {
         this.unwrappedKeyMustBeEncodable = unwrappedKeyMustBeEncodable;
 
         return this;
@@ -126,8 +118,7 @@ public abstract class JceKeyTransRecipient
      * @param providerName the name of the provider to use.
      * @return this recipient.
      */
-    public JceKeyTransRecipient setContentProvider(String providerName)
-    {
+    public JceKeyTransRecipient setContentProvider(String providerName) {
         this.contentHelper = CMSUtils.createContentHelper(providerName);
 
         return this;
@@ -143,20 +134,16 @@ public abstract class JceKeyTransRecipient
      * @param doValidate true if unwrapped key's should be validated against the content encryption algorithm, false otherwise.
      * @return this recipient.
      */
-    public JceKeyTransRecipient setKeySizeValidation(boolean doValidate)
-    {
+    public JceKeyTransRecipient setKeySizeValidation(boolean doValidate) {
         this.validateKeySize = doValidate;
 
         return this;
     }
 
     protected Key extractSecretKey(AlgorithmIdentifier keyEncryptionAlgorithm, AlgorithmIdentifier encryptedKeyAlgorithm, byte[] encryptedEncryptionKey)
-        throws CMSException
-    {
-        if (CMSUtils.isGOST(keyEncryptionAlgorithm.getAlgorithm()))
-        {
-            try
-            {
+            throws CMSException {
+        if (CMSUtils.isGOST(keyEncryptionAlgorithm.getAlgorithm())) {
+            try {
                 GostR3410KeyTransport transport = GostR3410KeyTransport.getInstance(encryptedEncryptionKey);
 
                 GostR3410TransportParameters transParams = transport.getTransportParameters();
@@ -180,79 +167,58 @@ public abstract class JceKeyTransRecipient
                 Gost2814789EncryptedKey encKey = transport.getSessionEncryptedKey();
 
                 return keyCipher.unwrap(Arrays.concatenate(encKey.getEncryptedKey(), encKey.getMacKey()), helper.getBaseCipherName(encryptedKeyAlgorithm.getAlgorithm()), Cipher.SECRET_KEY);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 throw new CMSException("exception unwrapping key: " + e.getMessage(), e);
             }
-        }
-        else if (CMSObjectIdentifiers.id_ori_kem.equals(keyEncryptionAlgorithm.getAlgorithm()))
-        {
+        } else if (CMSObjectIdentifiers.id_ori_kem.equals(keyEncryptionAlgorithm.getAlgorithm())) {
             // TODO: note there is a move to change the type for KEMs from KeyTrans, expect this to change
             KEMRecipientInfo gktParams = KEMRecipientInfo.getInstance(keyEncryptionAlgorithm.getParameters());
             JceAsymmetricKeyUnwrapper unwrapper = helper.createAsymmetricUnwrapper(gktParams.getKem(), recipientKey).setMustProduceEncodableUnwrappedKey(unwrappedKeyMustBeEncodable);
 
-            if (!extraMappings.isEmpty())
-            {
-                for (Iterator it = extraMappings.keySet().iterator(); it.hasNext(); )
-                {
-                    ASN1ObjectIdentifier algorithm = (ASN1ObjectIdentifier)it.next();
+            if (!extraMappings.isEmpty()) {
+                for (Iterator it = extraMappings.keySet().iterator(); it.hasNext(); ) {
+                    ASN1ObjectIdentifier algorithm = (ASN1ObjectIdentifier) it.next();
 
-                    unwrapper.setAlgorithmMapping(algorithm, (String)extraMappings.get(algorithm));
+                    unwrapper.setAlgorithmMapping(algorithm, (String) extraMappings.get(algorithm));
                 }
             }
 
-            try
-            {
+            try {
                 Key key = helper.getJceKey(encryptedKeyAlgorithm, unwrapper.generateUnwrappedKey(encryptedKeyAlgorithm, encryptedEncryptionKey));
 
-                if (validateKeySize)
-                {
+                if (validateKeySize) {
                     helper.keySizeCheck(encryptedKeyAlgorithm, key);
                 }
 
                 return key;
-            }
-            catch (OperatorException e)
-            {
+            } catch (OperatorException e) {
                 throw new CMSException("exception unwrapping key: " + e.getMessage(), e);
             }
-        }
-        else
-        {
+        } else {
             JceAsymmetricKeyUnwrapper unwrapper = helper.createAsymmetricUnwrapper(keyEncryptionAlgorithm, recipientKey).setMustProduceEncodableUnwrappedKey(unwrappedKeyMustBeEncodable);
 
-            if (!extraMappings.isEmpty())
-            {
-                for (Iterator it = extraMappings.keySet().iterator(); it.hasNext(); )
-                {
-                    ASN1ObjectIdentifier algorithm = (ASN1ObjectIdentifier)it.next();
+            if (!extraMappings.isEmpty()) {
+                for (Iterator it = extraMappings.keySet().iterator(); it.hasNext(); ) {
+                    ASN1ObjectIdentifier algorithm = (ASN1ObjectIdentifier) it.next();
 
-                    unwrapper.setAlgorithmMapping(algorithm, (String)extraMappings.get(algorithm));
+                    unwrapper.setAlgorithmMapping(algorithm, (String) extraMappings.get(algorithm));
                 }
             }
 
-            try
-            {
+            try {
                 Key key = helper.getJceKey(encryptedKeyAlgorithm, unwrapper.generateUnwrappedKey(encryptedKeyAlgorithm, encryptedEncryptionKey));
 
-                if (validateKeySize)
-                {
-                    if (encryptedEncryptionKey.equals(CMSObjectIdentifiers.id_alg_cek_hkdf_sha256))
-                    {
+                if (validateKeySize) {
+                    if (encryptedEncryptionKey.equals(CMSObjectIdentifiers.id_alg_cek_hkdf_sha256)) {
                         helper.keySizeCheck(
-                            AlgorithmIdentifier.getInstance(encryptedKeyAlgorithm.getParameters()), key);
-                    }
-                    else
-                    {
+                                AlgorithmIdentifier.getInstance(encryptedKeyAlgorithm.getParameters()), key);
+                    } else {
                         helper.keySizeCheck(encryptedKeyAlgorithm, key);
                     }
                 }
 
                 return key;
-            }
-            catch (OperatorException e)
-            {
+            } catch (OperatorException e) {
                 throw new CMSException("exception unwrapping key: " + e.getMessage(), e);
             }
         }

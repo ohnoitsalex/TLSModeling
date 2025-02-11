@@ -1,19 +1,15 @@
 package org.bouncycastle.cms;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Collections;
-
-import org.bouncycastle.asn1.ASN1EncodableVector;
-import org.bouncycastle.asn1.ASN1Integer;
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.BERSequenceGenerator;
-import org.bouncycastle.asn1.DLSet;
+import org.bouncycastle.asn1.*;
 import org.bouncycastle.asn1.cms.CMSObjectIdentifiers;
 import org.bouncycastle.asn1.cms.EnvelopedData;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.operator.OutputAEADEncryptor;
 import org.bouncycastle.operator.OutputEncryptor;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Collections;
 
 /**
  * General class for generating a CMS enveloped-data message stream.
@@ -35,16 +31,14 @@ import org.bouncycastle.operator.OutputEncryptor;
  * </pre>
  */
 public class CMSEnvelopedDataStreamGenerator
-    extends CMSEnvelopedGenerator
-{
-    private int                 _bufferSize;
-    private boolean             _berEncodeRecipientSet;
+        extends CMSEnvelopedGenerator {
+    private int _bufferSize;
+    private boolean _berEncodeRecipientSet;
 
     /**
      * base constructor
      */
-    public CMSEnvelopedDataStreamGenerator()
-    {
+    public CMSEnvelopedDataStreamGenerator() {
     }
 
     /**
@@ -53,8 +47,7 @@ public class CMSEnvelopedDataStreamGenerator
      * @param bufferSize length of octet strings to buffer the data.
      */
     public void setBufferSize(
-        int bufferSize)
-    {
+            int bufferSize) {
         _bufferSize = bufferSize;
     }
 
@@ -62,15 +55,12 @@ public class CMSEnvelopedDataStreamGenerator
      * Use a BER Set to store the recipient information
      */
     public void setBEREncodeRecipients(
-        boolean berEncodeRecipientSet)
-    {
+            boolean berEncodeRecipientSet) {
         _berEncodeRecipientSet = berEncodeRecipientSet;
     }
 
-    private ASN1Integer getVersion(ASN1EncodableVector recipientInfos)
-    {
-        if (unprotectedAttributeGenerator != null)
-        {
+    private ASN1Integer getVersion(ASN1EncodableVector recipientInfos) {
+        if (unprotectedAttributeGenerator != null) {
             // mark unprotected attributes as non-null.
             return new ASN1Integer(EnvelopedData.calculateVersion(originatorInfo, new DLSet(recipientInfos), new DLSet()));
         }
@@ -78,23 +68,21 @@ public class CMSEnvelopedDataStreamGenerator
     }
 
     private OutputStream doOpen(
-        ASN1ObjectIdentifier dataType,
-        OutputStream         out,
-        OutputEncryptor      encryptor)
-        throws IOException, CMSException
-    {
+            ASN1ObjectIdentifier dataType,
+            OutputStream out,
+            OutputEncryptor encryptor)
+            throws IOException, CMSException {
         ASN1EncodableVector recipientInfos = CMSUtils.getRecipentInfos(encryptor.getKey(), recipientInfoGenerators);
 
         return open(dataType, out, recipientInfos, encryptor);
     }
 
     protected OutputStream open(
-        ASN1ObjectIdentifier dataType,
-        OutputStream         out,
-        ASN1EncodableVector  recipientInfos,
-        OutputEncryptor      encryptor)
-        throws IOException
-    {
+            ASN1ObjectIdentifier dataType,
+            OutputStream out,
+            ASN1EncodableVector recipientInfos,
+            OutputEncryptor encryptor)
+            throws IOException {
         //
         // ContentInfo
         //
@@ -122,23 +110,19 @@ public class CMSEnvelopedDataStreamGenerator
         eiGen.getRawOutputStream().write(encAlgId.getEncoded());
 
         OutputStream octetStream = CMSUtils.createBEROctetOutputStream(
-            eiGen.getRawOutputStream(), 0, false, _bufferSize);
+                eiGen.getRawOutputStream(), 0, false, _bufferSize);
 
         return new CmsEnvelopedDataOutputStream(encryptor, octetStream, cGen, envGen, eiGen);
     }
 
     protected OutputStream open(
-        OutputStream        out,
-        ASN1EncodableVector recipientInfos,
-        OutputEncryptor     encryptor)
-        throws CMSException
-    {
-        try
-        {
+            OutputStream out,
+            ASN1EncodableVector recipientInfos,
+            OutputEncryptor encryptor)
+            throws CMSException {
+        try {
             return open(CMSObjectIdentifiers.data, out, recipientInfos, encryptor);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new CMSException("exception decoding algorithm parameters.", e);
         }
     }
@@ -148,10 +132,9 @@ public class CMSEnvelopedDataStreamGenerator
      * object using the given encryptor.
      */
     public OutputStream open(
-        OutputStream    out,
-        OutputEncryptor encryptor)
-        throws CMSException, IOException
-    {
+            OutputStream out,
+            OutputEncryptor encryptor)
+            throws CMSException, IOException {
         return doOpen(new ASN1ObjectIdentifier(CMSObjectIdentifiers.data.getId()), out, encryptor);
     }
 
@@ -161,17 +144,15 @@ public class CMSEnvelopedDataStreamGenerator
      * in type.
      */
     public OutputStream open(
-        ASN1ObjectIdentifier dataType,
-        OutputStream         out,
-        OutputEncryptor      encryptor)
-        throws CMSException, IOException
-    {
+            ASN1ObjectIdentifier dataType,
+            OutputStream out,
+            OutputEncryptor encryptor)
+            throws CMSException, IOException {
         return doOpen(dataType, out, encryptor);
     }
 
     private class CmsEnvelopedDataOutputStream
-        extends OutputStream
-    {
+            extends OutputStream {
         private final OutputEncryptor _encryptor;
         private final OutputStream _cOut;
         private final OutputStream _octetStream;
@@ -180,12 +161,11 @@ public class CMSEnvelopedDataStreamGenerator
         private final BERSequenceGenerator _eiGen;
 
         public CmsEnvelopedDataOutputStream(
-            OutputEncryptor encryptor,
-            OutputStream   octetStream,
-            BERSequenceGenerator cGen,
-            BERSequenceGenerator envGen,
-            BERSequenceGenerator eiGen)
-        {
+                OutputEncryptor encryptor,
+                OutputStream octetStream,
+                BERSequenceGenerator cGen,
+                BERSequenceGenerator envGen,
+                BERSequenceGenerator eiGen) {
             _encryptor = encryptor;
             _octetStream = octetStream;
             _cOut = encryptor.getOutputStream(octetStream);
@@ -195,36 +175,31 @@ public class CMSEnvelopedDataStreamGenerator
         }
 
         public void write(
-            int b)
-            throws IOException
-        {
+                int b)
+                throws IOException {
             _cOut.write(b);
         }
 
         public void write(
-            byte[] bytes,
-            int    off,
-            int    len)
-            throws IOException
-        {
+                byte[] bytes,
+                int off,
+                int len)
+                throws IOException {
             _cOut.write(bytes, off, len);
         }
 
         public void write(
-            byte[] bytes)
-            throws IOException
-        {
+                byte[] bytes)
+                throws IOException {
             _cOut.write(bytes);
         }
 
         public void close()
-            throws IOException
-        {
+                throws IOException {
             _cOut.close();
-            if (_encryptor instanceof OutputAEADEncryptor)
-            {
+            if (_encryptor instanceof OutputAEADEncryptor) {
                 // enveloped data so MAC appended to cipher text.
-                _octetStream.write(((OutputAEADEncryptor)_encryptor).getMAC());
+                _octetStream.write(((OutputAEADEncryptor) _encryptor).getMAC());
                 _octetStream.close();
             }
             _eiGen.close();

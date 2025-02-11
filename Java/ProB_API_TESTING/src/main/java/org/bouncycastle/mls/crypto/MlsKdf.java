@@ -1,8 +1,8 @@
 package org.bouncycastle.mls.crypto;
 
-import java.io.IOException;
-
 import org.bouncycastle.crypto.Digest;
+
+import java.io.IOException;
 
 public interface MlsKdf
 {

@@ -7,11 +7,10 @@ import org.bouncycastle.asn1.nist.NISTObjectIdentifiers;
  * General class for generating a CMS enveloped-data message.
  */
 public class CMSAuthEnvelopedGenerator
-    extends CMSEnvelopedGenerator
-{
-    public static final String  AES128_GCM = NISTObjectIdentifiers.id_aes128_GCM.getId();
-    public static final String  AES192_GCM = NISTObjectIdentifiers.id_aes192_GCM.getId();
-    public static final String  AES256_GCM = NISTObjectIdentifiers.id_aes256_GCM.getId();
+        extends CMSEnvelopedGenerator {
+    public static final String AES128_GCM = NISTObjectIdentifiers.id_aes128_GCM.getId();
+    public static final String AES192_GCM = NISTObjectIdentifiers.id_aes192_GCM.getId();
+    public static final String AES256_GCM = NISTObjectIdentifiers.id_aes256_GCM.getId();
 
     protected CMSAttributeTableGenerator authAttrsGenerator = null;
     protected CMSAttributeTableGenerator unauthAttrsGenerator = null;
@@ -21,23 +20,19 @@ public class CMSAuthEnvelopedGenerator
     /**
      * base constructor
      */
-    protected CMSAuthEnvelopedGenerator()
-    {
+    protected CMSAuthEnvelopedGenerator() {
     }
 
 
-    public void setAuthenticatedAttributeGenerator(CMSAttributeTableGenerator protectedAttributeGenerator)
-    {
+    public void setAuthenticatedAttributeGenerator(CMSAttributeTableGenerator protectedAttributeGenerator) {
         this.authAttrsGenerator = protectedAttributeGenerator;
     }
 
-    public void setUnauthenticatedAttributeGenerator(CMSAttributeTableGenerator unauthenticatedAttributeGenerator)
-    {
+    public void setUnauthenticatedAttributeGenerator(CMSAttributeTableGenerator unauthenticatedAttributeGenerator) {
         this.unauthAttrsGenerator = unauthenticatedAttributeGenerator;
     }
 
-    public void setOriginatorInfo(OriginatorInformation originatorInfo)
-    {
+    public void setOriginatorInfo(OriginatorInformation originatorInfo) {
         this.originatorInfo = originatorInfo.toASN1Structure();
     }
 
@@ -46,8 +41,7 @@ public class CMSAuthEnvelopedGenerator
      *
      * @param recipientGenerator a generator of a recipient info object.
      */
-    public void addRecipientInfoGenerator(RecipientInfoGenerator recipientGenerator)
-    {
+    public void addRecipientInfoGenerator(RecipientInfoGenerator recipientGenerator) {
         recipientInfoGenerators.add(recipientGenerator);
     }
 }

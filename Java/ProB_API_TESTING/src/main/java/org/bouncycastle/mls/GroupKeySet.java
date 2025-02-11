@@ -1,17 +1,17 @@
 package org.bouncycastle.mls;
 
+import org.bouncycastle.mls.TreeKEM.LeafIndex;
+import org.bouncycastle.mls.TreeKEM.NodeIndex;
+import org.bouncycastle.mls.codec.ContentType;
+import org.bouncycastle.mls.crypto.MlsCipherSuite;
+import org.bouncycastle.mls.crypto.Secret;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.bouncycastle.mls.TreeKEM.LeafIndex;
-import org.bouncycastle.mls.TreeKEM.NodeIndex;
-import org.bouncycastle.mls.codec.ContentType;
-import org.bouncycastle.mls.crypto.MlsCipherSuite;
-import org.bouncycastle.mls.crypto.Secret;
 
 public class GroupKeySet
 {

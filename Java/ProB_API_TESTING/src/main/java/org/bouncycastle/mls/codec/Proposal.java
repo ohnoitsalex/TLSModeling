@@ -1,12 +1,12 @@
 package org.bouncycastle.mls.codec;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bouncycastle.mls.TreeKEM.LeafIndex;
 import org.bouncycastle.mls.TreeKEM.LeafNode;
 import org.bouncycastle.mls.crypto.MlsCipherSuite;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Proposal
     implements MLSInputStream.Readable, MLSOutputStream.Writable

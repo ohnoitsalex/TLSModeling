@@ -1,7 +1,5 @@
 package org.bouncycastle.mls.codec;
 
-import java.io.IOException;
-
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.bouncycastle.mls.GroupKeySet;
 import org.bouncycastle.mls.KeyGeneration;
@@ -9,6 +7,8 @@ import org.bouncycastle.mls.KeyScheduleEpoch;
 import org.bouncycastle.mls.TreeKEM.LeafIndex;
 import org.bouncycastle.mls.crypto.MlsCipherSuite;
 import org.bouncycastle.util.Arrays;
+
+import java.io.IOException;
 
 public class PrivateMessage
     implements MLSInputStream.Readable, MLSOutputStream.Writable

@@ -1,6 +1,12 @@
 package org.bouncycastle.est.jcajce;
 
 
+import org.bouncycastle.est.ESTClientProvider;
+import org.bouncycastle.est.ESTService;
+import org.bouncycastle.est.ESTServiceBuilder;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.X509TrustManager;
 import java.net.Socket;
 import java.security.NoSuchProviderException;
 import java.security.Provider;
@@ -8,13 +14,6 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.X509TrustManager;
-
-import org.bouncycastle.est.ESTClientProvider;
-import org.bouncycastle.est.ESTService;
-import org.bouncycastle.est.ESTServiceBuilder;
 
 
 /**

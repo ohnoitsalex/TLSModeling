@@ -10,8 +10,7 @@ import java.io.IOException;
  * Toolkit methods for dealing with common errors in CMS
  * classes.
  */
-public class CMSPatchKit
-{
+public class CMSPatchKit {
     /**
      * Create a SignerInformation based on original which uses definite-length
      * rather than DER encoding for verifying the signature on the signed attributes.
@@ -19,8 +18,7 @@ public class CMSPatchKit
      * @param original the source SignerInformation
      */
     public static SignerInformation createNonDERSignerInfo(
-        SignerInformation original)
-    {
+            SignerInformation original) {
         return new DLSignerInformation(original);
     }
 
@@ -31,41 +29,34 @@ public class CMSPatchKit
      * @param original the source SignerInformation
      */
     public static SignerInformation createWithSignatureAlgorithm(
-        SignerInformation original,
-        AlgorithmIdentifier signatureAlgorithm)
-    {
-         return new ModEncAlgSignerInformation(original, signatureAlgorithm);
+            SignerInformation original,
+            AlgorithmIdentifier signatureAlgorithm) {
+        return new ModEncAlgSignerInformation(original, signatureAlgorithm);
     }
 
     private static class DLSignerInformation
-        extends SignerInformation
-    {
-        protected DLSignerInformation(SignerInformation baseInfo)
-        {
+            extends SignerInformation {
+        protected DLSignerInformation(SignerInformation baseInfo) {
             super(baseInfo);
         }
 
         public byte[] getEncodedSignedAttributes()
-            throws IOException
-        {
+                throws IOException {
             return signedAttributeSet.getEncoded(ASN1Encoding.DL);
         }
     }
 
     private static class ModEncAlgSignerInformation
-        extends SignerInformation
-    {
+            extends SignerInformation {
         protected ModEncAlgSignerInformation(
-            SignerInformation baseInfo,
-            AlgorithmIdentifier signatureAlgorithm)
-        {
+                SignerInformation baseInfo,
+                AlgorithmIdentifier signatureAlgorithm) {
             super(baseInfo, editEncAlg(baseInfo.info, signatureAlgorithm));
         }
 
-        private static SignerInfo editEncAlg(SignerInfo info, AlgorithmIdentifier signatureAlgorithm)
-        {
+        private static SignerInfo editEncAlg(SignerInfo info, AlgorithmIdentifier signatureAlgorithm) {
             return new SignerInfo(info.getSID(), info.getDigestAlgorithm(), info.getAuthenticatedAttributes(),
-                signatureAlgorithm, info.getEncryptedDigest(), info.getUnauthenticatedAttributes());
+                    signatureAlgorithm, info.getEncryptedDigest(), info.getUnauthenticatedAttributes());
         }
     }
 }

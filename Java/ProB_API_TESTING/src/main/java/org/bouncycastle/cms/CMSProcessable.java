@@ -6,8 +6,7 @@ import java.io.OutputStream;
 /**
  * Use CMSTypedData instead of this. See CMSProcessableFile/ByteArray for defaults.
  */
-public interface CMSProcessable
-{
+public interface CMSProcessable {
     /**
      * generic routine to copy out the data we want processed - the OutputStream
      * passed in will do the handling on it's own.
@@ -15,7 +14,7 @@ public interface CMSProcessable
      * Note: this routine may be called multiple times.
      */
     void write(OutputStream out)
-        throws IOException, CMSException;
+            throws IOException, CMSException;
 
     Object getContent();
 }

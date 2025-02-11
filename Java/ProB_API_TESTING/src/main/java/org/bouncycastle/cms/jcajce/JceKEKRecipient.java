@@ -11,16 +11,13 @@ import java.security.Key;
 import java.security.Provider;
 
 public abstract class JceKEKRecipient
-    implements KEKRecipient
-{
-    private SecretKey recipientKey;
-
+        implements KEKRecipient {
     protected EnvelopedDataHelper helper = new EnvelopedDataHelper(new DefaultJcaJceExtHelper());
     protected EnvelopedDataHelper contentHelper = helper;
     protected boolean validateKeySize = false;
+    private SecretKey recipientKey;
 
-    public JceKEKRecipient(SecretKey recipientKey)
-    {
+    public JceKEKRecipient(SecretKey recipientKey) {
         this.recipientKey = recipientKey;
     }
 
@@ -30,8 +27,7 @@ public abstract class JceKEKRecipient
      * @param provider provider to use.
      * @return this recipient.
      */
-    public JceKEKRecipient setProvider(Provider provider)
-    {
+    public JceKEKRecipient setProvider(Provider provider) {
         this.helper = new EnvelopedDataHelper(new ProviderJcaJceExtHelper(provider));
         this.contentHelper = helper;
 
@@ -44,8 +40,7 @@ public abstract class JceKEKRecipient
      * @param providerName the name of the provider to use.
      * @return this recipient.
      */
-    public JceKEKRecipient setProvider(String providerName)
-    {
+    public JceKEKRecipient setProvider(String providerName) {
         this.helper = new EnvelopedDataHelper(new NamedJcaJceExtHelper(providerName));
         this.contentHelper = helper;
 
@@ -58,8 +53,7 @@ public abstract class JceKEKRecipient
      * @param provider the provider to use.
      * @return this recipient.
      */
-    public JceKEKRecipient setContentProvider(Provider provider)
-    {
+    public JceKEKRecipient setContentProvider(Provider provider) {
         this.contentHelper = new EnvelopedDataHelper(new ProviderJcaJceExtHelper(provider));
 
         return this;
@@ -71,8 +65,7 @@ public abstract class JceKEKRecipient
      * @param providerName the name of the provider to use.
      * @return this recipient.
      */
-    public JceKEKRecipient setContentProvider(String providerName)
-    {
+    public JceKEKRecipient setContentProvider(String providerName) {
         this.contentHelper = new EnvelopedDataHelper(new NamedJcaJceExtHelper(providerName));
 
         return this;
@@ -84,34 +77,29 @@ public abstract class JceKEKRecipient
      * This setting will not have any affect if the encryption algorithm in the recipient does not specify a particular key size, or
      * if the unwrapper is a HSM and the byte encoding of the unwrapped secret key is not available.
      * </p>
+     *
      * @param doValidate true if unwrapped key's should be validated against the content encryption algorithm, false otherwise.
      * @return this recipient.
      */
-    public JceKEKRecipient setKeySizeValidation(boolean doValidate)
-    {
+    public JceKEKRecipient setKeySizeValidation(boolean doValidate) {
         this.validateKeySize = doValidate;
 
         return this;
     }
 
     protected Key extractSecretKey(AlgorithmIdentifier keyEncryptionAlgorithm, AlgorithmIdentifier encryptedKeyAlgorithm, byte[] encryptedContentEncryptionKey)
-        throws CMSException
-    {
+            throws CMSException {
         SymmetricKeyUnwrapper unwrapper = helper.createSymmetricUnwrapper(keyEncryptionAlgorithm, recipientKey);
 
-        try
-        {
-            Key key =  helper.getJceKey(encryptedKeyAlgorithm, unwrapper.generateUnwrappedKey(encryptedKeyAlgorithm, encryptedContentEncryptionKey));
+        try {
+            Key key = helper.getJceKey(encryptedKeyAlgorithm, unwrapper.generateUnwrappedKey(encryptedKeyAlgorithm, encryptedContentEncryptionKey));
 
-            if (validateKeySize)
-            {
+            if (validateKeySize) {
                 helper.keySizeCheck(encryptedKeyAlgorithm, key);
             }
 
             return key;
-        }
-        catch (OperatorException e)
-        {
+        } catch (OperatorException e) {
             throw new CMSException("exception unwrapping key: " + e.getMessage(), e);
         }
     }

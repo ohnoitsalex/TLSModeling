@@ -1,13 +1,13 @@
 package org.bouncycastle.mls.TreeKEM;
 
+import org.bouncycastle.mls.TreeSize;
+import org.bouncycastle.mls.codec.MLSInputStream;
+import org.bouncycastle.mls.codec.MLSOutputStream;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Vector;
-
-import org.bouncycastle.mls.TreeSize;
-import org.bouncycastle.mls.codec.MLSInputStream;
-import org.bouncycastle.mls.codec.MLSOutputStream;
 
 public class LeafIndex
     implements MLSInputStream.Readable, MLSOutputStream.Writable

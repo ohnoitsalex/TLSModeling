@@ -25,8 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 class JceCMSKEMKeyWrapper
-    extends KEMKeyWrapper
-{
+        extends KEMKeyWrapper {
     private final KemEncapsulationLengthProvider kemEncLenProvider = new DefaultKemEncapsulationLengthProvider();
     private final AlgorithmIdentifier symWrapAlgorithm;
     private final int kekLength;
@@ -38,8 +37,7 @@ class JceCMSKEMKeyWrapper
     private AlgorithmIdentifier kdfAlgorithm = new AlgorithmIdentifier(X9ObjectIdentifiers.id_kdf_kdf3, new AlgorithmIdentifier(NISTObjectIdentifiers.id_sha256, DERNull.INSTANCE));
     private byte[] encapsulation;
 
-    public JceCMSKEMKeyWrapper(PublicKey publicKey, ASN1ObjectIdentifier symWrapAlg)
-    {
+    public JceCMSKEMKeyWrapper(PublicKey publicKey, ASN1ObjectIdentifier symWrapAlg) {
         super(publicKey instanceof RSAPublicKey ? new AlgorithmIdentifier(ISOIECObjectIdentifiers.id_kem_rsa) : SubjectPublicKeyInfo.getInstance(publicKey.getEncoded()).getAlgorithm());
 
         this.publicKey = publicKey;
@@ -47,29 +45,25 @@ class JceCMSKEMKeyWrapper
         this.kekLength = CMSUtils.getKekSize(symWrapAlg);
     }
 
-    public JceCMSKEMKeyWrapper setProvider(Provider provider)
-    {
+    public JceCMSKEMKeyWrapper setProvider(Provider provider) {
         this.helper = new ProviderJcaJceExtHelper(provider);
 
         return this;
     }
 
-    public JceCMSKEMKeyWrapper setProvider(String providerName)
-    {
+    public JceCMSKEMKeyWrapper setProvider(String providerName) {
         this.helper = new NamedJcaJceExtHelper(providerName);
 
         return this;
     }
 
-    public JceCMSKEMKeyWrapper setKDF(AlgorithmIdentifier kdfAlgorithm)
-    {
+    public JceCMSKEMKeyWrapper setKDF(AlgorithmIdentifier kdfAlgorithm) {
         this.kdfAlgorithm = kdfAlgorithm;
 
         return this;
     }
 
-    public JceCMSKEMKeyWrapper setSecureRandom(SecureRandom random)
-    {
+    public JceCMSKEMKeyWrapper setSecureRandom(SecureRandom random) {
         this.random = random;
 
         return this;
@@ -80,77 +74,64 @@ class JceCMSKEMKeyWrapper
      * the standard lookup table won't work. Use this method to establish a specific mapping from an
      * algorithm identifier to a specific algorithm.
      * <p>
-     *     For example:
+     * For example:
      * <pre>
      *     unwrapper.setAlgorithmMapping(PKCSObjectIdentifiers.rsaEncryption, "RSA");
      * </pre>
-     * @param algorithm  OID of algorithm in recipient.
+     *
+     * @param algorithm     OID of algorithm in recipient.
      * @param algorithmName JCE algorithm name to use.
      * @return the current Wrapper.
      */
-    public JceCMSKEMKeyWrapper setAlgorithmMapping(ASN1ObjectIdentifier algorithm, String algorithmName)
-    {
+    public JceCMSKEMKeyWrapper setAlgorithmMapping(ASN1ObjectIdentifier algorithm, String algorithmName) {
         extraMappings.put(algorithm, algorithmName);
 
         return this;
     }
 
-    public byte[] getEncapsulation()
-    {
+    public byte[] getEncapsulation() {
         return encapsulation;
     }
 
-    public AlgorithmIdentifier getKdfAlgorithmIdentifier()
-    {
+    public AlgorithmIdentifier getKdfAlgorithmIdentifier() {
         return kdfAlgorithm;
     }
 
-    public int getKekLength()
-    {
+    public int getKekLength() {
         return kekLength;
     }
 
-    public AlgorithmIdentifier getWrapAlgorithmIdentifier()
-    {
+    public AlgorithmIdentifier getWrapAlgorithmIdentifier() {
         return symWrapAlgorithm;
     }
 
     public byte[] generateWrappedKey(GenericKey encryptionKey)
-        throws OperatorException
-    {
-        try
-        {
+            throws OperatorException {
+        try {
             byte[] oriInfoEnc = new CMSORIforKEMOtherInfo(symWrapAlgorithm, kekLength).getEncoded();
 
-            if (publicKey instanceof RSAPublicKey)
-            {
+            if (publicKey instanceof RSAPublicKey) {
                 Cipher keyEncryptionCipher = CMSUtils.createAsymmetricWrapper(helper, getAlgorithmIdentifier().getAlgorithm(), new HashMap());
-                      
-                try
-                {
+
+                try {
                     KTSParameterSpec ktsSpec = new KTSParameterSpec.Builder(CMSUtils.getWrapAlgorithmName(symWrapAlgorithm.getAlgorithm()), kekLength * 8, oriInfoEnc).withKdfAlgorithm(kdfAlgorithm).build();
 
                     keyEncryptionCipher.init(Cipher.WRAP_MODE, publicKey, ktsSpec, random);
 
                     byte[] encWithKey = keyEncryptionCipher.wrap(CMSUtils.getJceKey(encryptionKey));
 
-                    int modLength = (((RSAPublicKey)publicKey).getModulus().bitLength() + 7) / 8;
+                    int modLength = (((RSAPublicKey) publicKey).getModulus().bitLength() + 7) / 8;
 
                     encapsulation = Arrays.copyOfRange(encWithKey, 0, modLength);
 
                     return Arrays.copyOfRange(encWithKey, modLength, encWithKey.length);
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     throw new OperatorException("Unable to wrap contents key: " + e.getMessage(), e);
                 }
-            }
-            else
-            {
+            } else {
                 Cipher keyEncryptionCipher = CMSUtils.createAsymmetricWrapper(helper, getAlgorithmIdentifier().getAlgorithm(), new HashMap());
 
-                try
-                {
+                try {
                     KTSParameterSpec ktsSpec = new KTSParameterSpec.Builder(CMSUtils.getWrapAlgorithmName(symWrapAlgorithm.getAlgorithm()), kekLength * 8, oriInfoEnc).withKdfAlgorithm(kdfAlgorithm).build();
 
                     keyEncryptionCipher.init(Cipher.WRAP_MODE, publicKey, ktsSpec, random);
@@ -162,21 +143,16 @@ class JceCMSKEMKeyWrapper
                     encapsulation = Arrays.copyOfRange(encWithKey, 0, encLength);
 
                     return Arrays.copyOfRange(encWithKey, encLength, encWithKey.length);
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     throw new OperatorException("Unable to wrap contents key: " + e.getMessage(), e);
                 }
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new OperatorException("unable to wrap contents key: " + e.getMessage(), e);
         }
     }
 
-    private int getKemEncLength(PublicKey key)
-    {
+    private int getKemEncLength(PublicKey key) {
         return kemEncLenProvider.getEncapsulationLength(SubjectPublicKeyInfo.getInstance(key.getEncoded()).getAlgorithm());
     }
 }

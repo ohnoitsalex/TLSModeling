@@ -3,8 +3,7 @@ package org.bouncycastle.cms;
 import org.bouncycastle.util.Arrays;
 
 public class KEKRecipientId
-    extends RecipientId
-{
+        extends RecipientId {
     private final byte[] keyIdentifier;
 
     /**
@@ -12,48 +11,38 @@ public class KEKRecipientId
      *
      * @param keyIdentifier a subjectKeyId
      */
-    public KEKRecipientId(byte[] keyIdentifier)
-    {
+    public KEKRecipientId(byte[] keyIdentifier) {
         super(kek);
 
         this.keyIdentifier = keyIdentifier;
     }
 
-    public int hashCode()
-    {
+    public int hashCode() {
         return Arrays.hashCode(keyIdentifier);
     }
 
     public boolean equals(
-        Object o)
-    {
-        if (!(o instanceof KEKRecipientId id))
-        {
+            Object o) {
+        if (!(o instanceof KEKRecipientId id)) {
             return false;
         }
 
         return Arrays.areEqual(keyIdentifier, id.keyIdentifier);
     }
 
-    public byte[] getKeyIdentifier()
-    {
+    public byte[] getKeyIdentifier() {
         return Arrays.clone(keyIdentifier);
     }
 
-    public Object clone()
-    {
+    public Object clone() {
         return new KEKRecipientId(keyIdentifier);
     }
 
-    public boolean match(Object obj)
-    {
-        if (obj instanceof byte[])
-        {
-            return Arrays.areEqual(keyIdentifier, (byte[])obj);
-        }
-        else if (obj instanceof KEKRecipientInformation)
-        {
-            return ((KEKRecipientInformation)obj).getRID().equals(this);
+    public boolean match(Object obj) {
+        if (obj instanceof byte[]) {
+            return Arrays.areEqual(keyIdentifier, (byte[]) obj);
+        } else if (obj instanceof KEKRecipientInformation) {
+            return ((KEKRecipientInformation) obj).getRID().equals(this);
         }
 
         return false;

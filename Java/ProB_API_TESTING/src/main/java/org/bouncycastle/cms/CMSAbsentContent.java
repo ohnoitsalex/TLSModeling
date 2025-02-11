@@ -11,39 +11,32 @@ import java.io.OutputStream;
  * a class representing null or absent content.
  */
 public class CMSAbsentContent
-    implements CMSTypedData, CMSReadable
-{
+        implements CMSTypedData, CMSReadable {
     private final ASN1ObjectIdentifier type;
 
-    public CMSAbsentContent()
-    {
+    public CMSAbsentContent() {
         this(CMSObjectIdentifiers.data);
     }
 
     public CMSAbsentContent(
-        ASN1ObjectIdentifier type)
-    {
+            ASN1ObjectIdentifier type) {
         this.type = type;
     }
 
-    public InputStream getInputStream()
-    {
+    public InputStream getInputStream() {
         return null;
     }
 
     public void write(OutputStream zOut)
-        throws IOException, CMSException
-    {
+            throws IOException, CMSException {
         // do nothing
     }
 
-    public Object getContent()
-    {
+    public Object getContent() {
         return null;
     }
 
-    public ASN1ObjectIdentifier getContentType()
-    {
+    public ASN1ObjectIdentifier getContentType() {
         return type;
     }
 }

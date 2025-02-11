@@ -1,10 +1,10 @@
 package org.bouncycastle.its.operator;
 
-import java.io.OutputStream;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.its.ITSCertificate;
+
+import java.io.OutputStream;
 
 public interface ITSContentSigner
 {

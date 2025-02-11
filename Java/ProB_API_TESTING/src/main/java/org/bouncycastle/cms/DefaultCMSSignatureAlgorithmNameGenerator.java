@@ -1,8 +1,5 @@
 package org.bouncycastle.cms;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.bc.BCObjectIdentifiers;
 import org.bouncycastle.asn1.bsi.BSIObjectIdentifiers;
@@ -20,51 +17,45 @@ import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.asn1.x509.X509ObjectIdentifiers;
 import org.bouncycastle.asn1.x9.X9ObjectIdentifiers;
 
-public class DefaultCMSSignatureAlgorithmNameGenerator
-    implements CMSSignatureAlgorithmNameGenerator
-{
-    private final Map encryptionAlgs = new HashMap();
-    private final Map     digestAlgs = new HashMap();
-    private final Map     simpleAlgs = new HashMap();
+import java.util.HashMap;
+import java.util.Map;
 
-    private void addEntries(ASN1ObjectIdentifier alias, String digest, String encryption)
-    {
+public class DefaultCMSSignatureAlgorithmNameGenerator
+        implements CMSSignatureAlgorithmNameGenerator {
+    private final Map encryptionAlgs = new HashMap();
+    private final Map digestAlgs = new HashMap();
+    private final Map simpleAlgs = new HashMap();
+
+    private void addEntries(ASN1ObjectIdentifier alias, String digest, String encryption) {
         addDigestAlg(alias, digest);
         addEncryptionAlg(alias, encryption);
     }
 
-    private void addSimpleAlg(ASN1ObjectIdentifier alias, String algorithmName)
-    {
-        if (simpleAlgs.containsKey(alias))
-        {
+    private void addSimpleAlg(ASN1ObjectIdentifier alias, String algorithmName) {
+        if (simpleAlgs.containsKey(alias)) {
             throw new IllegalStateException("object identifier already present in addSimpleAlg");
         }
-        
+
         simpleAlgs.put(alias, algorithmName);
     }
 
-    private void addDigestAlg(ASN1ObjectIdentifier alias, String algorithmName)
-    {
-        if (digestAlgs.containsKey(alias))
-        {
+    private void addDigestAlg(ASN1ObjectIdentifier alias, String algorithmName) {
+        if (digestAlgs.containsKey(alias)) {
             throw new IllegalStateException("object identifier already present in addDigestAlg");
         }
 
         digestAlgs.put(alias, algorithmName);
     }
 
-    private void addEncryptionAlg(ASN1ObjectIdentifier alias, String algorithmName)
-    {
-        if (encryptionAlgs.containsKey(alias))
-        {
+    private void addEncryptionAlg(ASN1ObjectIdentifier alias, String algorithmName) {
+        if (encryptionAlgs.containsKey(alias)) {
             throw new IllegalStateException("object identifier already present in addEncryptionAlg");
         }
-        
+
         encryptionAlgs.put(alias, algorithmName);
     }
-    
-    public DefaultCMSSignatureAlgorithmNameGenerator()
-    {
+
+    public DefaultCMSSignatureAlgorithmNameGenerator() {
         addEntries(NISTObjectIdentifiers.dsa_with_sha224, "SHA224", "DSA");
         addEntries(NISTObjectIdentifiers.dsa_with_sha256, "SHA256", "DSA");
         addEntries(NISTObjectIdentifiers.dsa_with_sha384, "SHA384", "DSA");
@@ -182,11 +173,11 @@ public class DefaultCMSSignatureAlgorithmNameGenerator
         addDigestAlg(TeleTrusTObjectIdentifiers.ripemd128, "RIPEMD128");
         addDigestAlg(TeleTrusTObjectIdentifiers.ripemd160, "RIPEMD160");
         addDigestAlg(TeleTrusTObjectIdentifiers.ripemd256, "RIPEMD256");
-        addDigestAlg(CryptoProObjectIdentifiers.gostR3411,  "GOST3411");
-        addDigestAlg(new ASN1ObjectIdentifier("1.3.6.1.4.1.5849.1.2.1"),  "GOST3411");
-        addDigestAlg(RosstandartObjectIdentifiers.id_tc26_gost_3411_12_256,  "GOST3411-2012-256");
-        addDigestAlg(RosstandartObjectIdentifiers.id_tc26_gost_3411_12_512,  "GOST3411-2012-512");
-        addDigestAlg(GMObjectIdentifiers.sm3,  "SM3");
+        addDigestAlg(CryptoProObjectIdentifiers.gostR3411, "GOST3411");
+        addDigestAlg(new ASN1ObjectIdentifier("1.3.6.1.4.1.5849.1.2.1"), "GOST3411");
+        addDigestAlg(RosstandartObjectIdentifiers.id_tc26_gost_3411_12_256, "GOST3411-2012-256");
+        addDigestAlg(RosstandartObjectIdentifiers.id_tc26_gost_3411_12_512, "GOST3411-2012-512");
+        addDigestAlg(GMObjectIdentifiers.sm3, "SM3");
 
         addSimpleAlg(EdECObjectIdentifiers.id_Ed25519, "Ed25519");
         addSimpleAlg(EdECObjectIdentifiers.id_Ed448, "Ed448");
@@ -255,12 +246,10 @@ public class DefaultCMSSignatureAlgorithmNameGenerator
      * representations rather than the algorithm identifier (if possible).
      */
     private String getDigestAlgName(
-        ASN1ObjectIdentifier digestAlgOID)
-    {
-        String algName = (String)digestAlgs.get(digestAlgOID);
+            ASN1ObjectIdentifier digestAlgOID) {
+        String algName = (String) digestAlgs.get(digestAlgOID);
 
-        if (algName != null)
-        {
+        if (algName != null) {
             return algName;
         }
 
@@ -273,12 +262,10 @@ public class DefaultCMSSignatureAlgorithmNameGenerator
      * possible).
      */
     private String getEncryptionAlgName(
-        ASN1ObjectIdentifier encryptionAlgOID)
-    {
-        String algName = (String)encryptionAlgs.get(encryptionAlgOID);
+            ASN1ObjectIdentifier encryptionAlgOID) {
+        String algName = (String) encryptionAlgs.get(encryptionAlgOID);
 
-        if (algName != null)
-        {
+        if (algName != null) {
             return algName;
         }
 
@@ -289,11 +276,10 @@ public class DefaultCMSSignatureAlgorithmNameGenerator
      * Set the mapping for the encryption algorithm used in association with a SignedData generation
      * or interpretation.
      *
-     * @param oid object identifier to map.
+     * @param oid           object identifier to map.
      * @param algorithmName algorithm name to use.
      */
-    protected void setSigningEncryptionAlgorithmMapping(ASN1ObjectIdentifier oid, String algorithmName)
-    {
+    protected void setSigningEncryptionAlgorithmMapping(ASN1ObjectIdentifier oid, String algorithmName) {
         encryptionAlgs.put(oid, algorithmName);
     }
 
@@ -301,33 +287,28 @@ public class DefaultCMSSignatureAlgorithmNameGenerator
      * Set the mapping for the digest algorithm to use in conjunction with a SignedData generation
      * or interpretation.
      *
-     * @param oid object identifier to map.
+     * @param oid           object identifier to map.
      * @param algorithmName algorithm name to use.
      */
-    protected void setSigningDigestAlgorithmMapping(ASN1ObjectIdentifier oid, String algorithmName)
-    {
+    protected void setSigningDigestAlgorithmMapping(ASN1ObjectIdentifier oid, String algorithmName) {
         digestAlgs.put(oid, algorithmName);
     }
 
-    public String getSignatureName(AlgorithmIdentifier digestAlg, AlgorithmIdentifier encryptionAlg)
-    {
+    public String getSignatureName(AlgorithmIdentifier digestAlg, AlgorithmIdentifier encryptionAlg) {
         ASN1ObjectIdentifier encryptionAlgOID = encryptionAlg.getAlgorithm();
 
-        String simpleAlgName = (String)simpleAlgs.get(encryptionAlgOID);
-        if (simpleAlgName != null)
-        {
+        String simpleAlgName = (String) simpleAlgs.get(encryptionAlgOID);
+        if (simpleAlgName != null) {
             return simpleAlgName;
         }
 
-        if (encryptionAlgOID.on(BCObjectIdentifiers.sphincsPlus))
-        {
+        if (encryptionAlgOID.on(BCObjectIdentifiers.sphincsPlus)) {
             return "SPHINCSPlus";
         }
 
         String digestName = getDigestAlgName(encryptionAlgOID);
 
-        if (!digestName.equals(encryptionAlgOID.getId()))
-        {
+        if (!digestName.equals(encryptionAlgOID.getId())) {
             return digestName + "with" + getEncryptionAlgName(encryptionAlgOID);
         }
 

@@ -1,9 +1,9 @@
 package org.bouncycastle.mls.client;
 
-import java.io.IOException;
-
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
+
+import java.io.IOException;
 
 public class MLSServer
 {

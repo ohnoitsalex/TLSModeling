@@ -1,10 +1,10 @@
 package org.bouncycastle.gpg.keybox.bc;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.bouncycastle.gpg.keybox.KeyBox;
 import org.bouncycastle.openpgp.operator.bc.BcKeyFingerprintCalculator;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class BcKeyBox
     extends KeyBox

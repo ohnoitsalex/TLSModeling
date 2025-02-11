@@ -8,18 +8,13 @@ import org.bouncycastle.util.Pack;
 import java.io.IOException;
 
 class RFC5753KeyMaterialGenerator
-    implements KeyMaterialGenerator
-{
-    public byte[] generateKDFMaterial(AlgorithmIdentifier keyAlgorithm, int keySize, byte[] userKeyMaterialParameters)
-    {
+        implements KeyMaterialGenerator {
+    public byte[] generateKDFMaterial(AlgorithmIdentifier keyAlgorithm, int keySize, byte[] userKeyMaterialParameters) {
         ECCCMSSharedInfo eccInfo = new ECCCMSSharedInfo(keyAlgorithm, userKeyMaterialParameters, Pack.intToBigEndian(keySize));
 
-        try
-        {
+        try {
             return eccInfo.getEncoded(ASN1Encoding.DER);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new IllegalStateException("Unable to create KDF material: " + e);
         }
     }

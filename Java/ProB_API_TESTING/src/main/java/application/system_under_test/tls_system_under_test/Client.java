@@ -1,9 +1,9 @@
 package application.system_under_test.tls_system_under_test;
 
+import application.config.Config;
 import org.bouncycastle.tls.*;
 import org.bouncycastle.tls.crypto.impl.bc.BcTlsCrypto;
 
-import javax.net.ssl.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,8 +12,6 @@ import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,7 +32,7 @@ public class Client {
     public static void main(String[] args) throws IOException {
 
         try {
-            Map<String, String> clientHelloInfo = parseYaml("src/main/resources/data/ModelClientHello.yaml");
+            Map<String, String> clientHelloInfo = parseYaml(Config.MODELCLIENTHELLOYAML);
 
             ProtocolVersion[] tls_versions = Arrays.stream(getExtensionData(clientHelloInfo, "supported_versions"))
                             .map(Client::getProtocolVersionFromString)

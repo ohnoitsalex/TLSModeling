@@ -8,8 +8,7 @@ import org.bouncycastle.util.io.Streams;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-public abstract class RecipientInformation
-{
+public abstract class RecipientInformation {
     protected RecipientId rid;
     protected AlgorithmIdentifier keyEncAlg;
     protected AlgorithmIdentifier messageAlgorithm;
@@ -18,17 +17,15 @@ public abstract class RecipientInformation
     private RecipientOperator operator;
 
     RecipientInformation(
-        AlgorithmIdentifier keyEncAlg,
-        AlgorithmIdentifier messageAlgorithm,
-        CMSSecureReadable secureReadable)
-    {
+            AlgorithmIdentifier keyEncAlg,
+            AlgorithmIdentifier messageAlgorithm,
+            CMSSecureReadable secureReadable) {
         this.keyEncAlg = keyEncAlg;
         this.messageAlgorithm = messageAlgorithm;
         this.secureReadable = secureReadable;
     }
 
-    public RecipientId getRID()
-    {
+    public RecipientId getRID() {
         return rid;
     }
 
@@ -37,8 +34,7 @@ public abstract class RecipientInformation
      *
      * @return AlgorithmIdentifier representing the key encryption algorithm.
      */
-    public AlgorithmIdentifier getKeyEncryptionAlgorithm()
-    {
+    public AlgorithmIdentifier getKeyEncryptionAlgorithm() {
         return keyEncAlg;
     }
 
@@ -47,8 +43,7 @@ public abstract class RecipientInformation
      *
      * @return OID for key encryption algorithm.
      */
-    public String getKeyEncryptionAlgOID()
-    {
+    public String getKeyEncryptionAlgOID() {
         return keyEncAlg.getAlgorithm().getId();
     }
 
@@ -58,14 +53,10 @@ public abstract class RecipientInformation
      *
      * @return ASN.1 encoding of key encryption algorithm parameters.
      */
-    public byte[] getKeyEncryptionAlgParams()
-    {
-        try
-        {
+    public byte[] getKeyEncryptionAlgParams() {
+        try {
             return CMSUtils.encodeObj(keyEncAlg.getParameters());
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new RuntimeException("exception getting encryption parameters " + e);
         }
     }
@@ -76,11 +67,9 @@ public abstract class RecipientInformation
      *
      * @return byte array containing the digest.
      */
-    public byte[] getContentDigest()
-    {
-        if (secureReadable instanceof CMSEnvelopedHelper.CMSDigestAuthenticatedSecureReadable)
-        {
-            return ((CMSEnvelopedHelper.CMSDigestAuthenticatedSecureReadable)secureReadable).getDigest();
+    public byte[] getContentDigest() {
+        if (secureReadable instanceof CMSEnvelopedHelper.CMSDigestAuthenticatedSecureReadable) {
+            return ((CMSEnvelopedHelper.CMSDigestAuthenticatedSecureReadable) secureReadable).getDigest();
         }
         return null;
     }
@@ -91,18 +80,12 @@ public abstract class RecipientInformation
      *
      * @return byte array containing the mac.
      */
-    public byte[] getMac()
-    {
-        if (resultMac == null)
-        {
-            if (operator.isMacBased() && secureReadable.hasAdditionalData())
-            {
-                try
-                {
+    public byte[] getMac() {
+        if (resultMac == null) {
+            if (operator.isMacBased() && secureReadable.hasAdditionalData()) {
+                try {
                     Streams.drain(operator.getInputStream(new ByteArrayInputStream(secureReadable.getAuthAttrSet().getEncoded(ASN1Encoding.DER))));
-                }
-                catch (IOException e)
-                {
+                } catch (IOException e) {
                     throw new IllegalStateException("unable to drain input: " + e.getMessage());
                 }
             }
@@ -120,15 +103,11 @@ public abstract class RecipientInformation
      * @throws CMSException if the content-encryption/MAC key cannot be recovered.
      */
     public byte[] getContent(
-        Recipient recipient)
-        throws CMSException
-    {
-        try
-        {
+            Recipient recipient)
+            throws CMSException {
+        try {
             return CMSUtils.streamToByteArray(getContentStream(recipient).getContentStream());
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new CMSException("unable to parse internal stream: " + e.getMessage(), e);
         }
     }
@@ -138,8 +117,7 @@ public abstract class RecipientInformation
      *
      * @return the content type OID.
      */
-    public ASN1ObjectIdentifier getContentType()
-    {
+    public ASN1ObjectIdentifier getContentType() {
         return secureReadable.getContentType();
     }
 
@@ -152,16 +130,12 @@ public abstract class RecipientInformation
      * @throws CMSException if the content-encryption/MAC key cannot be recovered.
      */
     public CMSTypedStream getContentStream(Recipient recipient)
-        throws CMSException, IOException
-    {
+            throws CMSException, IOException {
         operator = getRecipientOperator(recipient);
 
-        if (operator.isAEADBased())
-        {
-            ((CMSSecureReadableWithAAD)secureReadable).setAADStream(operator.getAADStream());
-        }
-        else if (secureReadable.hasAdditionalData())
-        {
+        if (operator.isAEADBased()) {
+            ((CMSSecureReadableWithAAD) secureReadable).setAADStream(operator.getAADStream());
+        } else if (secureReadable.hasAdditionalData()) {
             return new CMSTypedStream(secureReadable.getContentType(), secureReadable.getInputStream());
         }
 
@@ -169,5 +143,5 @@ public abstract class RecipientInformation
     }
 
     protected abstract RecipientOperator getRecipientOperator(Recipient recipient)
-        throws CMSException, IOException;
+            throws CMSException, IOException;
 }

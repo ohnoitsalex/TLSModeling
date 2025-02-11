@@ -8,15 +8,12 @@ import java.io.OutputStream;
 import java.util.zip.DeflaterOutputStream;
 
 public class ZlibCompressor
-    implements OutputCompressor
-{
-    public AlgorithmIdentifier getAlgorithmIdentifier()
-    {
+        implements OutputCompressor {
+    public AlgorithmIdentifier getAlgorithmIdentifier() {
         return new AlgorithmIdentifier(CMSObjectIdentifiers.zlibCompress);
     }
 
-    public OutputStream getOutputStream(OutputStream comOut)
-    {
+    public OutputStream getOutputStream(OutputStream comOut) {
         return new DeflaterOutputStream(comOut);
     }
 }

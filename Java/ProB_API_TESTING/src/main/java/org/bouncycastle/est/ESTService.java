@@ -1,19 +1,5 @@
 package org.bouncycastle.est;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.regex.Pattern;
-
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.DERPrintableString;
@@ -25,19 +11,19 @@ import org.bouncycastle.cert.X509CRLHolder;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cmc.CMCException;
 import org.bouncycastle.cmc.SimplePKIResponse;
-import org.bouncycastle.mime.BasicMimeParser;
-import org.bouncycastle.mime.ConstantMimeContext;
-import org.bouncycastle.mime.Headers;
-import org.bouncycastle.mime.MimeContext;
-import org.bouncycastle.mime.MimeParser;
-import org.bouncycastle.mime.MimeParserContext;
-import org.bouncycastle.mime.MimeParserListener;
+import org.bouncycastle.mime.*;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.bouncycastle.pkcs.PKCS10CertificationRequestBuilder;
 import org.bouncycastle.util.Selector;
 import org.bouncycastle.util.Store;
 import org.bouncycastle.util.encoders.Base64;
+
+import java.io.*;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * ESTService provides unified access to an EST server which is defined as implementing

@@ -12,36 +12,27 @@ import org.bouncycastle.operator.InputDecryptor;
 import java.io.InputStream;
 
 public class BcPasswordEnvelopedRecipient
-    extends BcPasswordRecipient
-{
-    public BcPasswordEnvelopedRecipient(char[] password)
-    {
+        extends BcPasswordRecipient {
+    public BcPasswordEnvelopedRecipient(char[] password) {
         super(password);
     }
 
     public RecipientOperator getRecipientOperator(AlgorithmIdentifier keyEncryptionAlgorithm, final AlgorithmIdentifier contentEncryptionAlgorithm, byte[] derivedKey, byte[] encryptedContentEncryptionKey)
-        throws CMSException
-    {
+            throws CMSException {
         KeyParameter secretKey = extractSecretKey(keyEncryptionAlgorithm, contentEncryptionAlgorithm, derivedKey, encryptedContentEncryptionKey);
 
         final Object dataCipher = EnvelopedDataHelper.createContentCipher(false, secretKey, contentEncryptionAlgorithm);
 
-        return new RecipientOperator(new InputDecryptor()
-        {
-            public AlgorithmIdentifier getAlgorithmIdentifier()
-            {
+        return new RecipientOperator(new InputDecryptor() {
+            public AlgorithmIdentifier getAlgorithmIdentifier() {
                 return contentEncryptionAlgorithm;
             }
 
-            public InputStream getInputStream(InputStream dataOut)
-            {
-                if (dataCipher instanceof BufferedBlockCipher)
-                {
-                    return new CipherInputStream(dataOut, (BufferedBlockCipher)dataCipher);
-                }
-                else
-                {
-                    return new CipherInputStream(dataOut, (StreamCipher)dataCipher);
+            public InputStream getInputStream(InputStream dataOut) {
+                if (dataCipher instanceof BufferedBlockCipher) {
+                    return new CipherInputStream(dataOut, (BufferedBlockCipher) dataCipher);
+                } else {
+                    return new CipherInputStream(dataOut, (StreamCipher) dataCipher);
                 }
             }
         });

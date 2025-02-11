@@ -1,15 +1,15 @@
 package org.bouncycastle.mls.codec;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.bouncycastle.mls.KeyGeneration;
 import org.bouncycastle.mls.KeyScheduleEpoch;
 import org.bouncycastle.mls.crypto.MlsCipherSuite;
 import org.bouncycastle.mls.crypto.Secret;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Welcome
     implements MLSInputStream.Readable, MLSOutputStream.Writable

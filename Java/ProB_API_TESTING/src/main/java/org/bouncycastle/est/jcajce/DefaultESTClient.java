@@ -1,6 +1,9 @@
 package org.bouncycastle.est.jcajce;
 
 
+import org.bouncycastle.est.*;
+import org.bouncycastle.util.Properties;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
@@ -8,15 +11,6 @@ import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
-import org.bouncycastle.est.ESTClient;
-import org.bouncycastle.est.ESTClientSourceProvider;
-import org.bouncycastle.est.ESTException;
-import org.bouncycastle.est.ESTRequest;
-import org.bouncycastle.est.ESTRequestBuilder;
-import org.bouncycastle.est.ESTResponse;
-import org.bouncycastle.est.Source;
-import org.bouncycastle.util.Properties;
 
 class DefaultESTClient
     implements ESTClient

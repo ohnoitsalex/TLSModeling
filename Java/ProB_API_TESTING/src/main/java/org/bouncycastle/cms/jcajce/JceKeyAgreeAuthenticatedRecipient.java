@@ -16,39 +16,31 @@ import java.security.Key;
 import java.security.PrivateKey;
 
 public class JceKeyAgreeAuthenticatedRecipient
-    extends JceKeyAgreeRecipient
-{
-    public JceKeyAgreeAuthenticatedRecipient(PrivateKey recipientKey)
-    {
+        extends JceKeyAgreeRecipient {
+    public JceKeyAgreeAuthenticatedRecipient(PrivateKey recipientKey) {
         super(recipientKey);
     }
 
     public RecipientOperator getRecipientOperator(AlgorithmIdentifier keyEncryptionAlgorithm, final AlgorithmIdentifier contentMacAlgorithm, SubjectPublicKeyInfo senderPublicKey, ASN1OctetString userKeyingMaterial, byte[] encryptedContentKey)
-        throws CMSException
-    {
+            throws CMSException {
         final Key secretKey = extractSecretKey(keyEncryptionAlgorithm, contentMacAlgorithm, senderPublicKey, userKeyingMaterial, encryptedContentKey);
 
         final Mac dataMac = contentHelper.createContentMac(secretKey, contentMacAlgorithm);
 
-        return new RecipientOperator(new MacCalculator()
-        {
-            public AlgorithmIdentifier getAlgorithmIdentifier()
-            {
+        return new RecipientOperator(new MacCalculator() {
+            public AlgorithmIdentifier getAlgorithmIdentifier() {
                 return contentMacAlgorithm;
             }
 
-            public GenericKey getKey()
-            {
+            public GenericKey getKey() {
                 return new JceGenericKey(contentMacAlgorithm, secretKey);
             }
 
-            public OutputStream getOutputStream()
-            {
+            public OutputStream getOutputStream() {
                 return new MacOutputStream(dataMac);
             }
 
-            public byte[] getMac()
-            {
+            public byte[] getMac() {
                 return dataMac.doFinal();
             }
         });

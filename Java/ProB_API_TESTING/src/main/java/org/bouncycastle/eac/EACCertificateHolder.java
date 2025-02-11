@@ -1,13 +1,13 @@
 package org.bouncycastle.eac;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 import org.bouncycastle.asn1.ASN1Encoding;
 import org.bouncycastle.asn1.ASN1ParsingException;
 import org.bouncycastle.asn1.eac.CVCertificate;
 import org.bouncycastle.asn1.eac.PublicKeyDataObject;
 import org.bouncycastle.eac.operator.EACSignatureVerifier;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class EACCertificateHolder
 {

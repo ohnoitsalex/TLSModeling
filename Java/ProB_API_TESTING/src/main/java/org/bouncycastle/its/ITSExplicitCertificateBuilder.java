@@ -1,8 +1,5 @@
 package org.bouncycastle.its;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.nist.NISTObjectIdentifiers;
 import org.bouncycastle.asn1.sec.SECObjectIdentifiers;
@@ -10,18 +7,16 @@ import org.bouncycastle.asn1.teletrust.TeleTrusTObjectIdentifiers;
 import org.bouncycastle.its.operator.ECDSAEncoder;
 import org.bouncycastle.its.operator.ITSContentSigner;
 import org.bouncycastle.oer.OEREncoder;
-import org.bouncycastle.oer.its.ieee1609dot2.CertificateBase;
-import org.bouncycastle.oer.its.ieee1609dot2.CertificateId;
-import org.bouncycastle.oer.its.ieee1609dot2.CertificateType;
+import org.bouncycastle.oer.its.ieee1609dot2.*;
 import org.bouncycastle.oer.its.ieee1609dot2.basetypes.HashAlgorithm;
 import org.bouncycastle.oer.its.ieee1609dot2.basetypes.HashedId8;
-import org.bouncycastle.oer.its.ieee1609dot2.IssuerIdentifier;
 import org.bouncycastle.oer.its.ieee1609dot2.basetypes.PublicVerificationKey;
 import org.bouncycastle.oer.its.ieee1609dot2.basetypes.Signature;
-import org.bouncycastle.oer.its.ieee1609dot2.ToBeSignedCertificate;
-import org.bouncycastle.oer.its.ieee1609dot2.VerificationKeyIndicator;
 import org.bouncycastle.oer.its.template.ieee1609dot2.IEEE1609dot2;
 import org.bouncycastle.util.Arrays;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class ITSExplicitCertificateBuilder
     extends ITSCertificateBuilder

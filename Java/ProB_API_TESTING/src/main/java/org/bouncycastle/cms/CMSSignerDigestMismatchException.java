@@ -1,11 +1,9 @@
 package org.bouncycastle.cms;
 
 public class CMSSignerDigestMismatchException
-    extends CMSException
-{
+        extends CMSException {
     public CMSSignerDigestMismatchException(
-        String msg)
-    {
+            String msg) {
         super(msg);
     }
 }

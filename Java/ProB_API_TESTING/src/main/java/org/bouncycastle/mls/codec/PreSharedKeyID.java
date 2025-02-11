@@ -1,9 +1,9 @@
 package org.bouncycastle.mls.codec;
 
+import org.bouncycastle.mls.crypto.Secret;
+
 import java.io.IOException;
 import java.util.Arrays;
-
-import org.bouncycastle.mls.crypto.Secret;
 
 public class PreSharedKeyID
     implements MLSInputStream.Readable, MLSOutputStream.Writable

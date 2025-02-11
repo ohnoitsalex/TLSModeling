@@ -1,0 +1,11 @@
+clientHelloInformation:
+  random: 00 9a 3b eb c1 7b a1 27 32 d0 a5 36 b2 10 ec 3f a5 7d 26 79 e6 f6 4f da
+    66 a8 56 fa e7 8c c2 37
+  pre_shared_key: '97 f7 11 ff 27 24 ea 70 df 41 80 44 80 90 b4 33 d2 a7 5a 1a c2
+    ce 0b 63 e2 91 c0 3b 5f a5 93 78 '
+  legacy_version: x0303
+  supported_versions: '{TLS_1_3}'
+  legacy_compression_methods: '0'
+  supported_groups: '{x25519}'
+  signature_algorithms: '{rsa_pss_rsae_sha512}'
+  cipher_suites: '{TLS_AES_128_GCM_SHA256, TLS_EMPTY_RENEGOTIATION_INFO_SCSV}'

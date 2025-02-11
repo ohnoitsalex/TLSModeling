@@ -6,10 +6,8 @@ import org.bouncycastle.cert.selector.X509CertificateHolderSelector;
 import java.math.BigInteger;
 
 public class KEMRecipientId
-    extends PKIXRecipientId
-{
-    private KEMRecipientId(X509CertificateHolderSelector baseSelector)
-    {
+        extends PKIXRecipientId {
+    private KEMRecipientId(X509CertificateHolderSelector baseSelector) {
         super(kem, baseSelector);
     }
 
@@ -18,8 +16,7 @@ public class KEMRecipientId
      *
      * @param subjectKeyId a subjectKeyId
      */
-    public KEMRecipientId(byte[] subjectKeyId)
-    {
+    public KEMRecipientId(byte[] subjectKeyId) {
         super(kem, null, null, subjectKeyId);
     }
 
@@ -27,11 +24,10 @@ public class KEMRecipientId
      * Construct a key trans recipient ID based on the issuer and serial number of the recipient's associated
      * certificate.
      *
-     * @param issuer the issuer of the recipient's associated certificate.
+     * @param issuer       the issuer of the recipient's associated certificate.
      * @param serialNumber the serial number of the recipient's associated certificate.
      */
-    public KEMRecipientId(X500Name issuer, BigInteger serialNumber)
-    {
+    public KEMRecipientId(X500Name issuer, BigInteger serialNumber) {
         super(kem, issuer, serialNumber, null);
     }
 
@@ -39,25 +35,21 @@ public class KEMRecipientId
      * Construct a key trans recipient ID based on the issuer and serial number of the recipient's associated
      * certificate.
      *
-     * @param issuer the issuer of the recipient's associated certificate.
+     * @param issuer       the issuer of the recipient's associated certificate.
      * @param serialNumber the serial number of the recipient's associated certificate.
      * @param subjectKeyId the subject key identifier to use to match the recipients associated certificate.
      */
-    public KEMRecipientId(X500Name issuer, BigInteger serialNumber, byte[] subjectKeyId)
-    {
+    public KEMRecipientId(X500Name issuer, BigInteger serialNumber, byte[] subjectKeyId) {
         super(kem, issuer, serialNumber, subjectKeyId);
     }
 
-    public Object clone()
-    {
+    public Object clone() {
         return new KEMRecipientId(this.baseSelector);
     }
 
-    public boolean match(Object obj)
-    {
-        if (obj instanceof KEMRecipientInformation)
-        {
-            return ((KEMRecipientInformation)obj).getRID().equals(this);
+    public boolean match(Object obj) {
+        if (obj instanceof KEMRecipientInformation) {
+            return ((KEMRecipientInformation) obj).getRID().equals(this);
         }
 
         return super.match(obj);

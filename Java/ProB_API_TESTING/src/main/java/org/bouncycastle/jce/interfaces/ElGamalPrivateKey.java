@@ -1,8 +1,7 @@
 package org.bouncycastle.jce.interfaces;
 
-import java.math.BigInteger;
-
 import javax.crypto.interfaces.DHPrivateKey;
+import java.math.BigInteger;
 
 public interface ElGamalPrivateKey
     extends ElGamalKey, DHPrivateKey
