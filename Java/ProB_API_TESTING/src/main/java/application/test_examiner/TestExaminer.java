@@ -45,9 +45,9 @@ public class TestExaminer {
 
     }
 
-    public void executeModelOperation() {
-        this.modelLoader.executeSpecificTrace();
-    }
+//    public void executeModelOperation() {
+//        this.modelLoader.executeSpecificTrace();
+//    }
 
     public void testServerHello(){
         this.modelLoader.generateClientAndServerHello();

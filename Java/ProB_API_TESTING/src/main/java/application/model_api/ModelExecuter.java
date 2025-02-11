@@ -184,7 +184,8 @@ public class ModelExecuter {
                 clientHelloInformation.put("supported_versions",transition.getParameterValues().get(1));
                 clientHelloInformation.put("legacy_compression_methods",transition.getParameterValues().get(2));
                 clientHelloInformation.put("pre_shared_key", transition.getParameterValues().get(3));
-                clientHelloInformation.put("signature_algorithms", transition.getParameterValues().get(4));
+                //clientHelloInformation.put("signature_algorithms", transition.getParameterValues().get(4));
+                clientHelloInformation.put("signature_algorithms", "{rsa_pss_rsae_sha512}");
                 clientHelloInformation.put("supported_groups",transition.getParameterValues().get(5));
                 clientHelloInformation.put("cipher_suites",transition.getParameterValues().get(6));
                 tlsClientInformationHolder.setClientHelloInformation(clientHelloInformation);
