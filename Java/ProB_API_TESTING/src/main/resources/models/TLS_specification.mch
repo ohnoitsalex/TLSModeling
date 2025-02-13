@@ -84,14 +84,6 @@ SETS
 	TLS_AES_128_CCM_8_SHA256};
 
     SIGNATURE_ALGORITHMS = {
-    	/* RSASSA-PKCS1-v1_5 algorithms */
-    	rsa_pkcs1_sha25,
-    	rsa_pkcs1_sha384,
-    	rsa_pkcs1_sha512,
-    	/* ECDSA algorithms */
-    	ecdsa_secp256r1_sha256,
-    	ecdsa_secp384r1_sha384,
-    	ecdsa_secp521r1_sha512,
     	/* RSASSA-PSS algorithms with public key OID rsaEncryption */
     	rsa_pss_rsae_sha256,
     	rsa_pss_rsae_sha384,
@@ -103,9 +95,6 @@ SETS
     	rsa_pss_pss_sha256,
     	rsa_pss_pss_sha384,
     	rsa_pss_pss_sha512,
-    	/* Legacy algorithms */
-    	rsa_pkcs1_sha1,
-    	ecdsa_sha1,
     	/* Reserved Code Points */
     	private_use};
 

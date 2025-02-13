@@ -1,6 +1,5 @@
 package application.model_api;
 
-import application.config.Config;
 import application.information_handler.InformationConvertertoAbstract;
 import application.information_holder.tls_information_holder.TLSClientInformationHolder;
 import application.information_holder.tls_information_holder.TLSServerInformationHolder;
@@ -27,8 +26,8 @@ public class ModelExecuter {
             "{TLS_1_3}",
             "0",
             "{}",
-            "{rsa_pkcs1_sha25}",
-            "{X25519}",
+            "{ed25519}",
+            "{X448}",
             "{TLS_AES_128_GCM_SHA256}"
     );
 
@@ -37,8 +36,8 @@ public class ModelExecuter {
             "supported_versions={TLS_1_3}",
             "legacy_compression_methods=0",
             "pre_shared_key={}",
-            "signature_algorithms={rsa_pkcs1_sha25}",
-            "supported_groups={X25519}",
+            "signature_algorithms={ed25519}",
+            "supported_groups={X448}",
             "cipher_suites={TLS_AES_128_GCM_SHA256}"
     );
 
@@ -65,7 +64,7 @@ public class ModelExecuter {
     );
 
     private final List<String> paramsSendEncryptedExtensions = Arrays.asList(
-            "rsa_pkcs1_sha25",
+            "rsa_pss_rsae_sha256",
             "X25519"
     );
 
@@ -174,23 +173,24 @@ public class ModelExecuter {
         }
         while (trace.canGoForward()) {
             trace = trace.forward();
+            //System.out.println("Current State = "+trace.getCurrent().toString());
             if (trace.getCurrent().toString() == "SendClientHello"){
                 System.out.println("Current Transition: SendClientHello");
                 Transition transition = trace.getCurrentTransition();
                 tlsClientInformationHolder = new TLSClientInformationHolder();
+                //System.out.println(transition.getName().toString());
                 clientHelloInformation.put("random", "NOT SUPPORTED IN MODEL ");
                 clientHelloInformation.put("legacy_version", String.valueOf(transition.getParameterValues().get(0)));
                 clientHelloInformation.put("supported_versions",transition.getParameterValues().get(1));
                 clientHelloInformation.put("legacy_compression_methods",transition.getParameterValues().get(2));
                 clientHelloInformation.put("pre_shared_key", transition.getParameterValues().get(3));
-                //clientHelloInformation.put("signature_algorithms", transition.getParameterValues().get(4));
-                clientHelloInformation.put("signature_algorithms", "{rsa_pss_rsae_sha512}");
+                clientHelloInformation.put("signature_algorithms", transition.getParameterValues().get(4));
                 clientHelloInformation.put("supported_groups",transition.getParameterValues().get(5));
                 clientHelloInformation.put("cipher_suites",transition.getParameterValues().get(6));
                 tlsClientInformationHolder.setClientHelloInformation(clientHelloInformation);
 
-                InformationConvertertoAbstract.serializeToYAML(tlsClientInformationHolder, Config.MODELCLIENTHELLO);
-                InformationConvertertoAbstract.removeGlobalTagsYaml(Config.MODELCLIENTHELLOYAML);
+                InformationConvertertoAbstract.serializeToYAML(tlsClientInformationHolder, "src/main/resources/data/ModelClientHello");
+                InformationConvertertoAbstract.removeGlobalTagsYaml("src/main/resources/data/ModelClientHello.yaml");
             }
             if (trace.getCurrent().toString() == "SendServerHello"){
                 System.out.println("SendServerHello");
@@ -198,6 +198,7 @@ public class ModelExecuter {
                 System.out.println("Current Transition: SendClientHello");
                 Transition transition = trace.getCurrentTransition();
                 tlsServerInformationHolder = new TLSServerInformationHolder();
+                //System.out.println(transition.getName().toString());
                 serverHelloInformation.put("random", "NOT SUPPORTED IN MODEL ");
                 serverHelloInformation.put("legacy_version", transition.getParameterValues().get(0));
                 serverHelloInformation.put("supported_versions",transition.getParameterValues().get(3));
@@ -209,9 +210,12 @@ public class ModelExecuter {
                 tlsServerInformationHolder.setServerHelloInformation(serverHelloInformation);
 
                 //InformationConvertertoAbstract.configureYAML();
-                InformationConvertertoAbstract.serializeToYAML(tlsServerInformationHolder, Config.MODELSERVERHELLO);
-                InformationConvertertoAbstract.removeGlobalTagsYaml(Config.MODELSERVERHELLOYAML);
+                InformationConvertertoAbstract.serializeToYAML(tlsServerInformationHolder, "src/main/resources/data/ModelServerHello");
+                InformationConvertertoAbstract.removeGlobalTagsYaml("src/main/resources/data/ModelServerHello.yaml");
             }
+
+            //System.out.println("Transition param values:" + trace.getCurrentState().getOutTransitions().toString());
+
         }
     }
 
