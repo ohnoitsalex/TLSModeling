@@ -1,9 +1,9 @@
 package org.bouncycastle.mls.TreeKEM;
 
-import java.io.IOException;
-
 import org.bouncycastle.mls.codec.MLSInputStream;
 import org.bouncycastle.mls.codec.MLSOutputStream;
+
+import java.io.IOException;
 
 public enum LeafNodeSource
     implements MLSInputStream.Readable, MLSOutputStream.Writable

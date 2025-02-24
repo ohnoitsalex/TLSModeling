@@ -2,12 +2,7 @@ package org.bouncycastle.its;
 
 
 import org.bouncycastle.its.operator.ETSIDataDecryptor;
-import org.bouncycastle.oer.its.ieee1609dot2.AesCcmCiphertext;
-import org.bouncycastle.oer.its.ieee1609dot2.EncryptedData;
-import org.bouncycastle.oer.its.ieee1609dot2.EncryptedDataEncryptionKey;
-import org.bouncycastle.oer.its.ieee1609dot2.PKRecipientInfo;
-import org.bouncycastle.oer.its.ieee1609dot2.RecipientInfo;
-import org.bouncycastle.oer.its.ieee1609dot2.SymmetricCiphertext;
+import org.bouncycastle.oer.its.ieee1609dot2.*;
 import org.bouncycastle.oer.its.ieee1609dot2.basetypes.EccP256CurvePoint;
 import org.bouncycastle.oer.its.ieee1609dot2.basetypes.EciesP256EncryptedKey;
 import org.bouncycastle.util.Arrays;

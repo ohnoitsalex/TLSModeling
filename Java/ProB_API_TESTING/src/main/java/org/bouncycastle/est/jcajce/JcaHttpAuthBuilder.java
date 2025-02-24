@@ -1,11 +1,11 @@
 package org.bouncycastle.est.jcajce;
 
-import java.security.Provider;
-import java.security.SecureRandom;
-
 import org.bouncycastle.est.HttpAuth;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
+
+import java.security.Provider;
+import java.security.SecureRandom;
 
 /**
  * Builder for HttpAuth operator that handles digest auth using a JCA provider.

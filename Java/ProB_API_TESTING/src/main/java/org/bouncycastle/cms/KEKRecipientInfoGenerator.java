@@ -10,29 +10,22 @@ import org.bouncycastle.operator.OperatorException;
 import org.bouncycastle.operator.SymmetricKeyWrapper;
 
 public abstract class KEKRecipientInfoGenerator
-    implements RecipientInfoGenerator
-{
+        implements RecipientInfoGenerator {
+    protected final SymmetricKeyWrapper wrapper;
     private final KEKIdentifier kekIdentifier;
 
-    protected final SymmetricKeyWrapper wrapper;
-
-    protected KEKRecipientInfoGenerator(KEKIdentifier kekIdentifier, SymmetricKeyWrapper wrapper)
-    {
+    protected KEKRecipientInfoGenerator(KEKIdentifier kekIdentifier, SymmetricKeyWrapper wrapper) {
         this.kekIdentifier = kekIdentifier;
         this.wrapper = wrapper;
     }
 
     public final RecipientInfo generate(GenericKey contentEncryptionKey)
-        throws CMSException
-    {
-        try
-        {
+            throws CMSException {
+        try {
             ASN1OctetString encryptedKey = new DEROctetString(wrapper.generateWrappedKey(contentEncryptionKey));
 
             return new RecipientInfo(new KEKRecipientInfo(kekIdentifier, wrapper.getAlgorithmIdentifier(), encryptedKey));
-        }
-        catch (OperatorException e)
-        {
+        } catch (OperatorException e) {
             throw new CMSException("exception wrapping content key: " + e.getMessage(), e);
         }
     }

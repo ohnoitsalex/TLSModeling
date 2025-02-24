@@ -19,30 +19,24 @@ import java.security.PrivateKey;
  * derive a key and extract a message.
  */
 public class JceKTSKeyTransEnvelopedRecipient
-    extends JceKTSKeyTransRecipient
-{
+        extends JceKTSKeyTransRecipient {
     public JceKTSKeyTransEnvelopedRecipient(PrivateKey recipientKey, KeyTransRecipientId recipientId)
-        throws IOException
-    {
+            throws IOException {
         super(recipientKey, getPartyVInfoFromRID(recipientId));
     }
 
     public RecipientOperator getRecipientOperator(AlgorithmIdentifier keyEncryptionAlgorithm, final AlgorithmIdentifier contentEncryptionAlgorithm, byte[] encryptedContentEncryptionKey)
-        throws CMSException
-    {
+            throws CMSException {
         Key secretKey = extractSecretKey(keyEncryptionAlgorithm, contentEncryptionAlgorithm, encryptedContentEncryptionKey);
 
         final Cipher dataCipher = contentHelper.createContentCipher(secretKey, contentEncryptionAlgorithm);
 
-        return new RecipientOperator(new InputDecryptor()
-        {
-            public AlgorithmIdentifier getAlgorithmIdentifier()
-            {
+        return new RecipientOperator(new InputDecryptor() {
+            public AlgorithmIdentifier getAlgorithmIdentifier() {
                 return contentEncryptionAlgorithm;
             }
 
-            public InputStream getInputStream(InputStream dataIn)
-            {
+            public InputStream getInputStream(InputStream dataIn) {
                 return new CipherInputStream(dataIn, dataCipher);
             }
         });

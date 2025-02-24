@@ -1,13 +1,13 @@
 package org.bouncycastle.jce.spec;
 
-import java.security.spec.AlgorithmParameterSpec;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.cryptopro.CryptoProObjectIdentifiers;
 import org.bouncycastle.asn1.cryptopro.GOST3410NamedParameters;
 import org.bouncycastle.asn1.cryptopro.GOST3410ParamSetParameters;
 import org.bouncycastle.asn1.cryptopro.GOST3410PublicKeyAlgParameters;
 import org.bouncycastle.jce.interfaces.GOST3410Params;
+
+import java.security.spec.AlgorithmParameterSpec;
 
 /**
  * ParameterSpec for a GOST 3410-94 key.

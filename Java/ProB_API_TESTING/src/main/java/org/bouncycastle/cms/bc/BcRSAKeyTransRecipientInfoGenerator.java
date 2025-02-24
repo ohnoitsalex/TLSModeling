@@ -8,16 +8,13 @@ import org.bouncycastle.operator.bc.BcRSAAsymmetricKeyWrapper;
 import java.io.IOException;
 
 public class BcRSAKeyTransRecipientInfoGenerator
-    extends BcKeyTransRecipientInfoGenerator
-{
-    public BcRSAKeyTransRecipientInfoGenerator(byte[] subjectKeyIdentifier, AlgorithmIdentifier encAlgId, AsymmetricKeyParameter publicKey)
-    {
+        extends BcKeyTransRecipientInfoGenerator {
+    public BcRSAKeyTransRecipientInfoGenerator(byte[] subjectKeyIdentifier, AlgorithmIdentifier encAlgId, AsymmetricKeyParameter publicKey) {
         super(subjectKeyIdentifier, new BcRSAAsymmetricKeyWrapper(encAlgId, publicKey));
     }
 
     public BcRSAKeyTransRecipientInfoGenerator(X509CertificateHolder recipientCert)
-        throws IOException
-    {
+            throws IOException {
         super(recipientCert, new BcRSAAsymmetricKeyWrapper(recipientCert.getSubjectPublicKeyInfo().getAlgorithm(), recipientCert.getSubjectPublicKeyInfo()));
     }
 }

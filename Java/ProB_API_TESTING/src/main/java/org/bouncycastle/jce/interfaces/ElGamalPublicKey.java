@@ -1,8 +1,7 @@
 package org.bouncycastle.jce.interfaces;
 
-import java.math.BigInteger;
-
 import javax.crypto.interfaces.DHPublicKey;
+import java.math.BigInteger;
 
 /**
  * @deprecated just use DHPublicKey.

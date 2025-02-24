@@ -1,11 +1,5 @@
 package org.bouncycastle.mls;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.hpke.HPKEContext;
 import org.bouncycastle.crypto.hpke.HPKEContextWithEncapsulation;
@@ -15,6 +9,12 @@ import org.bouncycastle.mls.codec.PreSharedKeyID;
 import org.bouncycastle.mls.crypto.MlsCipherSuite;
 import org.bouncycastle.mls.crypto.Secret;
 import org.bouncycastle.util.Arrays;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 
 public class KeyScheduleEpoch
 {

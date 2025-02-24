@@ -1,9 +1,9 @@
 package org.bouncycastle.gpg.keybox;
 
-import java.io.IOException;
-
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.encoders.Hex;
+
+import java.io.IOException;
 
 
 /**

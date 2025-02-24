@@ -1,12 +1,5 @@
 package org.bouncycastle.its.jcajce;
 
-import java.security.KeyFactory;
-import java.security.Provider;
-import java.security.PublicKey;
-import java.security.interfaces.ECPublicKey;
-import java.security.spec.ECParameterSpec;
-import java.security.spec.ECPublicKeySpec;
-
 import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.nist.NISTNamedCurves;
@@ -22,12 +15,14 @@ import org.bouncycastle.jcajce.util.NamedJcaJceHelper;
 import org.bouncycastle.jcajce.util.ProviderJcaJceHelper;
 import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.math.ec.ECPoint;
-import org.bouncycastle.oer.its.ieee1609dot2.basetypes.EccCurvePoint;
-import org.bouncycastle.oer.its.ieee1609dot2.basetypes.EccP256CurvePoint;
-import org.bouncycastle.oer.its.ieee1609dot2.basetypes.EccP384CurvePoint;
-import org.bouncycastle.oer.its.ieee1609dot2.basetypes.Point256;
-import org.bouncycastle.oer.its.ieee1609dot2.basetypes.Point384;
-import org.bouncycastle.oer.its.ieee1609dot2.basetypes.PublicVerificationKey;
+import org.bouncycastle.oer.its.ieee1609dot2.basetypes.*;
+
+import java.security.KeyFactory;
+import java.security.Provider;
+import java.security.PublicKey;
+import java.security.interfaces.ECPublicKey;
+import java.security.spec.ECParameterSpec;
+import java.security.spec.ECPublicKeySpec;
 
 public class JcaITSPublicVerificationKey
     extends ITSPublicVerificationKey

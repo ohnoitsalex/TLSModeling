@@ -1,12 +1,12 @@
 package org.bouncycastle.gpg;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.bouncycastle.openpgp.OpenedPGPKeyData;
 import org.bouncycastle.openpgp.PGPExtendedKeyHeader;
 import org.bouncycastle.util.Strings;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class PGPSecretKeyParser
 {

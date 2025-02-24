@@ -32,24 +32,21 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-class CMSUtils
-{
+class CMSUtils {
     private static final Set mqvAlgs = new HashSet();
     private static final Set ecAlgs = new HashSet();
     private static final Set gostAlgs = new HashSet();
     private static final Map asymmetricWrapperAlgNames = new HashMap();
 
-    private static Map<ASN1ObjectIdentifier,String> wrapAlgNames = new HashMap();
+    private static Map<ASN1ObjectIdentifier, String> wrapAlgNames = new HashMap();
 
-    static
-    {
-       wrapAlgNames.put(CMSAlgorithm.AES128_WRAP, "AESWRAP");
-       wrapAlgNames.put(CMSAlgorithm.AES192_WRAP, "AESWRAP");
-       wrapAlgNames.put(CMSAlgorithm.AES256_WRAP, "AESWRAP");
+    static {
+        wrapAlgNames.put(CMSAlgorithm.AES128_WRAP, "AESWRAP");
+        wrapAlgNames.put(CMSAlgorithm.AES192_WRAP, "AESWRAP");
+        wrapAlgNames.put(CMSAlgorithm.AES256_WRAP, "AESWRAP");
     }
 
-    static
-    {
+    static {
         mqvAlgs.add(X9ObjectIdentifiers.mqvSinglePass_sha1kdf_scheme);
         mqvAlgs.add(SECObjectIdentifiers.mqvSinglePass_sha224kdf_scheme);
         mqvAlgs.add(SECObjectIdentifiers.mqvSinglePass_sha256kdf_scheme);
@@ -81,165 +78,120 @@ class CMSUtils
         asymmetricWrapperAlgNames.put(ISOIECObjectIdentifiers.id_kem_rsa, "RSA-KTS-KEM-KWS");
     }
 
-    static boolean isMQV(ASN1ObjectIdentifier algorithm)
-    {
+    static boolean isMQV(ASN1ObjectIdentifier algorithm) {
         return mqvAlgs.contains(algorithm);
     }
 
-    static boolean isEC(ASN1ObjectIdentifier algorithm)
-    {
+    static boolean isEC(ASN1ObjectIdentifier algorithm) {
         return ecAlgs.contains(algorithm);
     }
 
-    static boolean isGOST(ASN1ObjectIdentifier algorithm)
-    {
+    static boolean isGOST(ASN1ObjectIdentifier algorithm) {
         return gostAlgs.contains(algorithm);
     }
 
-    static boolean isRFC2631(ASN1ObjectIdentifier algorithm)
-    {
+    static boolean isRFC2631(ASN1ObjectIdentifier algorithm) {
         return algorithm.equals(PKCSObjectIdentifiers.id_alg_ESDH) || algorithm.equals(PKCSObjectIdentifiers.id_alg_SSDH);
     }
 
-    static String getWrapAlgorithmName(ASN1ObjectIdentifier oid)
-    {
-        return (String)wrapAlgNames.get(oid);
+    static String getWrapAlgorithmName(ASN1ObjectIdentifier oid) {
+        return (String) wrapAlgNames.get(oid);
     }
 
-    static PrivateKey cleanPrivateKey(PrivateKey key)
-    {
-        if (key instanceof AnnotatedPrivateKey)
-        {
-            return cleanPrivateKey(((AnnotatedPrivateKey)key).getKey());
-        }
-        else
-        {
+    static PrivateKey cleanPrivateKey(PrivateKey key) {
+        if (key instanceof AnnotatedPrivateKey) {
+            return cleanPrivateKey(((AnnotatedPrivateKey) key).getKey());
+        } else {
             return key;
         }
     }
 
     static IssuerAndSerialNumber getIssuerAndSerialNumber(X509Certificate cert)
-        throws CertificateEncodingException
-    {
+            throws CertificateEncodingException {
         Certificate certStruct = Certificate.getInstance(cert.getEncoded());
 
         return new IssuerAndSerialNumber(certStruct.getIssuer(), cert.getSerialNumber());
     }
 
-    static byte[] getSubjectKeyId(X509Certificate cert)
-    {
+    static byte[] getSubjectKeyId(X509Certificate cert) {
         byte[] ext = cert.getExtensionValue(Extension.subjectKeyIdentifier.getId());
 
-        if (ext != null)
-        {
+        if (ext != null) {
             return ASN1OctetString.getInstance(ASN1OctetString.getInstance(ext).getOctets()).getOctets();
-        }
-        else
-        {
+        } else {
             return null;
         }
     }
 
-    static EnvelopedDataHelper createContentHelper(Provider provider)
-    {
-        if (provider != null)
-        {
+    static EnvelopedDataHelper createContentHelper(Provider provider) {
+        if (provider != null) {
             return new EnvelopedDataHelper(new ProviderJcaJceExtHelper(provider));
-        }
-        else
-        {
+        } else {
             return new EnvelopedDataHelper(new DefaultJcaJceExtHelper());
         }
     }
 
-    static EnvelopedDataHelper createContentHelper(String providerName)
-    {
-        if (providerName != null)
-        {
+    static EnvelopedDataHelper createContentHelper(String providerName) {
+        if (providerName != null) {
             return new EnvelopedDataHelper(new NamedJcaJceExtHelper(providerName));
-        }
-        else
-        {
+        } else {
             return new EnvelopedDataHelper(new DefaultJcaJceExtHelper());
         }
     }
 
     static ASN1Encodable extractParameters(AlgorithmParameters params)
-        throws CMSException
-    {
-        try
-        {
+            throws CMSException {
+        try {
             return AlgorithmParametersUtils.extractParameters(params);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new CMSException("cannot extract parameters: " + e.getMessage(), e);
         }
     }
 
     static void loadParameters(AlgorithmParameters params, ASN1Encodable sParams)
-        throws CMSException
-    {
-        try
-        {
+            throws CMSException {
+        try {
             AlgorithmParametersUtils.loadParameters(params, sParams);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new CMSException("error encoding algorithm parameters.", e);
         }
     }
 
-    static Key getJceKey(GenericKey key)
-    {
-        if (key.getRepresentation() instanceof Key)
-        {
-            return (Key)key.getRepresentation();
+    static Key getJceKey(GenericKey key) {
+        if (key.getRepresentation() instanceof Key) {
+            return (Key) key.getRepresentation();
         }
 
-        if (key.getRepresentation() instanceof byte[])
-        {
-            return new SecretKeySpec((byte[])key.getRepresentation(), "ENC");
+        if (key.getRepresentation() instanceof byte[]) {
+            return new SecretKeySpec((byte[]) key.getRepresentation(), "ENC");
         }
 
         throw new IllegalArgumentException("unknown generic key type");
     }
 
     static Cipher createAsymmetricWrapper(JcaJceHelper helper, ASN1ObjectIdentifier algorithm, Map extraAlgNames)
-        throws OperatorCreationException
-    {
-        try
-        {
+            throws OperatorCreationException {
+        try {
             String cipherName = null;
 
-            if (!extraAlgNames.isEmpty())
-            {
-                cipherName = (String)extraAlgNames.get(algorithm);
+            if (!extraAlgNames.isEmpty()) {
+                cipherName = (String) extraAlgNames.get(algorithm);
             }
 
-            if (cipherName == null)
-            {
-                cipherName = (String)asymmetricWrapperAlgNames.get(algorithm);
+            if (cipherName == null) {
+                cipherName = (String) asymmetricWrapperAlgNames.get(algorithm);
             }
 
-            if (cipherName != null)
-            {
-                try
-                {
+            if (cipherName != null) {
+                try {
                     // this is reversed as the Sun policy files now allow unlimited strength RSA
                     return helper.createCipher(cipherName);
-                }
-                catch (NoSuchAlgorithmException e)
-                {
+                } catch (NoSuchAlgorithmException e) {
                     // try alternate for RSA
-                    if (cipherName.equals("RSA/ECB/PKCS1Padding"))
-                    {
-                        try
-                        {
+                    if (cipherName.equals("RSA/ECB/PKCS1Padding")) {
+                        try {
                             return helper.createCipher("RSA/NONE/PKCS1Padding");
-                        }
-                        catch (NoSuchAlgorithmException ex)
-                        {
+                        } catch (NoSuchAlgorithmException ex) {
                             // Ignore
                         }
                     }
@@ -248,30 +200,20 @@ class CMSUtils
             }
 
             return helper.createCipher(algorithm.getId());
-        }
-        catch (GeneralSecurityException e)
-        {
+        } catch (GeneralSecurityException e) {
             throw new OperatorCreationException("cannot create cipher: " + e.getMessage(), e);
         }
     }
 
-    public static int getKekSize(ASN1ObjectIdentifier symWrapAlg)
-    {
+    public static int getKekSize(ASN1ObjectIdentifier symWrapAlg) {
         // TODO: add table
-        if (symWrapAlg.equals(CMSAlgorithm.AES256_WRAP))
-        {
+        if (symWrapAlg.equals(CMSAlgorithm.AES256_WRAP)) {
             return 32;
-        }
-        else if (symWrapAlg.equals(CMSAlgorithm.AES128_WRAP))
-        {
-            return  16;
-        }
-        else if (symWrapAlg.equals(CMSAlgorithm.AES192_WRAP))
-        {
-            return  24;
-        }
-        else
-        {
+        } else if (symWrapAlg.equals(CMSAlgorithm.AES128_WRAP)) {
+            return 16;
+        } else if (symWrapAlg.equals(CMSAlgorithm.AES192_WRAP)) {
+            return 24;
+        } else {
             throw new IllegalArgumentException("unknown wrap algorithm");
         }
     }

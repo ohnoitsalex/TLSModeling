@@ -19,8 +19,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SignerInfoGenerator
-{
+public class SignerInfoGenerator {
     private final SignerIdentifier signerIdentifier;
     private final CMSAttributeTableGenerator sAttrGen;
     private final CMSAttributeTableGenerator unsAttrGen;
@@ -33,11 +32,10 @@ public class SignerInfoGenerator
     private X509CertificateHolder certHolder;
 
     SignerInfoGenerator(
-        SignerIdentifier signerIdentifier,
-        ContentSigner signer,
-        AlgorithmIdentifier digesterAlgorithm,
-        CMSSignatureEncryptionAlgorithmFinder sigEncAlgFinder)
-    {
+            SignerIdentifier signerIdentifier,
+            ContentSigner signer,
+            AlgorithmIdentifier digesterAlgorithm,
+            CMSSignatureEncryptionAlgorithmFinder sigEncAlgFinder) {
         this.signerIdentifier = signerIdentifier;
         this.signer = signer;
         this.digestAlgorithm = digesterAlgorithm;
@@ -48,13 +46,12 @@ public class SignerInfoGenerator
     }
 
     SignerInfoGenerator(
-        SignerIdentifier signerIdentifier,
-        ContentSigner signer,
-        DigestCalculator digester,
-        CMSSignatureEncryptionAlgorithmFinder sigEncAlgFinder,
-        CMSAttributeTableGenerator sAttrGen,
-        CMSAttributeTableGenerator unsAttrGen)
-    {
+            SignerIdentifier signerIdentifier,
+            ContentSigner signer,
+            DigestCalculator digester,
+            CMSSignatureEncryptionAlgorithmFinder sigEncAlgFinder,
+            CMSAttributeTableGenerator sAttrGen,
+            CMSAttributeTableGenerator unsAttrGen) {
         this.signerIdentifier = signerIdentifier;
         this.signer = signer;
         this.digestAlgorithm = digester.getAlgorithmIdentifier();
@@ -65,10 +62,9 @@ public class SignerInfoGenerator
     }
 
     public SignerInfoGenerator(
-        SignerInfoGenerator original,
-        CMSAttributeTableGenerator sAttrGen,
-        CMSAttributeTableGenerator unsAttrGen)
-    {
+            SignerInfoGenerator original,
+            CMSAttributeTableGenerator sAttrGen,
+            CMSAttributeTableGenerator unsAttrGen) {
         this.signerIdentifier = original.signerIdentifier;
         this.signer = original.signer;
         this.digestAlgorithm = original.digestAlgorithm;
@@ -79,52 +75,44 @@ public class SignerInfoGenerator
         this.unsAttrGen = unsAttrGen;
     }
 
-    public SignerIdentifier getSID()
-    {
+    public SignerIdentifier getSID() {
         return signerIdentifier;
     }
 
-    public int getGeneratedVersion()
-    {
+    public int getGeneratedVersion() {
         return signerIdentifier.isTagged() ? 3 : 1;
     }
 
-    public boolean hasAssociatedCertificate()
-    {
+    public boolean hasAssociatedCertificate() {
         return certHolder != null;
     }
 
-    public X509CertificateHolder getAssociatedCertificate()
-    {
+    public X509CertificateHolder getAssociatedCertificate() {
         return certHolder;
     }
-    
-    public AlgorithmIdentifier getDigestAlgorithm()
-    {
+
+    void setAssociatedCertificate(X509CertificateHolder certHolder) {
+        this.certHolder = certHolder;
+    }
+
+    public AlgorithmIdentifier getDigestAlgorithm() {
         return digestAlgorithm;
     }
-    
-    public OutputStream getCalculatingOutputStream()
-    {
-        if (digester != null)
-        {
-            if (sAttrGen == null)
-            {
-                return new TeeOutputStream(digester.getOutputStream(), signer.getOutputStream());    
+
+    public OutputStream getCalculatingOutputStream() {
+        if (digester != null) {
+            if (sAttrGen == null) {
+                return new TeeOutputStream(digester.getOutputStream(), signer.getOutputStream());
             }
             return digester.getOutputStream();
-        }
-        else
-        {
+        } else {
             return signer.getOutputStream();
         }
     }
 
     public SignerInfo generate(ASN1ObjectIdentifier contentType)
-        throws CMSException
-    {
-        try
-        {
+            throws CMSException {
+        try {
             /* RFC 3852 5.4
              * The result of the message digest calculation process depends on
              * whether the signedAttrs field is present.  When the field is absent,
@@ -140,8 +128,7 @@ public class SignerInfoGenerator
 
             AlgorithmIdentifier digestAlg = null;
 
-            if (sAttrGen != null)
-            {
+            if (sAttrGen != null) {
                 digestAlg = digester.getAlgorithmIdentifier();
                 calculatedDigest = digester.getDigest();
                 Map parameters = getBaseParameters(contentType, digester.getAlgorithmIdentifier(), digestEncryptionAlgorithm, calculatedDigest);
@@ -155,16 +142,11 @@ public class SignerInfoGenerator
                 sOut.write(signedAttr.getEncoded(ASN1Encoding.DER));
 
                 sOut.close();
-            }
-            else
-            {
+            } else {
                 digestAlg = digestAlgorithm;
-                if (digester != null)
-                {
+                if (digester != null) {
                     calculatedDigest = digester.getDigest();
-                }
-                else
-                {
+                } else {
                     calculatedDigest = null;
                 }
             }
@@ -172,8 +154,7 @@ public class SignerInfoGenerator
             byte[] sigBytes = signer.getSignature();
 
             ASN1Set unsignedAttr = null;
-            if (unsAttrGen != null)
-            {
+            if (unsAttrGen != null) {
                 Map parameters = getBaseParameters(contentType, digestAlg, digestEncryptionAlgorithm, calculatedDigest);
                 parameters.put(CMSAttributeTableGenerator.SIGNATURE, Arrays.clone(sigBytes));
 
@@ -182,73 +163,56 @@ public class SignerInfoGenerator
                 unsignedAttr = getAttributeSet(unsigned);
             }
 
-            if (sAttrGen == null)
-            {
+            if (sAttrGen == null) {
                 // RFC 8419, Section 3.2 - needs to be shake-256, not shake-256-len
-                if (EdECObjectIdentifiers.id_Ed448.equals(digestEncryptionAlgorithm.getAlgorithm()))
-                {
+                if (EdECObjectIdentifiers.id_Ed448.equals(digestEncryptionAlgorithm.getAlgorithm())) {
                     digestAlg = new AlgorithmIdentifier(NISTObjectIdentifiers.id_shake256);
                 }
             }
-            
+
             return new SignerInfo(signerIdentifier, digestAlg,
-                signedAttr, digestEncryptionAlgorithm, new DEROctetString(sigBytes), unsignedAttr);
-        }
-        catch (IOException e)
-        {
+                    signedAttr, digestEncryptionAlgorithm, new DEROctetString(sigBytes), unsignedAttr);
+        } catch (IOException e) {
             throw new CMSException("encoding error.", e);
         }
     }
 
-    void setAssociatedCertificate(X509CertificateHolder certHolder)
-    {
-        this.certHolder = certHolder;
-    }
-
     private ASN1Set getAttributeSet(
-        AttributeTable attr)
-    {
-        if (attr != null)
-        {
+            AttributeTable attr) {
+        if (attr != null) {
             return new DERSet(attr.toASN1EncodableVector());
         }
 
         return null;
     }
 
-    private Map getBaseParameters(ASN1ObjectIdentifier contentType, AlgorithmIdentifier digAlgId, AlgorithmIdentifier sigAlgId, byte[] hash)
-    {
+    private Map getBaseParameters(ASN1ObjectIdentifier contentType, AlgorithmIdentifier digAlgId, AlgorithmIdentifier sigAlgId, byte[] hash) {
         Map param = new HashMap();
 
-        if (contentType != null)
-        {
+        if (contentType != null) {
             param.put(CMSAttributeTableGenerator.CONTENT_TYPE, contentType);
         }
 
         param.put(CMSAttributeTableGenerator.DIGEST_ALGORITHM_IDENTIFIER, digAlgId);
         param.put(CMSAttributeTableGenerator.SIGNATURE_ALGORITHM_IDENTIFIER, sigAlgId);
-        param.put(CMSAttributeTableGenerator.DIGEST,  Arrays.clone(hash));
+        param.put(CMSAttributeTableGenerator.DIGEST, Arrays.clone(hash));
 
         return param;
     }
 
-    public byte[] getCalculatedDigest()
-    {
-        if (calculatedDigest != null)
-        {
+    public byte[] getCalculatedDigest() {
+        if (calculatedDigest != null) {
             return Arrays.clone(calculatedDigest);
         }
 
         return null;
     }
 
-    public CMSAttributeTableGenerator getSignedAttributeTableGenerator()
-    {
+    public CMSAttributeTableGenerator getSignedAttributeTableGenerator() {
         return sAttrGen;
     }
 
-    public CMSAttributeTableGenerator getUnsignedAttributeTableGenerator()
-    {
+    public CMSAttributeTableGenerator getUnsignedAttributeTableGenerator() {
         return unsAttrGen;
     }
 }

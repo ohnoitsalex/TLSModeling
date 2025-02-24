@@ -11,15 +11,13 @@ import java.io.IOException;
  * encrypted using a secret key known to the other side.
  */
 public class KEKRecipientInformation
-    extends RecipientInformation
-{
-    private final KEKRecipientInfo      info;
+        extends RecipientInformation {
+    private final KEKRecipientInfo info;
 
     KEKRecipientInformation(
-        KEKRecipientInfo        info,
-        AlgorithmIdentifier     messageAlgorithm,
-        CMSSecureReadable       secureReadable)
-    {
+            KEKRecipientInfo info,
+            AlgorithmIdentifier messageAlgorithm,
+            CMSSecureReadable secureReadable) {
         super(info.getKeyEncryptionAlgorithm(), messageAlgorithm, secureReadable);
 
         this.info = info;
@@ -30,8 +28,7 @@ public class KEKRecipientInformation
     }
 
     protected RecipientOperator getRecipientOperator(Recipient recipient)
-        throws CMSException, IOException
-    {
-        return ((KEKRecipient)recipient).getRecipientOperator(keyEncAlg, messageAlgorithm, info.getEncryptedKey().getOctets());
+            throws CMSException, IOException {
+        return ((KEKRecipient) recipient).getRecipientOperator(keyEncAlg, messageAlgorithm, info.getEncryptedKey().getOctets());
     }
 }

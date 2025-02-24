@@ -1,11 +1,11 @@
 package org.bouncycastle.mls;
 
-import java.io.IOException;
-
 import org.bouncycastle.mls.codec.AuthenticatedContent;
 import org.bouncycastle.mls.codec.MLSOutputStream;
 import org.bouncycastle.mls.crypto.MlsCipherSuite;
 import org.bouncycastle.util.Arrays;
+
+import java.io.IOException;
 
 public class TranscriptHash
 {

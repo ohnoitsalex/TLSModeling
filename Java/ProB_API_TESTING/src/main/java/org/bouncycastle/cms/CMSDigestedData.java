@@ -25,52 +25,41 @@ import java.io.OutputStream;
  * </pre>
  */
 public class CMSDigestedData
-    implements Encodable
-{
-    private final ContentInfo  contentInfo;
+        implements Encodable {
+    private final ContentInfo contentInfo;
     private final DigestedData digestedData;
 
     public CMSDigestedData(
-        byte[] compressedData)
-        throws CMSException
-    {
+            byte[] compressedData)
+            throws CMSException {
         this(CMSUtils.readContentInfo(compressedData));
     }
 
     public CMSDigestedData(
-        InputStream compressedData)
-        throws CMSException
-    {
+            InputStream compressedData)
+            throws CMSException {
         this(CMSUtils.readContentInfo(compressedData));
     }
 
     public CMSDigestedData(
-        ContentInfo contentInfo)
-        throws CMSException
-    {
+            ContentInfo contentInfo)
+            throws CMSException {
         this.contentInfo = contentInfo;
 
-        try
-        {
+        try {
             this.digestedData = DigestedData.getInstance(contentInfo.getContent());
-        }
-        catch (ClassCastException e)
-        {
+        } catch (ClassCastException e) {
             throw new CMSException("Malformed content.", e);
-        }
-        catch (IllegalArgumentException e)
-        {
+        } catch (IllegalArgumentException e) {
             throw new CMSException("Malformed content.", e);
         }
     }
 
-    public ASN1ObjectIdentifier getContentType()
-    {
+    public ASN1ObjectIdentifier getContentType() {
         return contentInfo.getContentType();
     }
 
-    public AlgorithmIdentifier getDigestAlgorithm()
-    {
+    public AlgorithmIdentifier getDigestAlgorithm() {
         return digestedData.getDigestAlgorithm();
     }
 
@@ -81,16 +70,12 @@ public class CMSDigestedData
      * @throws CMSException if there is an exception un-compressing the data.
      */
     public CMSProcessable getDigestedContent()
-        throws CMSException
-    {
-        ContentInfo     content = digestedData.getEncapContentInfo();
+            throws CMSException {
+        ContentInfo content = digestedData.getEncapContentInfo();
 
-        try
-        {
-            return new CMSProcessableByteArray(content.getContentType(), ((ASN1OctetString)content.getContent()).getOctets());
-        }
-        catch (Exception e)
-        {
+        try {
+            return new CMSProcessableByteArray(content.getContentType(), ((ASN1OctetString) content.getContent()).getOctets());
+        } catch (Exception e) {
             throw new CMSException("exception reading digested stream.", e);
         }
     }
@@ -98,8 +83,7 @@ public class CMSDigestedData
     /**
      * return the ContentInfo
      */
-    public ContentInfo toASN1Structure()
-    {
+    public ContentInfo toASN1Structure() {
         return contentInfo;
     }
 
@@ -107,31 +91,24 @@ public class CMSDigestedData
      * return the ASN.1 encoded representation of this object.
      */
     public byte[] getEncoded()
-        throws IOException
-    {
+            throws IOException {
         return contentInfo.getEncoded();
     }
 
     public boolean verify(DigestCalculatorProvider calculatorProvider)
-        throws CMSException
-    {
-        try
-        {
-            ContentInfo     content = digestedData.getEncapContentInfo();
+            throws CMSException {
+        try {
+            ContentInfo content = digestedData.getEncapContentInfo();
             DigestCalculator calc = calculatorProvider.get(digestedData.getDigestAlgorithm());
 
             OutputStream dOut = calc.getOutputStream();
 
-            dOut.write(((ASN1OctetString)content.getContent()).getOctets());
+            dOut.write(((ASN1OctetString) content.getContent()).getOctets());
 
             return Arrays.areEqual(digestedData.getDigest(), calc.getDigest());
-        }
-        catch (OperatorCreationException e)
-        {
+        } catch (OperatorCreationException e) {
             throw new CMSException("unable to create digest calculator: " + e.getMessage(), e);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new CMSException("unable process content: " + e.getMessage(), e);
         }
     }

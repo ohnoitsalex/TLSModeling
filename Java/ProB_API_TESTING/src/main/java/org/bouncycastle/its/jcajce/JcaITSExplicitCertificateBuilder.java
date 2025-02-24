@@ -1,8 +1,5 @@
 package org.bouncycastle.its.jcajce;
 
-import java.security.Provider;
-import java.security.interfaces.ECPublicKey;
-
 import org.bouncycastle.its.ITSCertificate;
 import org.bouncycastle.its.ITSExplicitCertificateBuilder;
 import org.bouncycastle.its.ITSPublicEncryptionKey;
@@ -13,6 +10,9 @@ import org.bouncycastle.jcajce.util.NamedJcaJceHelper;
 import org.bouncycastle.jcajce.util.ProviderJcaJceHelper;
 import org.bouncycastle.oer.its.ieee1609dot2.CertificateId;
 import org.bouncycastle.oer.its.ieee1609dot2.ToBeSignedCertificate;
+
+import java.security.Provider;
+import java.security.interfaces.ECPublicKey;
 
 public class JcaITSExplicitCertificateBuilder
     extends ITSExplicitCertificateBuilder

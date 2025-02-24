@@ -1,5 +1,6 @@
 package application.information_capture.tls_information_capture;
 
+import application.config.Config;
 import application.information_capture.InformationCapture;
 import application.information_handler.InformationConvertertoAbstract;
 import org.pcap4j.core.*;
@@ -64,20 +65,18 @@ public class TLSInformationCapture extends InformationCapture {
                         TLSPacketList.add(packet);
                         // Extract header information
                         String headers = PacketLogger.extractHeaders(packet);
-//                        System.out.println("Extracted Headers");
                         // Log headers and raw data to file
-                        PacketLogger.logPacketData(headers, payload, "src/main/resources/data/tls_handshake_data.txt");
+                        PacketLogger.logPacketData(headers, payload, Config.WRITERFILEPATH);
                         InformationConvertertoAbstract.configureYAML();
-                        InformationConvertertoAbstract.serializeToYAML(TlsHandshakeParser.tlsClientInformationHolder, "src/main/resources/data/SUTClientHello");
-                        InformationConvertertoAbstract.serializeToYAML(TlsHandshakeParser.tlsServerInformationHolder, "src/main/resources/data/SUTServerHello");
-                        InformationConvertertoAbstract.removeGlobalTagsYaml("src/main/resources/data/SUTClientHello.yaml");
-                        InformationConvertertoAbstract.removeGlobalTagsYaml("src/main/resources/data/SUTServerHello.yaml");
+                        InformationConvertertoAbstract.serializeToYAML(TlsHandshakeParser.tlsClientInformationHolder, Config.SUTCLIENTHELLO);
+                        InformationConvertertoAbstract.serializeToYAML(TlsHandshakeParser.tlsServerInformationHolder, Config.SUTSERVERHELLO);
+                        InformationConvertertoAbstract.removeGlobalTagsYaml(Config.SUTCLIENTHELLOYAML);
+                        InformationConvertertoAbstract.removeGlobalTagsYaml(Config.SUTSERVERHELLOYAML);
                     }
                 }
             }
         };
         try {
-//            System.out.println("Entered TRY");
             int maxPackets = -1; //Non Stop ->Listening continuously
             handle.loop(maxPackets, listener);
         } catch (NotOpenException e) {
@@ -102,7 +101,7 @@ public class TLSInformationCapture extends InformationCapture {
             Packet payload = tcpPacket.getPayload();
 
             // Log headers and raw data to file
-            PacketLogger.logPacketData(headers, payload, "src/main/resources/data/tls_handshake_data.txt");
+            PacketLogger.logPacketData(headers, payload, Config.WRITERFILEPATH);
         }
     }
 

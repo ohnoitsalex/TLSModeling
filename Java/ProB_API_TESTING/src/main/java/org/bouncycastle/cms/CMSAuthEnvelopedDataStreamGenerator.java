@@ -1,29 +1,21 @@
 package org.bouncycastle.cms;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Collections;
-
-import org.bouncycastle.asn1.ASN1EncodableVector;
-import org.bouncycastle.asn1.ASN1Integer;
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.ASN1Set;
-import org.bouncycastle.asn1.BERSequenceGenerator;
-import org.bouncycastle.asn1.DEROctetString;
-import org.bouncycastle.asn1.DERTaggedObject;
+import org.bouncycastle.asn1.*;
 import org.bouncycastle.asn1.cms.CMSObjectIdentifiers;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.operator.OutputAEADEncryptor;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Collections;
+
 public class CMSAuthEnvelopedDataStreamGenerator
-    extends CMSAuthEnvelopedGenerator
-{
+        extends CMSAuthEnvelopedGenerator {
 
     private int _bufferSize;
     private boolean _berEncodeRecipientSet;
 
-    public CMSAuthEnvelopedDataStreamGenerator()
-    {
+    public CMSAuthEnvelopedDataStreamGenerator() {
 
     }
 
@@ -33,8 +25,7 @@ public class CMSAuthEnvelopedDataStreamGenerator
      * @param bufferSize length of octet strings to buffer the data.
      */
     public void setBufferSize(
-        int bufferSize)
-    {
+            int bufferSize) {
         _bufferSize = bufferSize;
     }
 
@@ -42,29 +33,26 @@ public class CMSAuthEnvelopedDataStreamGenerator
      * Use a BER Set to store the recipient information
      */
     public void setBEREncodeRecipients(
-        boolean berEncodeRecipientSet)
-    {
+            boolean berEncodeRecipientSet) {
         _berEncodeRecipientSet = berEncodeRecipientSet;
     }
 
     private OutputStream doOpen(
-        ASN1ObjectIdentifier dataType,
-        OutputStream out,
-        OutputAEADEncryptor encryptor)
-        throws IOException, CMSException
-    {
+            ASN1ObjectIdentifier dataType,
+            OutputStream out,
+            OutputAEADEncryptor encryptor)
+            throws IOException, CMSException {
         ASN1EncodableVector recipientInfos = CMSUtils.getRecipentInfos(encryptor.getKey(), recipientInfoGenerators);
 
         return open(dataType, out, recipientInfos, encryptor);
     }
 
     protected OutputStream open(
-        ASN1ObjectIdentifier dataType,
-        OutputStream out,
-        ASN1EncodableVector recipientInfos,
-        OutputAEADEncryptor encryptor)
-        throws IOException
-    {
+            ASN1ObjectIdentifier dataType,
+            OutputStream out,
+            ASN1EncodableVector recipientInfos,
+            OutputAEADEncryptor encryptor)
+            throws IOException {
         //
         // ContentInfo
         //
@@ -92,23 +80,19 @@ public class CMSAuthEnvelopedDataStreamGenerator
         eiGen.getRawOutputStream().write(encAlgId.getEncoded());
 
         OutputStream octetStream = CMSUtils.createBEROctetOutputStream(
-            eiGen.getRawOutputStream(), 0, true, _bufferSize);
+                eiGen.getRawOutputStream(), 0, true, _bufferSize);
 
         return new CMSAuthEnvelopedDataOutputStream(encryptor, octetStream, cGen, authEnvGen, eiGen);
     }
 
     protected OutputStream open(
-        OutputStream out,
-        ASN1EncodableVector recipientInfos,
-        OutputAEADEncryptor encryptor)
-        throws CMSException
-    {
-        try
-        {
+            OutputStream out,
+            ASN1EncodableVector recipientInfos,
+            OutputAEADEncryptor encryptor)
+            throws CMSException {
+        try {
             return open(CMSObjectIdentifiers.data, out, recipientInfos, encryptor);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new CMSException("exception decoding algorithm parameters.", e);
         }
     }
@@ -119,16 +103,14 @@ public class CMSAuthEnvelopedDataStreamGenerator
      * object using the given encryptor.
      */
     public OutputStream open(
-        OutputStream out,
-        OutputAEADEncryptor encryptor)
-        throws CMSException, IOException
-    {
+            OutputStream out,
+            OutputAEADEncryptor encryptor)
+            throws CMSException, IOException {
         return doOpen(new ASN1ObjectIdentifier(CMSObjectIdentifiers.data.getId()), out, encryptor);
     }
 
     private class CMSAuthEnvelopedDataOutputStream
-        extends OutputStream
-    {
+            extends OutputStream {
         private final OutputAEADEncryptor _encryptor;
         private final OutputStream _cOut;
         private final OutputStream _octetStream;
@@ -137,12 +119,11 @@ public class CMSAuthEnvelopedDataStreamGenerator
         private final BERSequenceGenerator _eiGen;
 
         public CMSAuthEnvelopedDataOutputStream(
-            OutputAEADEncryptor encryptor,
-            OutputStream octetStream,
-            BERSequenceGenerator cGen,
-            BERSequenceGenerator envGen,
-            BERSequenceGenerator eiGen)
-        {
+                OutputAEADEncryptor encryptor,
+                OutputStream octetStream,
+                BERSequenceGenerator cGen,
+                BERSequenceGenerator envGen,
+                BERSequenceGenerator eiGen) {
             _encryptor = encryptor;
             _octetStream = octetStream;
             _cOut = encryptor.getOutputStream(octetStream);
@@ -152,39 +133,34 @@ public class CMSAuthEnvelopedDataStreamGenerator
         }
 
         public void write(
-            int b)
-            throws IOException
-        {
+                int b)
+                throws IOException {
             _cOut.write(b);
         }
 
         public void write(
-            byte[] bytes,
-            int off,
-            int len)
-            throws IOException
-        {
+                byte[] bytes,
+                int off,
+                int len)
+                throws IOException {
             _cOut.write(bytes, off, len);
         }
 
         public void write(
-            byte[] bytes)
-            throws IOException
-        {
+                byte[] bytes)
+                throws IOException {
             _cOut.write(bytes);
         }
 
         public void close()
-            throws IOException
-        {
+                throws IOException {
             ASN1Set authenticatedAttrSet = CMSUtils.processAuthAttrSet(authAttrsGenerator, _encryptor);
 
             _cOut.close();
             _octetStream.close();
             _eiGen.close();
 
-            if (authenticatedAttrSet != null)
-            {
+            if (authenticatedAttrSet != null) {
                 _envGen.addObject(new DERTaggedObject(false, 1, authenticatedAttrSet));
             }
 

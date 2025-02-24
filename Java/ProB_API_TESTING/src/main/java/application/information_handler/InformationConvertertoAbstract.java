@@ -7,9 +7,11 @@ import org.yaml.snakeyaml.representer.Representer;
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class InformationConvertertoAbstract {
@@ -59,5 +61,12 @@ public class InformationConvertertoAbstract {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static Map<String, Object> retreiveYamlInformation(String yamlFilePath){
+        InputStream inputStream = InformationConvertertoAbstract.class.getClassLoader().getResourceAsStream(yamlFilePath);
+        if (inputStream != null)
+            return yaml.load(inputStream);
+        return null;
     }
 }

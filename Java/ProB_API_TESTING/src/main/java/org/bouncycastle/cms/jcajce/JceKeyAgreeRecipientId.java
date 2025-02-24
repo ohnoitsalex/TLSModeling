@@ -8,15 +8,12 @@ import java.math.BigInteger;
 import java.security.cert.X509Certificate;
 
 public class JceKeyAgreeRecipientId
-    extends KeyAgreeRecipientId
-{
-    public JceKeyAgreeRecipientId(X509Certificate certificate)
-    {
+        extends KeyAgreeRecipientId {
+    public JceKeyAgreeRecipientId(X509Certificate certificate) {
         this(certificate.getIssuerX500Principal(), certificate.getSerialNumber());
     }
 
-    public JceKeyAgreeRecipientId(X500Principal issuer, BigInteger serialNumber)
-    {
+    public JceKeyAgreeRecipientId(X500Principal issuer, BigInteger serialNumber) {
         super(X500Name.getInstance(issuer.getEncoded()), serialNumber);
     }
 }

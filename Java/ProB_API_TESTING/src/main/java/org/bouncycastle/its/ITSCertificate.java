@@ -1,8 +1,5 @@
 package org.bouncycastle.its;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 import org.bouncycastle.its.operator.ECDSAEncoder;
 import org.bouncycastle.its.operator.ITSContentVerifierProvider;
 import org.bouncycastle.oer.OEREncoder;
@@ -13,6 +10,9 @@ import org.bouncycastle.oer.its.ieee1609dot2.basetypes.Signature;
 import org.bouncycastle.oer.its.template.ieee1609dot2.IEEE1609dot2;
 import org.bouncycastle.operator.ContentVerifier;
 import org.bouncycastle.util.Encodable;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class ITSCertificate
     implements Encodable

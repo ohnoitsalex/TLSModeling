@@ -10,8 +10,7 @@ import java.io.*;
  * a holding class for a file of data to be processed.
  */
 public class CMSProcessableFile
-    implements CMSTypedData, CMSReadable
-{
+        implements CMSTypedData, CMSReadable {
     private static final int DEFAULT_BUF_SIZE = 32 * 1024;
 
     private final ASN1ObjectIdentifier type;
@@ -19,37 +18,32 @@ public class CMSProcessableFile
     private final int bufSize;
 
     public CMSProcessableFile(
-        File file)
-    {
+            File file) {
         this(file, DEFAULT_BUF_SIZE);
     }
-    
+
     public CMSProcessableFile(
-        File file,
-        int  bufSize)
-    {
+            File file,
+            int bufSize) {
         this(CMSObjectIdentifiers.data, file, bufSize);
     }
 
     public CMSProcessableFile(
-        ASN1ObjectIdentifier type,
-        File file,
-        int  bufSize)
-    {
+            ASN1ObjectIdentifier type,
+            File file,
+            int bufSize) {
         this.type = type;
         this.file = file;
         this.bufSize = bufSize;
     }
 
     public InputStream getInputStream()
-        throws IOException, CMSException
-    {
+            throws IOException, CMSException {
         return new BufferedInputStream(new FileInputStream(file), bufSize);
     }
 
     public void write(OutputStream zOut)
-        throws IOException, CMSException
-    {
+            throws IOException, CMSException {
         FileInputStream fIn = new FileInputStream(file);
         Streams.pipeAll(fIn, zOut, bufSize);
         fIn.close();
@@ -58,13 +52,11 @@ public class CMSProcessableFile
     /**
      * Return the file handle.
      */
-    public Object getContent()
-    {
+    public Object getContent() {
         return file;
     }
 
-    public ASN1ObjectIdentifier getContentType()
-    {
+    public ASN1ObjectIdentifier getContentType() {
         return type;
     }
 }

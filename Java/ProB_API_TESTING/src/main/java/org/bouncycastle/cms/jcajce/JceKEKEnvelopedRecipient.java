@@ -12,29 +12,23 @@ import java.io.InputStream;
 import java.security.Key;
 
 public class JceKEKEnvelopedRecipient
-    extends JceKEKRecipient
-{
-    public JceKEKEnvelopedRecipient(SecretKey recipientKey)
-    {
+        extends JceKEKRecipient {
+    public JceKEKEnvelopedRecipient(SecretKey recipientKey) {
         super(recipientKey);
     }
 
     public RecipientOperator getRecipientOperator(AlgorithmIdentifier keyEncryptionAlgorithm, final AlgorithmIdentifier contentEncryptionAlgorithm, byte[] encryptedContentEncryptionKey)
-        throws CMSException
-    {
+            throws CMSException {
         Key secretKey = extractSecretKey(keyEncryptionAlgorithm, contentEncryptionAlgorithm, encryptedContentEncryptionKey);
 
         final Cipher dataCipher = contentHelper.createContentCipher(secretKey, contentEncryptionAlgorithm);
 
-        return new RecipientOperator(new InputDecryptor()
-        {
-            public AlgorithmIdentifier getAlgorithmIdentifier()
-            {
+        return new RecipientOperator(new InputDecryptor() {
+            public AlgorithmIdentifier getAlgorithmIdentifier() {
                 return contentEncryptionAlgorithm;
             }
 
-            public InputStream getInputStream(InputStream dataOut)
-            {
+            public InputStream getInputStream(InputStream dataOut) {
                 return new CipherInputStream(dataOut, dataCipher);
             }
         });

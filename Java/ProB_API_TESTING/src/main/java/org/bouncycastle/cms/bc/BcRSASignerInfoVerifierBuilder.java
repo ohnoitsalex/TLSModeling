@@ -10,15 +10,13 @@ import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.SignatureAlgorithmIdentifierFinder;
 import org.bouncycastle.operator.bc.BcRSAContentVerifierProviderBuilder;
 
-public class BcRSASignerInfoVerifierBuilder
-{
+public class BcRSASignerInfoVerifierBuilder {
     private BcRSAContentVerifierProviderBuilder contentVerifierProviderBuilder;
     private DigestCalculatorProvider digestCalculatorProvider;
     private CMSSignatureAlgorithmNameGenerator sigAlgNameGen;
     private SignatureAlgorithmIdentifierFinder sigAlgIdFinder;
 
-    public BcRSASignerInfoVerifierBuilder(CMSSignatureAlgorithmNameGenerator sigAlgNameGen, SignatureAlgorithmIdentifierFinder sigAlgIdFinder, DigestAlgorithmIdentifierFinder digestAlgorithmFinder, DigestCalculatorProvider digestCalculatorProvider)
-    {
+    public BcRSASignerInfoVerifierBuilder(CMSSignatureAlgorithmNameGenerator sigAlgNameGen, SignatureAlgorithmIdentifierFinder sigAlgIdFinder, DigestAlgorithmIdentifierFinder digestAlgorithmFinder, DigestCalculatorProvider digestCalculatorProvider) {
         this.sigAlgNameGen = sigAlgNameGen;
         this.sigAlgIdFinder = sigAlgIdFinder;
         this.contentVerifierProviderBuilder = new BcRSAContentVerifierProviderBuilder(digestAlgorithmFinder);
@@ -26,14 +24,12 @@ public class BcRSASignerInfoVerifierBuilder
     }
 
     public SignerInformationVerifier build(X509CertificateHolder certHolder)
-        throws OperatorCreationException
-    {
+            throws OperatorCreationException {
         return new SignerInformationVerifier(sigAlgNameGen, sigAlgIdFinder, contentVerifierProviderBuilder.build(certHolder), digestCalculatorProvider);
     }
 
     public SignerInformationVerifier build(AsymmetricKeyParameter pubKey)
-        throws OperatorCreationException
-    {
+            throws OperatorCreationException {
         return new SignerInformationVerifier(sigAlgNameGen, sigAlgIdFinder, contentVerifierProviderBuilder.build(pubKey), digestCalculatorProvider);
     }
 }

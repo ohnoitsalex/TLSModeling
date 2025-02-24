@@ -21,10 +21,6 @@ public class BCClient {
     private static final ProtocolVersion[] C_TLS_VERSIONS = new ProtocolVersion[]{ProtocolVersion.TLSv12, ProtocolVersion.TLSv13};
     private static final int[] C_CIPHERS = new int[]{CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, CipherSuite.TLS_AES_128_GCM_SHA256, CipherSuite.TLS_CHACHA20_POLY1305_SHA256};
 
-//    public static void main(String[] args) throws Exception {
-//        BCTlsDirectUse.sendClientHello(C_TLS_VERSIONS, C_CIPHERS);
-//    }
-
     public static void main(String[] args) throws Exception {
         // Secure random number generator
         SecureRandom secureRandom = new SecureRandom();
@@ -74,6 +70,7 @@ public class BCClient {
                 return supported_groups;
             }
 
+            // KEEPING JUST IN CASE
 //            @Override
 //            protected short[] getAllowedServerCertificateTypes() {
 //                return super.getAllowedServerCertificateTypes();
@@ -100,28 +97,6 @@ public class BCClient {
                 return ProtocolVersion.TLSv13.downTo(ProtocolVersion.TLSv13);
             }
         };
-
-        //TRYING TO REPRODUCE 2 CLIENTHELLO B2B
-
-//        // Create the first Runnable for startCapture
-//        Runnable start_connection = new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    protocol.connect(client);
-//                } catch (IOException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//        };
-//
-//        // Create two threads for each task - It takes a bit of time before the .txt file is generated.
-//        Thread thread1 = new Thread(start_connection);
-//        Thread thread2 = new Thread(start_connection);
-//
-//        // Start the threads
-//        thread1.start();
-//        thread2.start();
 
         // Start the TLS handshake
         protocol.connect(client);

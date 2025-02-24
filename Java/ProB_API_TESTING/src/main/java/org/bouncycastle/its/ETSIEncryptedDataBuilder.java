@@ -1,13 +1,13 @@
 package org.bouncycastle.its;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bouncycastle.its.operator.ETSIDataEncryptor;
 import org.bouncycastle.oer.its.ieee1609dot2.AesCcmCiphertext;
 import org.bouncycastle.oer.its.ieee1609dot2.EncryptedData;
 import org.bouncycastle.oer.its.ieee1609dot2.SequenceOfRecipientInfo;
 import org.bouncycastle.oer.its.ieee1609dot2.SymmetricCiphertext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ETSIEncryptedDataBuilder
 {

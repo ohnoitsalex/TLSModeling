@@ -1,11 +1,11 @@
 package org.bouncycastle.mls.codec;
 
+import org.bouncycastle.mls.crypto.MlsCipherSuite;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.bouncycastle.mls.crypto.MlsCipherSuite;
 
 public class Capabilities
     implements MLSInputStream.Readable, MLSOutputStream.Writable

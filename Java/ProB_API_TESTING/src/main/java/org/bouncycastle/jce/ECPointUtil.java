@@ -1,12 +1,12 @@
 package org.bouncycastle.jce;
 
+import org.bouncycastle.jcajce.provider.asymmetric.util.EC5Util;
+import org.bouncycastle.math.ec.ECCurve;
+
 import java.security.spec.ECFieldF2m;
 import java.security.spec.ECFieldFp;
 import java.security.spec.ECPoint;
 import java.security.spec.EllipticCurve;
-
-import org.bouncycastle.jcajce.provider.asymmetric.util.EC5Util;
-import org.bouncycastle.math.ec.ECCurve;
 
 /**
  * Utility class for handling EC point decoding.

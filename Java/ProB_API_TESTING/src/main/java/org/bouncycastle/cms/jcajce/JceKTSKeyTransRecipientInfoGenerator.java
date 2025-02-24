@@ -17,62 +17,21 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 
 public class JceKTSKeyTransRecipientInfoGenerator
-    extends KeyTransRecipientInfoGenerator
-{
+        extends KeyTransRecipientInfoGenerator {
     private static final byte[] ANONYMOUS_SENDER = Hex.decode("0c14416e6f6e796d6f75732053656e64657220202020");   // "Anonymous Sender    "
 
     private JceKTSKeyTransRecipientInfoGenerator(X509Certificate recipientCert, IssuerAndSerialNumber recipientID, String symmetricWrappingAlg, int keySizeInBits)
-        throws CertificateEncodingException
-    {
+            throws CertificateEncodingException {
         super(recipientID, new JceKTSKeyWrapper(recipientCert, symmetricWrappingAlg, keySizeInBits, ANONYMOUS_SENDER, getEncodedRecipID(recipientID)));
     }
 
     public JceKTSKeyTransRecipientInfoGenerator(X509Certificate recipientCert, String symmetricWrappingAlg, int keySizeInBits)
-        throws CertificateEncodingException
-    {
+            throws CertificateEncodingException {
         this(recipientCert, new IssuerAndSerialNumber(new JcaX509CertificateHolder(recipientCert).toASN1Structure()), symmetricWrappingAlg, keySizeInBits);
     }
 
-    public JceKTSKeyTransRecipientInfoGenerator(byte[] subjectKeyIdentifier, PublicKey publicKey, String symmetricWrappingAlg, int keySizeInBits)
-    {
+    public JceKTSKeyTransRecipientInfoGenerator(byte[] subjectKeyIdentifier, PublicKey publicKey, String symmetricWrappingAlg, int keySizeInBits) {
         super(subjectKeyIdentifier, new JceKTSKeyWrapper(publicKey, symmetricWrappingAlg, keySizeInBits, ANONYMOUS_SENDER, getEncodedSubKeyId(subjectKeyIdentifier)));
-    }
-
-    private static byte[] getEncodedRecipID(IssuerAndSerialNumber recipientID)
-        throws CertificateEncodingException
-    {
-        try
-        {
-            return recipientID.getEncoded(ASN1Encoding.DER);
-        }
-        catch (final IOException e)
-        {
-            throw new CertificateEncodingException("Cannot process extracted IssuerAndSerialNumber: " + e.getMessage())
-            {
-                public Throwable getCause()
-                {
-                    return e;
-                }
-            };
-        }
-    }
-
-    private static byte[] getEncodedSubKeyId(byte[] subjectKeyIdentifier)
-    {
-        try
-        {
-            return new DEROctetString(subjectKeyIdentifier).getEncoded();
-        }
-        catch (final IOException e)
-        {
-            throw new IllegalArgumentException("Cannot process subject key identifier: " + e.getMessage())
-            {
-                public Throwable getCause()
-                {
-                    return e;
-                }
-            };
-        }
     }
 
     /**
@@ -82,8 +41,7 @@ public class JceKTSKeyTransRecipientInfoGenerator
      * @param algorithmIdentifier the identifier and parameters for the encryption algorithm to be used.
      */
     public JceKTSKeyTransRecipientInfoGenerator(X509Certificate recipientCert, AlgorithmIdentifier algorithmIdentifier)
-        throws CertificateEncodingException
-    {
+            throws CertificateEncodingException {
         super(new IssuerAndSerialNumber(new JcaX509CertificateHolder(recipientCert).toASN1Structure()), new JceAsymmetricKeyWrapper(algorithmIdentifier, recipientCert.getPublicKey()));
     }
 
@@ -94,21 +52,43 @@ public class JceKTSKeyTransRecipientInfoGenerator
      * @param algorithmIdentifier  the identifier and parameters for the encryption algorithm to be used.
      * @param publicKey            the public key to use.
      */
-    public JceKTSKeyTransRecipientInfoGenerator(byte[] subjectKeyIdentifier, AlgorithmIdentifier algorithmIdentifier, PublicKey publicKey)
-    {
+    public JceKTSKeyTransRecipientInfoGenerator(byte[] subjectKeyIdentifier, AlgorithmIdentifier algorithmIdentifier, PublicKey publicKey) {
         super(subjectKeyIdentifier, new JceAsymmetricKeyWrapper(algorithmIdentifier, publicKey));
     }
 
-    public JceKTSKeyTransRecipientInfoGenerator setProvider(String providerName)
-    {
-        ((JceKTSKeyWrapper)this.wrapper).setProvider(providerName);
+    private static byte[] getEncodedRecipID(IssuerAndSerialNumber recipientID)
+            throws CertificateEncodingException {
+        try {
+            return recipientID.getEncoded(ASN1Encoding.DER);
+        } catch (final IOException e) {
+            throw new CertificateEncodingException("Cannot process extracted IssuerAndSerialNumber: " + e.getMessage()) {
+                public Throwable getCause() {
+                    return e;
+                }
+            };
+        }
+    }
+
+    private static byte[] getEncodedSubKeyId(byte[] subjectKeyIdentifier) {
+        try {
+            return new DEROctetString(subjectKeyIdentifier).getEncoded();
+        } catch (final IOException e) {
+            throw new IllegalArgumentException("Cannot process subject key identifier: " + e.getMessage()) {
+                public Throwable getCause() {
+                    return e;
+                }
+            };
+        }
+    }
+
+    public JceKTSKeyTransRecipientInfoGenerator setProvider(String providerName) {
+        ((JceKTSKeyWrapper) this.wrapper).setProvider(providerName);
 
         return this;
     }
 
-    public JceKTSKeyTransRecipientInfoGenerator setProvider(Provider provider)
-    {
-        ((JceKTSKeyWrapper)this.wrapper).setProvider(provider);
+    public JceKTSKeyTransRecipientInfoGenerator setProvider(Provider provider) {
+        ((JceKTSKeyWrapper) this.wrapper).setProvider(provider);
 
         return this;
     }

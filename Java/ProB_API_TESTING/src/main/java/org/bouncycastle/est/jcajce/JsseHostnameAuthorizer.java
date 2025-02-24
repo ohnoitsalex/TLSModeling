@@ -1,8 +1,7 @@
 package org.bouncycastle.est.jcajce;
 
-import java.io.IOException;
-
 import javax.net.ssl.SSLSession;
+import java.io.IOException;
 
 /**
  * Verify the host name is as expected after the SSL Handshake has been completed.

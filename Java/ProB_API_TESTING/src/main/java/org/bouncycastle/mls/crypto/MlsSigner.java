@@ -1,10 +1,10 @@
 package org.bouncycastle.mls.crypto;
 
-import java.io.IOException;
-
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.CryptoException;
 import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
+
+import java.io.IOException;
 
 public interface MlsSigner
 {

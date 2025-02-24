@@ -1,10 +1,10 @@
 package org.bouncycastle.mls.codec;
 
-import java.io.IOException;
-
 import org.bouncycastle.mls.crypto.MlsCipherSuite;
 import org.bouncycastle.mls.crypto.Secret;
 import org.bouncycastle.util.Arrays;
+
+import java.io.IOException;
 
 public class PublicMessage
     implements MLSInputStream.Readable, MLSOutputStream.Writable

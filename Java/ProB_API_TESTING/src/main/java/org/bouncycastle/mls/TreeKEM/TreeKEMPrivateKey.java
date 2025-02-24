@@ -1,12 +1,5 @@
 package org.bouncycastle.mls.TreeKEM;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.mls.TreeSize;
 import org.bouncycastle.mls.codec.HPKECiphertext;
@@ -15,6 +8,9 @@ import org.bouncycastle.mls.crypto.MlsCipherSuite;
 import org.bouncycastle.mls.crypto.Secret;
 import org.bouncycastle.util.Strings;
 import org.bouncycastle.util.encoders.Hex;
+
+import java.io.IOException;
+import java.util.*;
 
 import static org.bouncycastle.mls.TreeKEM.Utils.removeLeaves;
 

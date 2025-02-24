@@ -5,46 +5,37 @@ import org.bouncycastle.asn1.cms.IssuerAndSerialNumber;
 import org.bouncycastle.asn1.cms.SignerIdentifier;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.cert.X509CertificateHolder;
-import org.bouncycastle.operator.ContentSigner;
-import org.bouncycastle.operator.DefaultDigestAlgorithmIdentifierFinder;
-import org.bouncycastle.operator.DigestAlgorithmIdentifierFinder;
-import org.bouncycastle.operator.DigestCalculator;
-import org.bouncycastle.operator.DigestCalculatorProvider;
-import org.bouncycastle.operator.ExtendedContentSigner;
-import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.operator.*;
 
 /**
  * Builder for SignerInfo generator objects.
  */
-public class SignerInfoGeneratorBuilder
-{
+public class SignerInfoGeneratorBuilder {
     private final DigestAlgorithmIdentifierFinder digAlgFinder = new DefaultDigestAlgorithmIdentifierFinder();
 
     private final DigestCalculatorProvider digestProvider;
+    private final CMSSignatureEncryptionAlgorithmFinder sigEncAlgFinder;
     private boolean directSignature;
     private CMSAttributeTableGenerator signedGen;
     private CMSAttributeTableGenerator unsignedGen;
-    private final CMSSignatureEncryptionAlgorithmFinder sigEncAlgFinder;
     private AlgorithmIdentifier contentDigest;
 
     /**
-     *  Base constructor.
+     * Base constructor.
      *
-     * @param digestProvider  a provider of digest calculators for the algorithms required in the signature and attribute calculations.
+     * @param digestProvider a provider of digest calculators for the algorithms required in the signature and attribute calculations.
      */
-    public SignerInfoGeneratorBuilder(DigestCalculatorProvider digestProvider)
-    {
+    public SignerInfoGeneratorBuilder(DigestCalculatorProvider digestProvider) {
         this(digestProvider, new DefaultCMSSignatureEncryptionAlgorithmFinder());
     }
 
     /**
      * Base constructor with a particular finder for signature algorithms.
      *
-     * @param digestProvider a provider of digest calculators for the algorithms required in the signature and attribute calculations.
+     * @param digestProvider  a provider of digest calculators for the algorithms required in the signature and attribute calculations.
      * @param sigEncAlgFinder finder for algorithm IDs to store for the signature encryption/signature algorithm field.
      */
-    public SignerInfoGeneratorBuilder(DigestCalculatorProvider digestProvider, CMSSignatureEncryptionAlgorithmFinder sigEncAlgFinder)
-    {
+    public SignerInfoGeneratorBuilder(DigestCalculatorProvider digestProvider, CMSSignatureEncryptionAlgorithmFinder sigEncAlgFinder) {
         this.digestProvider = digestProvider;
         this.sigEncAlgFinder = sigEncAlgFinder;
     }
@@ -55,8 +46,7 @@ public class SignerInfoGeneratorBuilder
      *
      * @return the builder object
      */
-    public SignerInfoGeneratorBuilder setDirectSignature(boolean hasNoSignedAttributes)
-    {
+    public SignerInfoGeneratorBuilder setDirectSignature(boolean hasNoSignedAttributes) {
         this.directSignature = hasNoSignedAttributes;
 
         return this;
@@ -67,21 +57,19 @@ public class SignerInfoGeneratorBuilder
      *
      * @return the builder object
      */
-    public SignerInfoGeneratorBuilder setContentDigest(AlgorithmIdentifier contentDigest)
-    {
+    public SignerInfoGeneratorBuilder setContentDigest(AlgorithmIdentifier contentDigest) {
         this.contentDigest = contentDigest;
 
         return this;
     }
 
     /**
-     *  Provide a custom signed attribute generator.
+     * Provide a custom signed attribute generator.
      *
      * @param signedGen a generator of signed attributes.
      * @return the builder object
      */
-    public SignerInfoGeneratorBuilder setSignedAttributeGenerator(CMSAttributeTableGenerator signedGen)
-    {
+    public SignerInfoGeneratorBuilder setSignedAttributeGenerator(CMSAttributeTableGenerator signedGen) {
         this.signedGen = signedGen;
 
         return this;
@@ -90,11 +78,10 @@ public class SignerInfoGeneratorBuilder
     /**
      * Provide a generator of unsigned attributes.
      *
-     * @param unsignedGen  a generator for signed attributes.
+     * @param unsignedGen a generator for signed attributes.
      * @return the builder object
      */
-    public SignerInfoGeneratorBuilder setUnsignedAttributeGenerator(CMSAttributeTableGenerator unsignedGen)
-    {
+    public SignerInfoGeneratorBuilder setUnsignedAttributeGenerator(CMSAttributeTableGenerator unsignedGen) {
         this.unsignedGen = unsignedGen;
 
         return this;
@@ -103,14 +90,13 @@ public class SignerInfoGeneratorBuilder
     /**
      * Build a generator with the passed in certHolder issuer and serial number as the signerIdentifier.
      *
-     * @param contentSigner  operator for generating the final signature in the SignerInfo with.
-     * @param certHolder  carrier for the X.509 certificate related to the contentSigner.
-     * @return  a SignerInfoGenerator
-     * @throws OperatorCreationException   if the generator cannot be built.
+     * @param contentSigner operator for generating the final signature in the SignerInfo with.
+     * @param certHolder    carrier for the X.509 certificate related to the contentSigner.
+     * @return a SignerInfoGenerator
+     * @throws OperatorCreationException if the generator cannot be built.
      */
     public SignerInfoGenerator build(ContentSigner contentSigner, X509CertificateHolder certHolder)
-        throws OperatorCreationException
-    {
+            throws OperatorCreationException {
         SignerIdentifier sigId = new SignerIdentifier(new IssuerAndSerialNumber(certHolder.toASN1Structure()));
 
         SignerInfoGenerator sigInfoGen = createGenerator(contentSigner, sigId);
@@ -124,66 +110,53 @@ public class SignerInfoGeneratorBuilder
      * Build a generator with the passed in subjectKeyIdentifier as the signerIdentifier. If used  you should
      * try to follow the calculation described in RFC 5280 section 4.2.1.2.
      *
-     * @param contentSigner  operator for generating the final signature in the SignerInfo with.
-     * @param subjectKeyIdentifier    key identifier to identify the public key for verifying the signature.
-     * @return  a SignerInfoGenerator
+     * @param contentSigner        operator for generating the final signature in the SignerInfo with.
+     * @param subjectKeyIdentifier key identifier to identify the public key for verifying the signature.
+     * @return a SignerInfoGenerator
      * @throws OperatorCreationException if the generator cannot be built.
      */
     public SignerInfoGenerator build(ContentSigner contentSigner, byte[] subjectKeyIdentifier)
-        throws OperatorCreationException
-    {
+            throws OperatorCreationException {
         SignerIdentifier sigId = new SignerIdentifier(new DEROctetString(subjectKeyIdentifier));
 
         return createGenerator(contentSigner, sigId);
     }
 
     private SignerInfoGenerator createGenerator(ContentSigner contentSigner, SignerIdentifier sigId)
-        throws OperatorCreationException
-    {
+            throws OperatorCreationException {
         DigestCalculator digester;
-        if (contentDigest != null)
-        {
+        if (contentDigest != null) {
             digester = digestProvider.get(contentDigest);
-        }
-        else
-        {
+        } else {
             AlgorithmIdentifier digestAlgorithmIdentifier = null;
 
-            if (contentSigner instanceof ExtendedContentSigner)
-            {
-                digestAlgorithmIdentifier = ((ExtendedContentSigner)contentSigner).getDigestAlgorithmIdentifier();
+            if (contentSigner instanceof ExtendedContentSigner) {
+                digestAlgorithmIdentifier = ((ExtendedContentSigner) contentSigner).getDigestAlgorithmIdentifier();
             }
 
-            if (digestAlgorithmIdentifier == null)
-            {
+            if (digestAlgorithmIdentifier == null) {
                 digestAlgorithmIdentifier = digAlgFinder.find(contentSigner.getAlgorithmIdentifier());
             }
 
-            if (digestAlgorithmIdentifier != null)
-            {
+            if (digestAlgorithmIdentifier != null) {
                 digester = digestProvider.get(digestAlgorithmIdentifier);
-            }
-            else
-            {
+            } else {
                 throw new OperatorCreationException("no digest algorithm specified for signature algorithm");
             }
         }
 
-        if (directSignature)
-        {
+        if (directSignature) {
             return new SignerInfoGenerator(sigId, contentSigner, digester.getAlgorithmIdentifier(), sigEncAlgFinder);
         }
 
-        if (signedGen != null || unsignedGen != null)
-        {
-            if (signedGen == null)
-            {
+        if (signedGen != null || unsignedGen != null) {
+            if (signedGen == null) {
                 signedGen = new DefaultSignedAttributeTableGenerator();
             }
 
             return new SignerInfoGenerator(sigId, contentSigner, digester, sigEncAlgFinder, signedGen, unsignedGen);
         }
-        
+
         return new SignerInfoGenerator(sigId, contentSigner, digester, sigEncAlgFinder, new DefaultSignedAttributeTableGenerator(), null);
     }
 }

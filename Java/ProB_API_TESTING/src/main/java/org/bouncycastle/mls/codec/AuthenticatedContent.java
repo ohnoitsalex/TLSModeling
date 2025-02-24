@@ -1,8 +1,8 @@
 package org.bouncycastle.mls.codec;
 
-import java.io.IOException;
-
 import org.bouncycastle.mls.crypto.MlsCipherSuite;
+
+import java.io.IOException;
 
 public class AuthenticatedContent
     implements MLSInputStream.Readable, MLSOutputStream.Writable

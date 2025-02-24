@@ -14,64 +14,55 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 
 public class JceKeyTransRecipientInfoGenerator
-    extends KeyTransRecipientInfoGenerator
-{
+        extends KeyTransRecipientInfoGenerator {
     public JceKeyTransRecipientInfoGenerator(X509Certificate recipientCert)
-        throws CertificateEncodingException
-    {
+            throws CertificateEncodingException {
         super(new IssuerAndSerialNumber(new JcaX509CertificateHolder(recipientCert).toASN1Structure()), new JceAsymmetricKeyWrapper(recipientCert));
     }
-    
+
     public JceKeyTransRecipientInfoGenerator(X509Certificate recipientCert, AsymmetricKeyWrapper wrapper)
-        throws CertificateEncodingException
-    {
+            throws CertificateEncodingException {
         super(new IssuerAndSerialNumber(new JcaX509CertificateHolder(recipientCert).toASN1Structure()), wrapper);
     }
 
-    public JceKeyTransRecipientInfoGenerator(byte[] subjectKeyIdentifier, PublicKey publicKey)
-    {
+    public JceKeyTransRecipientInfoGenerator(byte[] subjectKeyIdentifier, PublicKey publicKey) {
         super(subjectKeyIdentifier, new JceAsymmetricKeyWrapper(publicKey));
     }
 
-    public JceKeyTransRecipientInfoGenerator(byte[] subjectKeyIdentifier, AsymmetricKeyWrapper wrapper)
-    {
+    public JceKeyTransRecipientInfoGenerator(byte[] subjectKeyIdentifier, AsymmetricKeyWrapper wrapper) {
         super(subjectKeyIdentifier, wrapper);
     }
 
     /**
      * Create a generator overriding the algorithm type implied by the public key in the certificate passed in.
      *
-     * @param recipientCert certificate carrying the public key.
+     * @param recipientCert       certificate carrying the public key.
      * @param algorithmIdentifier the identifier and parameters for the encryption algorithm to be used.
      */
     public JceKeyTransRecipientInfoGenerator(X509Certificate recipientCert, AlgorithmIdentifier algorithmIdentifier)
-        throws CertificateEncodingException
-    {
+            throws CertificateEncodingException {
         super(new IssuerAndSerialNumber(new JcaX509CertificateHolder(recipientCert).toASN1Structure()), new JceAsymmetricKeyWrapper(algorithmIdentifier, recipientCert.getPublicKey()));
     }
 
     /**
      * Create a generator overriding the algorithm type implied by the public key passed in.
      *
-     * @param subjectKeyIdentifier  the subject key identifier value to associate with the public key.
+     * @param subjectKeyIdentifier the subject key identifier value to associate with the public key.
      * @param algorithmIdentifier  the identifier and parameters for the encryption algorithm to be used.
-     * @param publicKey the public key to use.
+     * @param publicKey            the public key to use.
      */
-    public JceKeyTransRecipientInfoGenerator(byte[] subjectKeyIdentifier, AlgorithmIdentifier algorithmIdentifier, PublicKey publicKey)
-    {
+    public JceKeyTransRecipientInfoGenerator(byte[] subjectKeyIdentifier, AlgorithmIdentifier algorithmIdentifier, PublicKey publicKey) {
         super(subjectKeyIdentifier, new JceAsymmetricKeyWrapper(algorithmIdentifier, publicKey));
     }
 
-    public JceKeyTransRecipientInfoGenerator setProvider(String providerName)
-    {
-        ((JceAsymmetricKeyWrapper)this.wrapper).setProvider(providerName);
+    public JceKeyTransRecipientInfoGenerator setProvider(String providerName) {
+        ((JceAsymmetricKeyWrapper) this.wrapper).setProvider(providerName);
 
         return this;
     }
 
-    public JceKeyTransRecipientInfoGenerator setProvider(Provider provider)
-    {
-        ((JceAsymmetricKeyWrapper)this.wrapper).setProvider(provider);
+    public JceKeyTransRecipientInfoGenerator setProvider(Provider provider) {
+        ((JceAsymmetricKeyWrapper) this.wrapper).setProvider(provider);
 
         return this;
     }
@@ -81,17 +72,17 @@ public class JceKeyTransRecipientInfoGenerator
      * the standard lookup table won't work. Use this method to establish a specific mapping from an
      * algorithm identifier to a specific algorithm.
      * <p>
-     *     For example:
+     * For example:
      * <pre>
      *     unwrapper.setAlgorithmMapping(PKCSObjectIdentifiers.rsaEncryption, "RSA");
      * </pre>
-     * @param algorithm  OID of algorithm in recipient.
+     *
+     * @param algorithm     OID of algorithm in recipient.
      * @param algorithmName JCE algorithm name to use.
      * @return the current RecipientInfoGenerator.
      */
-    public JceKeyTransRecipientInfoGenerator setAlgorithmMapping(ASN1ObjectIdentifier algorithm, String algorithmName)
-    {
-        ((JceAsymmetricKeyWrapper)this.wrapper).setAlgorithmMapping(algorithm, algorithmName);
+    public JceKeyTransRecipientInfoGenerator setAlgorithmMapping(ASN1ObjectIdentifier algorithm, String algorithmName) {
+        ((JceAsymmetricKeyWrapper) this.wrapper).setAlgorithmMapping(algorithm, algorithmName);
 
         return this;
     }

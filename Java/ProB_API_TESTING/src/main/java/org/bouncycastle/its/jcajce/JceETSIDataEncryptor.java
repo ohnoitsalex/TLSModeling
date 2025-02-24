@@ -1,17 +1,16 @@
 package org.bouncycastle.its.jcajce;
 
-import java.security.Provider;
-import java.security.SecureRandom;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-
 import org.bouncycastle.its.operator.ETSIDataEncryptor;
 import org.bouncycastle.jcajce.util.DefaultJcaJceHelper;
 import org.bouncycastle.jcajce.util.JcaJceHelper;
 import org.bouncycastle.jcajce.util.NamedJcaJceHelper;
 import org.bouncycastle.jcajce.util.ProviderJcaJceHelper;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.Provider;
+import java.security.SecureRandom;
 
 public class JceETSIDataEncryptor
     implements ETSIDataEncryptor

@@ -1,15 +1,14 @@
 package org.bouncycastle.est.jcajce;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocket;
-
 import org.bouncycastle.est.LimitedSource;
 import org.bouncycastle.est.Source;
 import org.bouncycastle.est.TLSUniqueProvider;
+
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocket;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 
 class LimitedSSLSocketSource

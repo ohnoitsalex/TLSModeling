@@ -1,8 +1,5 @@
 package org.bouncycastle.its.bc;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.nist.NISTObjectIdentifiers;
 import org.bouncycastle.asn1.sec.SECObjectIdentifiers;
@@ -19,6 +16,9 @@ import org.bouncycastle.its.operator.ITSContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.bc.BcDefaultDigestProvider;
 import org.bouncycastle.util.Arrays;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class BcITSContentSigner
     implements ITSContentSigner

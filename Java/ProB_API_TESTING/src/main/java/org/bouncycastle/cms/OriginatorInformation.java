@@ -3,12 +3,10 @@ package org.bouncycastle.cms;
 import org.bouncycastle.asn1.cms.OriginatorInfo;
 import org.bouncycastle.util.Store;
 
-public class OriginatorInformation
-{
+public class OriginatorInformation {
     private final OriginatorInfo originatorInfo;
 
-    OriginatorInformation(OriginatorInfo originatorInfo)
-    {
+    OriginatorInformation(OriginatorInfo originatorInfo) {
         this.originatorInfo = originatorInfo;
     }
 
@@ -17,8 +15,7 @@ public class OriginatorInformation
      *
      * @return a Store of X509CertificateHolder objects.
      */
-    public Store getCertificates()
-    {
+    public Store getCertificates() {
         return CMSSignedHelper.INSTANCE.getCertificates(originatorInfo.getCertificates());
     }
 
@@ -27,8 +24,7 @@ public class OriginatorInformation
      *
      * @return a Store of X509CRLHolder objects.
      */
-    public Store getCRLs()
-    {
+    public Store getCRLs() {
         return CMSSignedHelper.INSTANCE.getCRLs(originatorInfo.getCRLs());
     }
 
@@ -37,8 +33,7 @@ public class OriginatorInformation
      *
      * @return a OriginatorInfo.
      */
-    public OriginatorInfo toASN1Structure()
-    {
+    public OriginatorInfo toASN1Structure() {
         return originatorInfo;
     }
 }

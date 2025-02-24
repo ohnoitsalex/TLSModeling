@@ -1,9 +1,9 @@
 package org.bouncycastle.mls.codec;
 
+import org.bouncycastle.mls.crypto.MlsCipherSuite;
+
 import java.io.IOException;
 import java.util.ArrayList;
-
-import org.bouncycastle.mls.crypto.MlsCipherSuite;
 
 public class GroupContext
     implements MLSInputStream.Readable, MLSOutputStream.Writable

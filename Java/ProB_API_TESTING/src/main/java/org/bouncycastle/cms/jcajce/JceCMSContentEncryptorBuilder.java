@@ -30,13 +30,12 @@ import java.security.*;
 /**
  * Builder for the content encryptor in EnvelopedData - used to encrypt the actual transmitted content.
  */
-public class JceCMSContentEncryptorBuilder
-{
+public class JceCMSContentEncryptorBuilder {
     private static final SecretKeySizeProvider KEY_SIZE_PROVIDER = DefaultSecretKeySizeProvider.INSTANCE;
     private static final byte[] hkdfSalt = Strings.toByteArray("The Cryptographic Message Syntax");
 
     private final ASN1ObjectIdentifier encryptionOID;
-    private final int                  keySize;
+    private final int keySize;
 
     private EnvelopedDataHelper helper = new EnvelopedDataHelper(new DefaultJcaJceExtHelper());
     private SecureRandom random;
@@ -44,37 +43,27 @@ public class JceCMSContentEncryptorBuilder
     private AlgorithmParameters algorithmParameters;
     private ASN1ObjectIdentifier kdfAlgorithm;
 
-    public JceCMSContentEncryptorBuilder(ASN1ObjectIdentifier encryptionOID)
-    {
+    public JceCMSContentEncryptorBuilder(ASN1ObjectIdentifier encryptionOID) {
         this(encryptionOID, KEY_SIZE_PROVIDER.getKeySize(encryptionOID));
     }
 
-    public JceCMSContentEncryptorBuilder(ASN1ObjectIdentifier encryptionOID, int keySize)
-    {
+    public JceCMSContentEncryptorBuilder(ASN1ObjectIdentifier encryptionOID, int keySize) {
         this.encryptionOID = encryptionOID;
 
         int fixedSize = KEY_SIZE_PROVIDER.getKeySize(encryptionOID);
 
-        if (encryptionOID.equals(PKCSObjectIdentifiers.des_EDE3_CBC))
-        {
-            if (keySize != 168 && keySize != fixedSize)
-            {
+        if (encryptionOID.equals(PKCSObjectIdentifiers.des_EDE3_CBC)) {
+            if (keySize != 168 && keySize != fixedSize) {
                 throw new IllegalArgumentException("incorrect keySize for encryptionOID passed to builder.");
             }
             this.keySize = 168;
-        }
-        else if (encryptionOID.equals(OIWObjectIdentifiers.desCBC))
-        {
-            if (keySize != 56 && keySize != fixedSize)
-            {
+        } else if (encryptionOID.equals(OIWObjectIdentifiers.desCBC)) {
+            if (keySize != 56 && keySize != fixedSize) {
                 throw new IllegalArgumentException("incorrect keySize for encryptionOID passed to builder.");
             }
             this.keySize = 56;
-        }
-        else
-        {
-            if (fixedSize > 0 && fixedSize != keySize)
-            {
+        } else {
+            if (fixedSize > 0 && fixedSize != keySize) {
                 throw new IllegalArgumentException("incorrect keySize for encryptionOID passed to builder.");
             }
             this.keySize = keySize;
@@ -86,29 +75,33 @@ public class JceCMSContentEncryptorBuilder
      *
      * @param encryptionAlgId the full algorithm identifier for the encryption.
      */
-    public JceCMSContentEncryptorBuilder(AlgorithmIdentifier encryptionAlgId)
-    {
+    public JceCMSContentEncryptorBuilder(AlgorithmIdentifier encryptionAlgId) {
         this(encryptionAlgId.getAlgorithm(), KEY_SIZE_PROVIDER.getKeySize(encryptionAlgId.getAlgorithm()));
         this.algorithmIdentifier = encryptionAlgId;
     }
 
-    public JceCMSContentEncryptorBuilder setEnableSha256HKdf(boolean useSha256Hkdf)
-    {
-        if (useSha256Hkdf)
-        {
+    private static boolean checkForAEAD() {
+        return (Boolean) AccessController.doPrivileged(new PrivilegedAction() {
+            public Object run() {
+                try {
+                    return Cipher.class.getMethod("updateAAD", byte[].class) != null;
+                } catch (Exception ignore) {
+                    // TODO[logging] Log the fact that we are falling back to BC-specific class
+                    return Boolean.FALSE;
+                }
+            }
+        });
+    }
+
+    public JceCMSContentEncryptorBuilder setEnableSha256HKdf(boolean useSha256Hkdf) {
+        if (useSha256Hkdf) {
             // eventually this will be the default.
             this.kdfAlgorithm = CMSObjectIdentifiers.id_alg_cek_hkdf_sha256;
-        }
-        else
-        {
-            if (this.kdfAlgorithm != null)
-            {
-                if (this.kdfAlgorithm.equals(CMSObjectIdentifiers.id_alg_cek_hkdf_sha256))
-                {
+        } else {
+            if (this.kdfAlgorithm != null) {
+                if (this.kdfAlgorithm.equals(CMSObjectIdentifiers.id_alg_cek_hkdf_sha256)) {
                     this.kdfAlgorithm = null;
-                }
-                else
-                {
+                } else {
                     throw new IllegalStateException("SHA256 HKDF not enabled");
                 }
             }
@@ -123,8 +116,7 @@ public class JceCMSContentEncryptorBuilder
      * @param provider the provider object to use for cipher and default parameters creation.
      * @return the current builder instance.
      */
-    public JceCMSContentEncryptorBuilder setProvider(Provider provider)
-    {
+    public JceCMSContentEncryptorBuilder setProvider(Provider provider) {
         this.helper = new EnvelopedDataHelper(new ProviderJcaJceExtHelper(provider));
 
         return this;
@@ -136,8 +128,7 @@ public class JceCMSContentEncryptorBuilder
      * @param providerName the name of the provider to use for cipher and default parameters creation.
      * @return the current builder instance.
      */
-    public JceCMSContentEncryptorBuilder setProvider(String providerName)
-    {
+    public JceCMSContentEncryptorBuilder setProvider(String providerName) {
         this.helper = new EnvelopedDataHelper(new NamedJcaJceExtHelper(providerName));
 
         return this;
@@ -149,8 +140,7 @@ public class JceCMSContentEncryptorBuilder
      * @param random the secure random to use.
      * @return the current builder instance.
      */
-    public JceCMSContentEncryptorBuilder setSecureRandom(SecureRandom random)
-    {
+    public JceCMSContentEncryptorBuilder setSecureRandom(SecureRandom random) {
         this.random = random;
 
         return this;
@@ -162,140 +152,105 @@ public class JceCMSContentEncryptorBuilder
      * @param algorithmParameters algorithmParameters for content encryption.
      * @return the current builder instance.
      */
-    public JceCMSContentEncryptorBuilder setAlgorithmParameters(AlgorithmParameters algorithmParameters)
-    {
+    public JceCMSContentEncryptorBuilder setAlgorithmParameters(AlgorithmParameters algorithmParameters) {
         this.algorithmParameters = algorithmParameters;
 
         return this;
     }
 
     public OutputEncryptor build()
-        throws CMSException
-    {
-        if (algorithmParameters != null)
-        {
-            if (helper.isAuthEnveloped(encryptionOID))
-            {
+            throws CMSException {
+        if (algorithmParameters != null) {
+            if (helper.isAuthEnveloped(encryptionOID)) {
                 return new CMSAuthOutputEncryptor(kdfAlgorithm, encryptionOID, keySize, algorithmParameters, random);
             }
             return new CMSOutputEncryptor(kdfAlgorithm, encryptionOID, keySize, algorithmParameters, random);
         }
-        if (algorithmIdentifier != null)
-        {
+        if (algorithmIdentifier != null) {
             ASN1Encodable params = algorithmIdentifier.getParameters();
-            if (params != null && !params.equals(DERNull.INSTANCE))
-            {
-                try
-                {
+            if (params != null && !params.equals(DERNull.INSTANCE)) {
+                try {
                     algorithmParameters = helper.createAlgorithmParameters(algorithmIdentifier.getAlgorithm());
 
                     algorithmParameters.init(params.toASN1Primitive().getEncoded());
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     throw new CMSException("unable to process provided algorithmIdentifier: " + e.toString(), e);
                 }
             }
         }
 
-        if (helper.isAuthEnveloped(encryptionOID))
-        {
+        if (helper.isAuthEnveloped(encryptionOID)) {
             return new CMSAuthOutputEncryptor(kdfAlgorithm, encryptionOID, keySize, algorithmParameters, random);
         }
         return new CMSOutputEncryptor(kdfAlgorithm, encryptionOID, keySize, algorithmParameters, random);
     }
 
-    private class CMSOutEncryptor
-    {
+    private class CMSOutEncryptor {
         protected SecretKey encKey;
         protected AlgorithmIdentifier algorithmIdentifier;
-        protected Cipher              cipher;
+        protected Cipher cipher;
 
         private void applyKdf(ASN1ObjectIdentifier kdfAlgorithm, AlgorithmParameters params, SecureRandom random)
-            throws CMSException
-        {
+                throws CMSException {
             // TODO: at the moment assumes HKDF with SHA256
             HKDFBytesGenerator kdf = new HKDFBytesGenerator(new SHA256Digest());
             byte[] encKeyEncoded = encKey.getEncoded();
-            try
-            {
+            try {
                 kdf.init(new HKDFParameters(encKeyEncoded, hkdfSalt, algorithmIdentifier.getEncoded(ASN1Encoding.DER)));
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 throw new CMSException("unable to encode enc algorithm parameters", e);
             }
 
             kdf.generateBytes(encKeyEncoded, 0, encKeyEncoded.length);
 
             SecretKeySpec derivedKey = new SecretKeySpec(encKeyEncoded, encKey.getAlgorithm());
-            try
-            {
+            try {
                 cipher.init(Cipher.ENCRYPT_MODE, derivedKey, params, random);
-            }
-            catch (GeneralSecurityException e)
-            {
+            } catch (GeneralSecurityException e) {
                 throw new CMSException("unable to initialize cipher: " + e.getMessage(), e);
             }
             algorithmIdentifier = new AlgorithmIdentifier(kdfAlgorithm, algorithmIdentifier);
         }
 
         protected void init(ASN1ObjectIdentifier kdfAlgorithm, ASN1ObjectIdentifier encryptionOID, int keySize, AlgorithmParameters params, SecureRandom random)
-            throws CMSException
-        {
+                throws CMSException {
             KeyGenerator keyGen = helper.createKeyGenerator(encryptionOID);
 
             random = CryptoServicesRegistrar.getSecureRandom(random);
 
-            if (keySize < 0)
-            {
+            if (keySize < 0) {
                 keyGen.init(random);
-            }
-            else
-            {
+            } else {
                 keyGen.init(keySize, random);
             }
 
             cipher = helper.createCipher(encryptionOID);
             encKey = keyGen.generateKey();
 
-            if (params == null)
-            {
+            if (params == null) {
                 params = helper.generateParameters(encryptionOID, encKey, random);
             }
-            
-            if (params != null)
-            {
+
+            if (params != null) {
                 algorithmIdentifier = helper.getAlgorithmIdentifier(encryptionOID, params);
 
-                if (kdfAlgorithm != null)
-                {
+                if (kdfAlgorithm != null) {
                     applyKdf(kdfAlgorithm, params, random);
-                }
-                else
-                {
-                    try
-                    {
+                } else {
+                    try {
                         cipher.init(Cipher.ENCRYPT_MODE, encKey, params, random);
-                    }
-                    catch (GeneralSecurityException e)
-                    {
+                    } catch (GeneralSecurityException e) {
                         throw new CMSException("unable to initialize cipher: " + e.getMessage(), e);
                     }
                 }
-            }
-            else
-            {
+            } else {
                 //
                 // If params are null we try and second guess on them as some providers don't provide
                 // algorithm parameter generation explicitly but instead generate them under the hood.
                 //
-                try
-                { 
+                try {
                     cipher.init(Cipher.ENCRYPT_MODE, encKey, params, random);
-                }
-                catch (GeneralSecurityException e)
-                {
+                } catch (GeneralSecurityException e) {
                     throw new CMSException("unable to initialize cipher: " + e.getMessage(), e);
                 }
 
@@ -303,8 +258,7 @@ public class JceCMSContentEncryptorBuilder
 
                 algorithmIdentifier = helper.getAlgorithmIdentifier(encryptionOID, params);
 
-                if (kdfAlgorithm != null)
-                {
+                if (kdfAlgorithm != null) {
                     applyKdf(kdfAlgorithm, params, random);
                 }
             }
@@ -312,103 +266,68 @@ public class JceCMSContentEncryptorBuilder
     }
 
     private class CMSOutputEncryptor
-        extends CMSOutEncryptor
-        implements OutputEncryptor
-    {
+            extends CMSOutEncryptor
+            implements OutputEncryptor {
         CMSOutputEncryptor(ASN1ObjectIdentifier kdfAlgorithm, ASN1ObjectIdentifier encryptionOID, int keySize, AlgorithmParameters params, SecureRandom random)
-            throws CMSException
-        {
+                throws CMSException {
             init(kdfAlgorithm, encryptionOID, keySize, params, random);
         }
 
-        public AlgorithmIdentifier getAlgorithmIdentifier()
-        {
+        public AlgorithmIdentifier getAlgorithmIdentifier() {
             return algorithmIdentifier;
         }
 
-        public OutputStream getOutputStream(OutputStream dOut)
-        {
+        public OutputStream getOutputStream(OutputStream dOut) {
             return new CipherOutputStream(dOut, cipher);
         }
 
-        public GenericKey getKey()
-        {
+        public GenericKey getKey() {
             return new JceGenericKey(algorithmIdentifier, encKey);
         }
     }
 
     private class CMSAuthOutputEncryptor
-        extends CMSOutEncryptor
-        implements OutputAEADEncryptor
-    {
-        private MacCaptureStream    macOut;
+            extends CMSOutEncryptor
+            implements OutputAEADEncryptor {
+        private MacCaptureStream macOut;
 
         CMSAuthOutputEncryptor(ASN1ObjectIdentifier kdfAlgorithm, ASN1ObjectIdentifier encryptionOID, int keySize, AlgorithmParameters params, SecureRandom random)
-            throws CMSException
-        {
+                throws CMSException {
             init(kdfAlgorithm, encryptionOID, keySize, params, random);
         }
 
-        public AlgorithmIdentifier getAlgorithmIdentifier()
-        {
+        public AlgorithmIdentifier getAlgorithmIdentifier() {
             return algorithmIdentifier;
         }
 
-        public OutputStream getOutputStream(OutputStream dOut)
-        {
+        public OutputStream getOutputStream(OutputStream dOut) {
             AlgorithmIdentifier algId;
-            if (kdfAlgorithm != null)
-            {
+            if (kdfAlgorithm != null) {
                 algId = AlgorithmIdentifier.getInstance(algorithmIdentifier.getParameters());
-            }
-            else
-            {
+            } else {
                 algId = algorithmIdentifier;
             }
-            
+
             // TODO: works for CCM too, but others will follow.
             GCMParameters p = GCMParameters.getInstance(algId.getParameters());
             macOut = new MacCaptureStream(dOut, p.getIcvLen());
             return new CipherOutputStream(macOut, cipher);
         }
 
-        public GenericKey getKey()
-        {
+        public GenericKey getKey() {
             return new JceGenericKey(algorithmIdentifier, encKey);
         }
 
-        public OutputStream getAADStream()
-        {
-            if (checkForAEAD())
-            {
+        public OutputStream getAADStream() {
+            if (checkForAEAD()) {
                 return new JceAADStream(cipher);
             }
 
             return null; // TODO: okay this is awful, we could use AEADParameterSpec for earlier JDKs.
         }
 
-        public byte[] getMAC()
-        {
+        public byte[] getMAC() {
             return macOut.getMac();
         }
-    }
-
-    private static boolean checkForAEAD()
-    {
-        return (Boolean)AccessController.doPrivileged(new PrivilegedAction()
-        {
-            public Object run()
-            {
-                try
-                {
-                    return Cipher.class.getMethod("updateAAD", byte[].class) != null;
-                }
-                catch (Exception ignore)
-                {
-                    // TODO[logging] Log the fact that we are falling back to BC-specific class
-                    return Boolean.FALSE;
-                }
-            }
-        });
     }
 }

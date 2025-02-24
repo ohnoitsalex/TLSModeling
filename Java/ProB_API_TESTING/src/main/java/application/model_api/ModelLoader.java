@@ -63,6 +63,11 @@ public class ModelLoader {
 
     public void executeSpecificTrace() {
         modelExecuter.createSubscription("session_machine");
-        modelExecuter.generateSpecificTrace();
+        modelExecuter.generateClientAndServerHello();
+    }
+
+    public void generateClientAndServerHello(){
+        modelExecuter.createSubscription("session_machine");
+        modelExecuter.generateClientAndServerHello();
     }
 }

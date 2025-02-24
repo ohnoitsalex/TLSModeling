@@ -1,13 +1,13 @@
 package org.bouncycastle.mls.crypto.bc;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.generators.HKDFBytesGenerator;
 import org.bouncycastle.crypto.params.HKDFParameters;
 import org.bouncycastle.mls.codec.MLSOutputStream;
 import org.bouncycastle.mls.crypto.MlsKdf;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class BcMlsKdf
     implements MlsKdf

@@ -1,17 +1,11 @@
 package org.bouncycastle.est.jcajce;
 
 
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.Provider;
-import java.security.SecureRandom;
-import java.security.Security;
-
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
+import java.security.*;
 
 /**
  * A basic builder to allow configuration of an SSLContext used to create an SSLSocketFactory.

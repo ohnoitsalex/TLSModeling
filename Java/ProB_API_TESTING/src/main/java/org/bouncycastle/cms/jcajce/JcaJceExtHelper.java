@@ -11,8 +11,7 @@ import javax.crypto.SecretKey;
 import java.security.PrivateKey;
 
 interface JcaJceExtHelper
-    extends JcaJceHelper
-{
+        extends JcaJceHelper {
     JceAsymmetricKeyUnwrapper createAsymmetricUnwrapper(AlgorithmIdentifier keyEncryptionAlgorithm, PrivateKey keyEncryptionKey);
 
     JceKTSKeyUnwrapper createAsymmetricUnwrapper(AlgorithmIdentifier keyEncryptionAlgorithm, PrivateKey keyEncryptionKey, byte[] partyUInfo, byte[] partyVInfo);

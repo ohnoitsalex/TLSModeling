@@ -1,53 +1,54 @@
 package org.bouncycastle.cms;
 
-import java.io.IOException;
-import java.util.List;
-
 import org.bouncycastle.asn1.ASN1OctetString;
 import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.cms.IssuerAndSerialNumber;
-import org.bouncycastle.asn1.cms.KeyAgreeRecipientIdentifier;
-import org.bouncycastle.asn1.cms.KeyAgreeRecipientInfo;
-import org.bouncycastle.asn1.cms.OriginatorIdentifierOrKey;
-import org.bouncycastle.asn1.cms.OriginatorPublicKey;
-import org.bouncycastle.asn1.cms.RecipientEncryptedKey;
-import org.bouncycastle.asn1.cms.RecipientKeyIdentifier;
+import org.bouncycastle.asn1.cms.*;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.asn1.x509.SubjectKeyIdentifier;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.util.Arrays;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * the RecipientInfo class for a recipient who has been sent a message
  * encrypted using key agreement.
  */
 public class KeyAgreeRecipientInformation
-    extends RecipientInformation
-{
+        extends RecipientInformation {
     private final KeyAgreeRecipientInfo info;
-    private final ASN1OctetString       encryptedKey;
+    private final ASN1OctetString encryptedKey;
+
+    KeyAgreeRecipientInformation(
+            KeyAgreeRecipientInfo info,
+            RecipientId rid,
+            ASN1OctetString encryptedKey,
+            AlgorithmIdentifier messageAlgorithm,
+            CMSSecureReadable secureReadable) {
+        super(info.getKeyEncryptionAlgorithm(), messageAlgorithm, secureReadable);
+
+        this.info = info;
+        this.rid = rid;
+        this.encryptedKey = encryptedKey;
+    }
 
     static void readRecipientInfo(List infos, KeyAgreeRecipientInfo info,
-        AlgorithmIdentifier messageAlgorithm, CMSSecureReadable secureReadable)
-    {
+                                  AlgorithmIdentifier messageAlgorithm, CMSSecureReadable secureReadable) {
         ASN1Sequence s = info.getRecipientEncryptedKeys();
 
-        for (int i = 0; i < s.size(); ++i)
-        {
+        for (int i = 0; i < s.size(); ++i) {
             RecipientEncryptedKey id = RecipientEncryptedKey.getInstance(
-                s.getObjectAt(i));
+                    s.getObjectAt(i));
 
             RecipientId rid;
 
             KeyAgreeRecipientIdentifier karid = id.getIdentifier();
             IssuerAndSerialNumber iAndSN = karid.getIssuerAndSerialNumber();
 
-            if (iAndSN != null)
-            {
+            if (iAndSN != null) {
                 rid = new KeyAgreeRecipientId(iAndSN.getName(), iAndSN.getSerialNumber().getValue());
-            }
-            else
-            {
+            } else {
                 RecipientKeyIdentifier rKeyID = karid.getRKeyID();
 
                 // Note: 'date' and 'other' fields of RecipientKeyIdentifier appear to be only informational
@@ -56,22 +57,8 @@ public class KeyAgreeRecipientInformation
             }
 
             infos.add(new KeyAgreeRecipientInformation(info, rid, id.getEncryptedKey(), messageAlgorithm,
-                secureReadable));
+                    secureReadable));
         }
-    }
-
-    KeyAgreeRecipientInformation(
-        KeyAgreeRecipientInfo   info,
-        RecipientId             rid,
-        ASN1OctetString         encryptedKey,
-        AlgorithmIdentifier     messageAlgorithm,
-        CMSSecureReadable       secureReadable)
-    {
-        super(info.getKeyEncryptionAlgorithm(), messageAlgorithm, secureReadable);
-
-        this.info = info;
-        this.rid = rid;
-        this.encryptedKey = encryptedKey;
     }
 
     /**
@@ -79,8 +66,7 @@ public class KeyAgreeRecipientInformation
      *
      * @return the originator details.
      */
-    public OriginatorIdentifierOrKey getOriginator()
-    {
+    public OriginatorIdentifierOrKey getOriginator() {
         return this.info.getOriginator();
     }
 
@@ -89,11 +75,9 @@ public class KeyAgreeRecipientInformation
      *
      * @return the user keying material, null if absent.
      */
-    public byte[] getUserKeyingMaterial()
-    {
+    public byte[] getUserKeyingMaterial() {
         ASN1OctetString ukm = this.info.getUserKeyingMaterial();
-        if (ukm != null)
-        {
+        if (ukm != null) {
             return Arrays.clone(ukm.getOctets());
         }
 
@@ -101,24 +85,19 @@ public class KeyAgreeRecipientInformation
     }
 
     private SubjectPublicKeyInfo getSenderPublicKeyInfo(AlgorithmIdentifier recKeyAlgId,
-        OriginatorIdentifierOrKey originator)
-        throws CMSException, IOException
-    {
+                                                        OriginatorIdentifierOrKey originator)
+            throws CMSException, IOException {
         OriginatorPublicKey opk = originator.getOriginatorKey();
-        if (opk != null)
-        {
+        if (opk != null) {
             return getPublicKeyInfoFromOriginatorPublicKey(recKeyAlgId, opk);
         }
 
         OriginatorId origID;
 
         IssuerAndSerialNumber iAndSN = originator.getIssuerAndSerialNumber();
-        if (iAndSN != null)
-        {
+        if (iAndSN != null) {
             origID = new OriginatorId(iAndSN.getName(), iAndSN.getSerialNumber().getValue());
-        }
-        else
-        {
+        } else {
             SubjectKeyIdentifier ski = originator.getSubjectKeyIdentifier();
 
             origID = new OriginatorId(ski.getKeyIdentifier());
@@ -128,26 +107,23 @@ public class KeyAgreeRecipientInformation
     }
 
     private SubjectPublicKeyInfo getPublicKeyInfoFromOriginatorPublicKey(AlgorithmIdentifier recKeyAlgId,
-            OriginatorPublicKey originatorPublicKey)
-    {
+                                                                         OriginatorPublicKey originatorPublicKey) {
         return new SubjectPublicKeyInfo(recKeyAlgId, originatorPublicKey.getPublicKeyData());
     }
 
     private SubjectPublicKeyInfo getPublicKeyInfoFromOriginatorId(OriginatorId origID)
-            throws CMSException
-    {
+            throws CMSException {
         // TODO Support all alternatives for OriginatorIdentifierOrKey
         // see RFC 3852 6.2.2
         throw new CMSException("No support for 'originator' as IssuerAndSerialNumber or SubjectKeyIdentifier");
     }
 
     protected RecipientOperator getRecipientOperator(Recipient recipient)
-        throws CMSException, IOException
-    {
-        KeyAgreeRecipient agreeRecipient = (KeyAgreeRecipient)recipient;
-        AlgorithmIdentifier    recKeyAlgId = agreeRecipient.getPrivateKeyAlgorithmIdentifier();
+            throws CMSException, IOException {
+        KeyAgreeRecipient agreeRecipient = (KeyAgreeRecipient) recipient;
+        AlgorithmIdentifier recKeyAlgId = agreeRecipient.getPrivateKeyAlgorithmIdentifier();
 
-        return ((KeyAgreeRecipient)recipient).getRecipientOperator(keyEncAlg, messageAlgorithm, getSenderPublicKeyInfo(recKeyAlgId,
-                        info.getOriginator()), info.getUserKeyingMaterial(), encryptedKey.getOctets());
+        return ((KeyAgreeRecipient) recipient).getRecipientOperator(keyEncAlg, messageAlgorithm, getSenderPublicKeyInfo(recKeyAlgId,
+                info.getOriginator()), info.getUserKeyingMaterial(), encryptedKey.getOctets());
     }
 }

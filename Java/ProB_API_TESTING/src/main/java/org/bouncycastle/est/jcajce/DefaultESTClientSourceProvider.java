@@ -1,20 +1,15 @@
 package org.bouncycastle.est.jcajce;
 
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-
 import org.bouncycastle.est.ESTClientSourceProvider;
 import org.bouncycastle.est.Source;
 import org.bouncycastle.util.Strings;
+
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.*;
 
 class DefaultESTClientSourceProvider
     implements ESTClientSourceProvider

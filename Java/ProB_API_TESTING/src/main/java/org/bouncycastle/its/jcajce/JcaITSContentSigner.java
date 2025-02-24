@@ -1,12 +1,5 @@
 package org.bouncycastle.its.jcajce;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.security.PrivateKey;
-import java.security.Provider;
-import java.security.Signature;
-import java.security.interfaces.ECPrivateKey;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.nist.NISTObjectIdentifiers;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
@@ -24,6 +17,13 @@ import org.bouncycastle.operator.DigestCalculatorProvider;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
 import org.bouncycastle.util.Arrays;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.security.PrivateKey;
+import java.security.Provider;
+import java.security.Signature;
+import java.security.interfaces.ECPrivateKey;
 
 public class JcaITSContentSigner
     implements ITSContentSigner

@@ -37,13 +37,21 @@ public class TestExaminer {
     public void createSUT() {
         systemUnderTest.startSUT();
     }
+    public void createSUTForServerHello(){
+
+    }
 
     public void executeSUTOperation() {
 
     }
 
-    public void executeModelOperation() {
-        this.modelLoader.executeSpecificTrace();
+//    KEEPING FOR FURTHER IMPLEMENTATIONS
+//    public void executeModelOperation() {
+//        this.modelLoader.executeSpecificTrace();
+//    }
+
+    public void testServerHello(){
+        this.modelLoader.generateClientAndServerHello();
     }
 
     public void compareResults() {

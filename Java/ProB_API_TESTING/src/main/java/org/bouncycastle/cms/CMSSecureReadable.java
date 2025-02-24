@@ -6,8 +6,7 @@ import org.bouncycastle.asn1.ASN1Set;
 import java.io.IOException;
 import java.io.InputStream;
 
-interface CMSSecureReadable
-{
+interface CMSSecureReadable {
     ASN1ObjectIdentifier getContentType();
 
     InputStream getInputStream()

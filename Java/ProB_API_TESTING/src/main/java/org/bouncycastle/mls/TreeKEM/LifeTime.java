@@ -1,11 +1,11 @@
 package org.bouncycastle.mls.TreeKEM;
 
+import org.bouncycastle.mls.codec.MLSInputStream;
+import org.bouncycastle.mls.codec.MLSOutputStream;
+
 import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoField;
-
-import org.bouncycastle.mls.codec.MLSInputStream;
-import org.bouncycastle.mls.codec.MLSOutputStream;
 
 public class LifeTime
     implements MLSInputStream.Readable, MLSOutputStream.Writable

@@ -8,7 +8,12 @@ public class Main {
     public static void main(String[] args) {
 
         tlsTestExaminer.loadModel();
-        tlsTestExaminer.executeModelOperation();
+        tlsTestExaminer.testServerHello();
         tlsTestExaminer.createSUT();
+    }
+
+    public void testServerHello(){
+        tlsTestExaminer.loadModel();
+        tlsTestExaminer.testServerHello();
     }
 }

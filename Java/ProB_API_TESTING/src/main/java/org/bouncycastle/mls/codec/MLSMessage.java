@@ -1,10 +1,10 @@
 package org.bouncycastle.mls.codec;
 
-import java.io.IOException;
-
 import org.bouncycastle.mls.TreeKEM.LeafIndex;
 import org.bouncycastle.mls.crypto.MlsCipherSuite;
 import org.bouncycastle.util.Pack;
+
+import java.io.IOException;
 
 public class MLSMessage
     implements MLSInputStream.Readable, MLSOutputStream.Writable

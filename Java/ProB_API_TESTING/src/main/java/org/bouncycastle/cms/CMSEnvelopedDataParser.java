@@ -17,7 +17,7 @@ import java.io.InputStream;
 /**
  * Parsing class for an CMS Enveloped Data object from an input stream.
  * <p>
- * Note: that because we are in a streaming mode only one recipient can be tried and it is important 
+ * Note: that because we are in a streaming mode only one recipient can be tried and it is important
  * that the methods on the parser are called in the appropriate order.
  * </p>
  * <p>
@@ -29,57 +29,52 @@ import java.io.InputStream;
  *
  *      Collection  c = recipients.getRecipients();
  *      Iterator    it = c.iterator();
- *      
+ *
  *      if (it.hasNext())
  *      {
  *          RecipientInformation   recipient = (RecipientInformation)it.next();
  *
  *          CMSTypedStream recData = recipient.getContentStream(new JceKeyTransEnvelopedRecipient(privateKey).setProvider("BC"));
- *          
+ *
  *          processDataStream(recData.getContentStream());
  *      }
  *  </pre>
- *  Note: this class does not introduce buffering - if you are processing large files you should create
- *  the parser with:
- *  <pre>
+ * Note: this class does not introduce buffering - if you are processing large files you should create
+ * the parser with:
+ * <pre>
  *          CMSEnvelopedDataParser     ep = new CMSEnvelopedDataParser(new BufferedInputStream(inputStream, bufSize));
  *  </pre>
- *  where bufSize is a suitably large buffer size.
+ * where bufSize is a suitably large buffer size.
  */
 public class CMSEnvelopedDataParser
-    extends CMSContentInfoParser
-{
+        extends CMSContentInfoParser {
+    private final AlgorithmIdentifier encAlg;
     RecipientInformationStore recipientInfoStore;
     EnvelopedDataParser envelopedData;
-    
-    private final AlgorithmIdentifier encAlg;
     private AttributeTable unprotectedAttributes;
     private boolean attrNotRead;
-    private OriginatorInformation  originatorInfo;
+    private OriginatorInformation originatorInfo;
 
     public CMSEnvelopedDataParser(
-        byte[]    envelopedData) 
-        throws CMSException, IOException
-    {
+            byte[] envelopedData)
+            throws CMSException, IOException {
         this(new ByteArrayInputStream(envelopedData));
     }
 
     public CMSEnvelopedDataParser(
-        InputStream    envelopedData) 
-        throws CMSException, IOException
-    {
+            InputStream envelopedData)
+            throws CMSException, IOException {
         super(envelopedData);
 
         this.attrNotRead = true;
-        this.envelopedData = new EnvelopedDataParser((ASN1SequenceParser)_contentInfo.getContent(BERTags.SEQUENCE));
+        this.envelopedData = new EnvelopedDataParser((ASN1SequenceParser) _contentInfo.getContent(BERTags.SEQUENCE));
 
         // TODO Validate version?
         //ASN1Integer version = this._envelopedData.getVersion();
 
         OriginatorInfo info = this.envelopedData.getOriginatorInfo();
 
-        if (info != null)
-        {
+        if (info != null) {
             this.originatorInfo = new OriginatorInformation(info);
         }
 
@@ -94,22 +89,21 @@ public class CMSEnvelopedDataParser
         EncryptedContentInfoParser encInfo = this.envelopedData.getEncryptedContentInfo();
         this.encAlg = encInfo.getContentEncryptionAlgorithm();
         CMSReadable readable = new CMSProcessableInputStream(
-            ((ASN1OctetStringParser)encInfo.getEncryptedContent(BERTags.OCTET_STRING)).getOctetStream());
+                ((ASN1OctetStringParser) encInfo.getEncryptedContent(BERTags.OCTET_STRING)).getOctetStream());
         CMSSecureReadable secureReadable = new CMSEnvelopedHelper.CMSAuthEnveSecureReadable(
-            this.encAlg, encInfo.getContentType(), readable);
+                this.encAlg, encInfo.getContentType(), readable);
 
         //
         // build the RecipientInformationStore
         //
         this.recipientInfoStore = CMSEnvelopedHelper.buildRecipientInformationStore(
-            recipientInfos, this.encAlg, secureReadable);
+                recipientInfos, this.encAlg, secureReadable);
     }
 
     /**
      * return the object identifier for the content encryption algorithm.
      */
-    public String getEncryptionAlgOID()
-    {
+    public String getEncryptionAlgOID() {
         return encAlg.getAlgorithm().toString();
     }
 
@@ -117,14 +111,10 @@ public class CMSEnvelopedDataParser
      * return the ASN.1 encoded encryption algorithm parameters, or null if
      * there aren't any.
      */
-    public byte[] getEncryptionAlgParams()
-    {
-        try
-        {
+    public byte[] getEncryptionAlgParams() {
+        try {
             return CMSUtils.encodeObj(encAlg.getParameters());
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new RuntimeException("exception getting encryption parameters " + e);
         }
     }
@@ -134,8 +124,7 @@ public class CMSEnvelopedDataParser
      *
      * @return AlgorithmIdentifier representing the content encryption algorithm.
      */
-    public AlgorithmIdentifier getContentEncryptionAlgorithm()
-    {
+    public AlgorithmIdentifier getContentEncryptionAlgorithm() {
         return encAlg;
     }
 
@@ -144,29 +133,26 @@ public class CMSEnvelopedDataParser
      *
      * @return OriginatorInformation, null if not present.
      */
-    public OriginatorInformation getOriginatorInfo()
-    {
+    public OriginatorInformation getOriginatorInfo() {
         return originatorInfo;
     }
 
     /**
      * return a store of the intended recipients for this message
      */
-    public RecipientInformationStore getRecipientInfos()
-    {
+    public RecipientInformationStore getRecipientInfos() {
         return recipientInfoStore;
     }
 
     /**
      * return a table of the unprotected attributes indexed by
      * the OID of the attribute.
-     * @exception IOException 
+     *
+     * @throws IOException
      */
-    public AttributeTable getUnprotectedAttributes() 
-        throws IOException
-    {
-        if (unprotectedAttributes == null && attrNotRead)
-        {
+    public AttributeTable getUnprotectedAttributes()
+            throws IOException {
+        if (unprotectedAttributes == null && attrNotRead) {
             attrNotRead = false;
             unprotectedAttributes = CMSUtils.getAttributesTable(envelopedData.getUnprotectedAttrs());
         }

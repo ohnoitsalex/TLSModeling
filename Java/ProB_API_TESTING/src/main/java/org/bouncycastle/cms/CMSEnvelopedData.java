@@ -34,26 +34,22 @@ import java.io.InputStream;
  *  </pre>
  */
 public class CMSEnvelopedData
-    implements Encodable
-{
-    RecipientInformationStore   recipientInfoStore;
-    ContentInfo                 contentInfo;
-
-    private final AlgorithmIdentifier    encAlg;
-    private final ASN1Set                unprotectedAttributes;
-    private OriginatorInformation  originatorInfo;
+        implements Encodable {
+    private final AlgorithmIdentifier encAlg;
+    private final ASN1Set unprotectedAttributes;
+    RecipientInformationStore recipientInfoStore;
+    ContentInfo contentInfo;
+    private OriginatorInformation originatorInfo;
 
     public CMSEnvelopedData(
-        byte[]    envelopedData)
-        throws CMSException
-    {
+            byte[] envelopedData)
+            throws CMSException {
         this(CMSUtils.readContentInfo(envelopedData));
     }
 
     public CMSEnvelopedData(
-        InputStream    envelopedData)
-        throws CMSException
-    {
+            InputStream envelopedData)
+            throws CMSException {
         this(CMSUtils.readContentInfo(envelopedData));
     }
 
@@ -64,17 +60,14 @@ public class CMSEnvelopedData
      * @throws CMSException in the case where malformed content is encountered.
      */
     public CMSEnvelopedData(
-        ContentInfo contentInfo)
-        throws CMSException
-    {
+            ContentInfo contentInfo)
+            throws CMSException {
         this.contentInfo = contentInfo;
 
-        try
-        {
-            EnvelopedData  envData = EnvelopedData.getInstance(contentInfo.getContent());
+        try {
+            EnvelopedData envData = EnvelopedData.getInstance(contentInfo.getContent());
 
-            if (envData.getOriginatorInfo() != null)
-            {
+            if (envData.getOriginatorInfo() != null) {
                 originatorInfo = new OriginatorInformation(envData.getOriginatorInfo());
             }
 
@@ -90,22 +83,18 @@ public class CMSEnvelopedData
             this.encAlg = encInfo.getContentEncryptionAlgorithm();
             CMSReadable readable = new CMSProcessableByteArray(encInfo.getEncryptedContent().getOctets());
             CMSSecureReadable secureReadable = new CMSEnvelopedHelper.CMSAuthEnveSecureReadable(
-                this.encAlg, encInfo.getContentType(), readable);
+                    this.encAlg, encInfo.getContentType(), readable);
 
             //
             // build the RecipientInformationStore
             //
             this.recipientInfoStore = CMSEnvelopedHelper.buildRecipientInformationStore(
-                recipientInfos, this.encAlg, secureReadable);
+                    recipientInfos, this.encAlg, secureReadable);
 
             this.unprotectedAttributes = envData.getUnprotectedAttrs();
-        }
-        catch (ClassCastException e)
-        {
+        } catch (ClassCastException e) {
             throw new CMSException("Malformed content.", e);
-        }
-        catch (IllegalArgumentException e)
-        {
+        } catch (IllegalArgumentException e) {
             throw new CMSException("Malformed content.", e);
         }
     }
@@ -115,8 +104,7 @@ public class CMSEnvelopedData
      *
      * @return OriginatorInformation, null if not present.
      */
-    public OriginatorInformation getOriginatorInfo()
-    {
+    public OriginatorInformation getOriginatorInfo() {
         return originatorInfo;
     }
 
@@ -125,16 +113,14 @@ public class CMSEnvelopedData
      *
      * @return AlgorithmIdentifier representing the content encryption algorithm.
      */
-    public AlgorithmIdentifier getContentEncryptionAlgorithm()
-    {
+    public AlgorithmIdentifier getContentEncryptionAlgorithm() {
         return encAlg;
     }
 
     /**
      * return the object identifier for the content encryption algorithm.
      */
-    public String getEncryptionAlgOID()
-    {
+    public String getEncryptionAlgOID() {
         return encAlg.getAlgorithm().getId();
     }
 
@@ -142,14 +128,10 @@ public class CMSEnvelopedData
      * return the ASN.1 encoded encryption algorithm parameters, or null if
      * there aren't any.
      */
-    public byte[] getEncryptionAlgParams()
-    {
-        try
-        {
+    public byte[] getEncryptionAlgParams() {
+        try {
             return CMSUtils.encodeObj(encAlg.getParameters());
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new RuntimeException("exception getting encryption parameters " + e);
         }
     }
@@ -157,16 +139,14 @@ public class CMSEnvelopedData
     /**
      * return a store of the intended recipients for this message
      */
-    public RecipientInformationStore getRecipientInfos()
-    {
+    public RecipientInformationStore getRecipientInfos() {
         return recipientInfoStore;
     }
 
     /**
      * return the ContentInfo
      */
-    public ContentInfo toASN1Structure()
-    {
+    public ContentInfo toASN1Structure() {
         return contentInfo;
     }
 
@@ -174,10 +154,8 @@ public class CMSEnvelopedData
      * return a table of the unprotected attributes indexed by
      * the OID of the attribute.
      */
-    public AttributeTable getUnprotectedAttributes()
-    {
-        if (unprotectedAttributes == null)
-        {
+    public AttributeTable getUnprotectedAttributes() {
+        if (unprotectedAttributes == null) {
             return null;
         }
 
@@ -188,8 +166,7 @@ public class CMSEnvelopedData
      * return the ASN.1 encoded representation of this object.
      */
     public byte[] getEncoded()
-        throws IOException
-    {
+            throws IOException {
         return contentInfo.getEncoded();
     }
 }

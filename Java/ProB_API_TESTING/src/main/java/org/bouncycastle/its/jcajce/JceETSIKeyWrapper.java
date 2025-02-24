@@ -1,11 +1,5 @@
 package org.bouncycastle.its.jcajce;
 
-import java.security.Provider;
-import java.security.interfaces.ECPublicKey;
-
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.sec.SECObjectIdentifiers;
 import org.bouncycastle.asn1.teletrust.TeleTrusTObjectIdentifiers;
@@ -20,6 +14,11 @@ import org.bouncycastle.oer.its.ieee1609dot2.EncryptedDataEncryptionKey;
 import org.bouncycastle.oer.its.ieee1609dot2.basetypes.EccP256CurvePoint;
 import org.bouncycastle.oer.its.ieee1609dot2.basetypes.EciesP256EncryptedKey;
 import org.bouncycastle.util.Arrays;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.Provider;
+import java.security.interfaces.ECPublicKey;
 
 public class JceETSIKeyWrapper
     implements ETSIKeyWrapper

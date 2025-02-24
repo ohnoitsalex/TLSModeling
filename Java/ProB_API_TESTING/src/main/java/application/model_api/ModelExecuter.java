@@ -26,8 +26,8 @@ public class ModelExecuter {
             "{TLS_1_3}",
             "0",
             "{}",
-            "{rsa_pkcs1_sha25}",
-            "{X25519}",
+            "{ed25519}",
+            "{X448}",
             "{TLS_AES_128_GCM_SHA256}"
     );
 
@@ -36,8 +36,8 @@ public class ModelExecuter {
             "supported_versions={TLS_1_3}",
             "legacy_compression_methods=0",
             "pre_shared_key={}",
-            "signature_algorithms={rsa_pkcs1_sha25}",
-            "supported_groups={X25519}",
+            "signature_algorithms={ed25519}",
+            "supported_groups={X448}",
             "cipher_suites={TLS_AES_128_GCM_SHA256}"
     );
 
@@ -64,7 +64,7 @@ public class ModelExecuter {
     );
 
     private final List<String> paramsSendEncryptedExtensions = Arrays.asList(
-            "rsa_pkcs1_sha25",
+            "rsa_pss_rsae_sha256",
             "X25519"
     );
 
@@ -109,7 +109,7 @@ public class ModelExecuter {
         model.subscribe(this, session_machine);
     }
 
-    public void generateSpecificTrace() {
+    public void generateClientAndServerHello() {
         initaliseMachine();
         generateClientHelloMessages();
         generateServerHelloMessages();

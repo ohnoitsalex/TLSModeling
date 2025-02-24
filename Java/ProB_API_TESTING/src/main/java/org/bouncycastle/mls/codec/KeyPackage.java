@@ -1,13 +1,13 @@
 package org.bouncycastle.mls.codec;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bouncycastle.crypto.CryptoException;
 import org.bouncycastle.mls.TreeKEM.LeafNode;
 import org.bouncycastle.mls.TreeKEM.LeafNodeSource;
 import org.bouncycastle.mls.crypto.MlsCipherSuite;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class KeyPackage
     implements MLSInputStream.Readable, MLSOutputStream.Writable

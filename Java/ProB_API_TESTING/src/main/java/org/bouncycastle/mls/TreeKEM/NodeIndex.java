@@ -1,11 +1,11 @@
 package org.bouncycastle.mls.TreeKEM;
 
+import org.bouncycastle.mls.TreeSize;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Vector;
-
-import org.bouncycastle.mls.TreeSize;
 
 public class NodeIndex
 {

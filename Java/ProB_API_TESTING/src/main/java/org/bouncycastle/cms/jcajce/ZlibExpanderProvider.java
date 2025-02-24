@@ -11,15 +11,13 @@ import java.io.InputStream;
 import java.util.zip.InflaterInputStream;
 
 public class ZlibExpanderProvider
-    implements InputExpanderProvider
-{
+        implements InputExpanderProvider {
     private final long limit;
 
     /**
      * Base constructor. Create an expander which will not limit the size of any objects expanded in the stream.
      */
-    public ZlibExpanderProvider()
-    {
+    public ZlibExpanderProvider() {
         this.limit = -1;
     }
 
@@ -29,25 +27,19 @@ public class ZlibExpanderProvider
      *
      * @param limit max number of bytes allowed in an expanded stream.
      */
-    public ZlibExpanderProvider(long limit)
-    {
+    public ZlibExpanderProvider(long limit) {
         this.limit = limit;
     }
 
-    public InputExpander get(final AlgorithmIdentifier algorithm)
-    {
-        return new InputExpander()
-        {
-            public AlgorithmIdentifier getAlgorithmIdentifier()
-            {
+    public InputExpander get(final AlgorithmIdentifier algorithm) {
+        return new InputExpander() {
+            public AlgorithmIdentifier getAlgorithmIdentifier() {
                 return algorithm;
             }
 
-            public InputStream getInputStream(InputStream comIn)
-            {
-                InputStream s = new InflaterInputStream(comIn);                
-                if (limit >= 0)
-                {
+            public InputStream getInputStream(InputStream comIn) {
+                InputStream s = new InflaterInputStream(comIn);
+                if (limit >= 0) {
                     s = new LimitedInputStream(s, limit);
                 }
                 return s;
@@ -56,26 +48,21 @@ public class ZlibExpanderProvider
     }
 
     private static class LimitedInputStream
-        extends FilterInputStream
-    {
+            extends FilterInputStream {
         private long remaining;
 
-        public LimitedInputStream(InputStream input, long limit)
-        {
+        public LimitedInputStream(InputStream input, long limit) {
             super(input);
 
             this.remaining = limit;
         }
 
         public int read()
-            throws IOException
-        {
+                throws IOException {
             // Only a single 'extra' byte will ever be read
-            if (remaining >= 0)
-            {
+            if (remaining >= 0) {
                 int b = super.in.read();
-                if (b < 0 || --remaining >= 0)
-                {
+                if (b < 0 || --remaining >= 0) {
                     return b;
                 }
             }
@@ -84,16 +71,13 @@ public class ZlibExpanderProvider
         }
 
         public int read(byte[] buf, int off, int len)
-            throws IOException
-        {
-            if (len < 1)
-            {
+                throws IOException {
+            if (len < 1) {
                 // This will give correct exceptions/returns for strange lengths
                 return super.read(buf, off, len);
             }
 
-            if (remaining < 1)
-            {
+            if (remaining < 1) {
                 // Will either return EOF or throw exception
                 read();
                 return -1;
@@ -104,10 +88,9 @@ public class ZlibExpanderProvider
              * caller will see the full 'limit' bytes before getting an exception.
              * Also, only one extra byte will ever be read.
              */
-            int actualLen = (remaining > len ? len : (int)remaining);
+            int actualLen = (remaining > len ? len : (int) remaining);
             int numRead = super.in.read(buf, off, actualLen);
-            if (numRead > 0)
-            {
+            if (numRead > 0) {
                 remaining -= numRead;
             }
             return numRead;

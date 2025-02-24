@@ -1,12 +1,12 @@
 package org.bouncycastle.est;
 
+import org.bouncycastle.util.Properties;
+import org.bouncycastle.util.Strings;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
-
-import org.bouncycastle.util.Properties;
-import org.bouncycastle.util.Strings;
 
 /**
  * A basic http response.

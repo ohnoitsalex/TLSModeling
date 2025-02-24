@@ -15,51 +15,42 @@ import java.security.Key;
 import java.security.Provider;
 
 public class JcePasswordRecipientInfoGenerator
-    extends PasswordRecipientInfoGenerator
-{
+        extends PasswordRecipientInfoGenerator {
     private EnvelopedDataHelper helper = new EnvelopedDataHelper(new DefaultJcaJceExtHelper());
 
-    public JcePasswordRecipientInfoGenerator(ASN1ObjectIdentifier kekAlgorithm, char[] password)
-    {
+    public JcePasswordRecipientInfoGenerator(ASN1ObjectIdentifier kekAlgorithm, char[] password) {
         super(kekAlgorithm, password);
     }
 
-    public JcePasswordRecipientInfoGenerator setProvider(Provider provider)
-    {
+    public JcePasswordRecipientInfoGenerator setProvider(Provider provider) {
         this.helper = new EnvelopedDataHelper(new ProviderJcaJceExtHelper(provider));
 
         return this;
     }
 
-    public JcePasswordRecipientInfoGenerator setProvider(String providerName)
-    {
+    public JcePasswordRecipientInfoGenerator setProvider(String providerName) {
         this.helper = new EnvelopedDataHelper(new NamedJcaJceExtHelper(providerName));
 
         return this;
     }
 
     protected byte[] calculateDerivedKey(int schemeID, AlgorithmIdentifier derivationAlgorithm, int keySize)
-        throws CMSException
-    {
+            throws CMSException {
         return helper.calculateDerivedKey(schemeID, password, derivationAlgorithm, keySize);
     }
 
     public byte[] generateEncryptedBytes(AlgorithmIdentifier keyEncryptionAlgorithm, byte[] derivedKey, GenericKey contentEncryptionKey)
-        throws CMSException
-    {
+            throws CMSException {
         Key contentEncryptionKeySpec = helper.getJceKey(contentEncryptionKey);
         Cipher keyEncryptionCipher = helper.createRFC3211Wrapper(keyEncryptionAlgorithm.getAlgorithm());
 
-        try
-        {
+        try {
             IvParameterSpec ivSpec = new IvParameterSpec(ASN1OctetString.getInstance(keyEncryptionAlgorithm.getParameters()).getOctets());
 
             keyEncryptionCipher.init(Cipher.WRAP_MODE, new SecretKeySpec(derivedKey, keyEncryptionCipher.getAlgorithm()), ivSpec);
 
             return keyEncryptionCipher.wrap(contentEncryptionKeySpec);
-        }
-        catch (GeneralSecurityException e)
-        {
+        } catch (GeneralSecurityException e) {
             throw new CMSException("cannot process content encryption key: " + e.getMessage(), e);
         }
     }

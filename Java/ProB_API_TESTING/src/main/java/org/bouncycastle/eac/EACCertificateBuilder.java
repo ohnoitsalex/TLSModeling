@@ -1,21 +1,10 @@
 package org.bouncycastle.eac;
 
-import java.io.OutputStream;
-
-import org.bouncycastle.asn1.ASN1Encoding;
-import org.bouncycastle.asn1.ASN1TaggedObject;
-import org.bouncycastle.asn1.BERTags;
-import org.bouncycastle.asn1.DEROctetString;
-import org.bouncycastle.asn1.DERTaggedObject;
-import org.bouncycastle.asn1.eac.CVCertificate;
-import org.bouncycastle.asn1.eac.CertificateBody;
-import org.bouncycastle.asn1.eac.CertificateHolderAuthorization;
-import org.bouncycastle.asn1.eac.CertificateHolderReference;
-import org.bouncycastle.asn1.eac.CertificationAuthorityReference;
-import org.bouncycastle.asn1.eac.EACTags;
-import org.bouncycastle.asn1.eac.PackedDate;
-import org.bouncycastle.asn1.eac.PublicKeyDataObject;
+import org.bouncycastle.asn1.*;
+import org.bouncycastle.asn1.eac.*;
 import org.bouncycastle.eac.operator.EACSigner;
+
+import java.io.OutputStream;
 
 public class EACCertificateBuilder
 {

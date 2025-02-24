@@ -17,71 +17,59 @@ import java.security.Provider;
  * encrypted using a password.
  */
 public abstract class JcePasswordRecipient
-    implements PasswordRecipient
-{
-    private int schemeID = PasswordRecipient.PKCS5_SCHEME2_UTF8;
+        implements PasswordRecipient {
     protected EnvelopedDataHelper helper = new EnvelopedDataHelper(new DefaultJcaJceExtHelper());
+    private int schemeID = PasswordRecipient.PKCS5_SCHEME2_UTF8;
     private char[] password;
 
     JcePasswordRecipient(
-        char[] password)
-    {
+            char[] password) {
         this.password = password;
     }
 
-    public JcePasswordRecipient setPasswordConversionScheme(int schemeID)
-    {
-        this.schemeID = schemeID;
-
-        return this;
-    }
-
-    public JcePasswordRecipient setProvider(Provider provider)
-    {
+    public JcePasswordRecipient setProvider(Provider provider) {
         this.helper = new EnvelopedDataHelper(new ProviderJcaJceExtHelper(provider));
 
         return this;
     }
 
-    public JcePasswordRecipient setProvider(String providerName)
-    {
+    public JcePasswordRecipient setProvider(String providerName) {
         this.helper = new EnvelopedDataHelper(new NamedJcaJceExtHelper(providerName));
 
         return this;
     }
 
     protected Key extractSecretKey(AlgorithmIdentifier keyEncryptionAlgorithm, AlgorithmIdentifier contentEncryptionAlgorithm, byte[] derivedKey, byte[] encryptedContentEncryptionKey)
-        throws CMSException
-    {
+            throws CMSException {
         Cipher keyEncryptionCipher = helper.createRFC3211Wrapper(keyEncryptionAlgorithm.getAlgorithm());
 
-        try
-        {
+        try {
             IvParameterSpec ivSpec = new IvParameterSpec(ASN1OctetString.getInstance(keyEncryptionAlgorithm.getParameters()).getOctets());
 
             keyEncryptionCipher.init(Cipher.UNWRAP_MODE, new SecretKeySpec(derivedKey, keyEncryptionCipher.getAlgorithm()), ivSpec);
 
             return keyEncryptionCipher.unwrap(encryptedContentEncryptionKey, contentEncryptionAlgorithm.getAlgorithm().getId(), Cipher.SECRET_KEY);
-        }
-        catch (GeneralSecurityException e)
-        {
+        } catch (GeneralSecurityException e) {
             throw new CMSException("cannot process content encryption key: " + e.getMessage(), e);
         }
     }
 
     public byte[] calculateDerivedKey(int schemeID, AlgorithmIdentifier derivationAlgorithm, int keySize)
-        throws CMSException
-    {
+            throws CMSException {
         return helper.calculateDerivedKey(schemeID, password, derivationAlgorithm, keySize);
     }
 
-    public int getPasswordConversionScheme()
-    {
+    public int getPasswordConversionScheme() {
         return schemeID;
     }
 
-    public char[] getPassword()
-    {
+    public JcePasswordRecipient setPasswordConversionScheme(int schemeID) {
+        this.schemeID = schemeID;
+
+        return this;
+    }
+
+    public char[] getPassword() {
         return password;
     }
 }

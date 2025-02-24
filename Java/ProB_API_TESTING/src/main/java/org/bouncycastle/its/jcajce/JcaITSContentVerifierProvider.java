@@ -1,11 +1,5 @@
 package org.bouncycastle.its.jcajce;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.security.Provider;
-import java.security.Signature;
-import java.security.interfaces.ECPublicKey;
-
 import org.bouncycastle.asn1.nist.NISTObjectIdentifiers;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.its.ITSCertificate;
@@ -26,6 +20,12 @@ import org.bouncycastle.operator.DigestCalculatorProvider;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
 import org.bouncycastle.util.Arrays;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.security.Provider;
+import java.security.Signature;
+import java.security.interfaces.ECPublicKey;
 
 public class JcaITSContentVerifierProvider
     implements ITSContentVerifierProvider
