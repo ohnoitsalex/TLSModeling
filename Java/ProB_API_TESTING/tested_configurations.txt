@@ -2,8 +2,8 @@
 TEST 1 : 
 ========
 
-MODEL CIENT HELLO
-  random: 'NOT SUPPORTED IN MODEL '
+MODEL CLIENT HELLO
+  random: 'NOT SUPPORTED IN MODEL'
   pre_shared_key: '{}'
   legacy_version: x0303
   supported_versions: '{TLS_1_3}'
@@ -14,23 +14,22 @@ MODEL CIENT HELLO
 
 EXPECTED SERVER HELLO
 
+  "legacy_session_id_echo= "
   "legacy_version=x0303",
-  "supported_versions={TLS_1_3}",
+  "supported_versions: '{TLS_1_3}'"
   "legacy_compression_methods=0",
-  "pre_shared_key={}",
-  "signature_algorithms={rsa_pss_rsae_sha256}",
-  "supported_groups={X25519}",
+  "key_share= ",
   "cipher_suites={TLS_AES_128_GCM_SHA256}"
 
 FOUND SERVER HELLO
 
-  legacy_session_id_echo: 0d d1 32 e9 4e 1c 90 56 23 82 37 be 20 b5 b3 5b 3d ca fc
-    5d 9a eb a1 7d b3 46 d6 5f 4f 68 ba 0b
+  legacy_session_id_echo: e4 65 11 a2 64 4d de c5 0e f1 3f 34 3d f5 5e eb e2 7d cc
+    a2 b8 52 04 37 0f 36 a1 c6 5a 28 b0 66
   legacy_version: x0303
   supported_versions: '{TLS_1_3}'
   legacy_compression_methods: '0'
-  key_share: 'fc 38 cd 3f b7 1a 96 e6 51 9a 7b fd b3 29 73 61 0c d2 e4 71 b6 d3 36
-    cf 72 6c 0b 34 51 e7 21 21 '
+  key_share: 'c3 77 cb 58 d6 5a ce 2b ed 57 27 21 2a f2 73 6b ff 94 e0 36 8b 5f fa
+    0c 56 f0 79 86 70 62 a8 45 '
   cipher_suites: TLS_AES_128_GCM_SHA256
 
 
@@ -49,12 +48,11 @@ MODEL CLIENT HELLO
 
 EXPECTED SERVER HELLO
 
+  "legacy_session_id_echo= "
   "legacy_version=x0303",
-  "supported_versions={TLS_1_3}",
+  "supported_versions: '{TLS_1_3}'"
   "legacy_compression_methods=0",
-  "pre_shared_key={}",
-  "signature_algorithms={rsa_pss_pss_sha512}",
-  "supported_groups={X25519}",
+  "key_share= ",
   "cipher_suites={TLS_AES_128_GCM_SHA256}"
 
 FOUND SERVER HELLO
@@ -84,12 +82,11 @@ MODEL CLIENT HELLO
 
 EXPECTED SERVER HELLO
 
-"legacy_version=x0303",
-  "supported_versions={TLS_1_3}",
+  "legacy_session_id_echo= "
+  "legacy_version=x0303",
+  "supported_versions: '{TLS_1_3}'"
   "legacy_compression_methods=0",
-  "pre_shared_key={}",
-  "signature_algorithms={rsa_pss_pss_sha512}",
-  "supported_groups={X448}",
+  "key_share= ",
   "cipher_suites={TLS_AES_128_GCM_SHA256}"
 
 FOUND SERVER HELLO
@@ -119,12 +116,11 @@ MODEL CLIENT HELLO
 
 EXPECTED SERVER HELLO
 
-"legacy_version=x0303",
-  "supported_versions={TLS_1_3}",
+  "legacy_session_id_echo= "
+  "legacy_version=x0303",
+  "supported_versions: '{TLS_1_3}'"
   "legacy_compression_methods=0",
-  "pre_shared_key={}",
-  "signature_algorithms={rsa_pss_pss_sha512}",
-  "supported_groups={X448}",
+  "key_share= ",
   "cipher_suites={TLS_AES_256_GCM_SHA384}"
 
 
@@ -155,12 +151,11 @@ MODEL CLIENT HELLO
 
 EXPECTED SERVER HELLO
 
+  "legacy_session_id_echo= "
   "legacy_version=x0303",
-  "supported_versions={TLS_1_3}",
+  "supported_versions: '{TLS_1_3}'"
   "legacy_compression_methods=0",
-  "pre_shared_key={}",
-  "signature_algorithms={rsa_pss_pss_sha512}",
-  "supported_groups={X448}",
+  "key_share= ",
   "cipher_suites={TLS_CHACHA20_POLY1305_SHA256}"
 
 FOUND SERVER HELLO
@@ -190,13 +185,12 @@ MODEL CLIENT HELLO
 
 EXPECTED SERVER HELLO
 
-"legacy_version=x0303",
-"supported_versions={TLS_1_3}",
-"legacy_compression_methods=0",
-"pre_shared_key={}",
-"signature_algorithms={ed448}",
-"supported_groups={X448}",
-"cipher_suites={TLS_CHACHA20_POLY1305_SHA256}"
+  "legacy_session_id_echo= "
+  "legacy_version=x0303",
+  "supported_versions: '{TLS_1_3}'"
+  "legacy_compression_methods=0",
+  "key_share= ",
+  "cipher_suites={TLS_CHACHA20_POLY1305_SHA256}"
 
 FOUND SERVER HELLO
 
@@ -224,12 +218,11 @@ MODEL CLIENT HELLO
 
 
 EXPECTED SERVER HELLO
+  "legacy_session_id_echo= "
   "legacy_version=x0303",
-  "supported_versions={TLS_1_3}",
+  "supported_versions: '{TLS_1_3}'"
   "legacy_compression_methods=0",
-  "pre_shared_key={}",
-  "signature_algorithms={rsa_pss_pss_sha512}",
-  "supported_groups={X25519}",
+  "key_share= ",
   "cipher_suites={RSA_PSS_PSS_SHA512}"
 
 FOUND SERVER HELLO
@@ -258,13 +251,12 @@ MODEL CLIENT HELLO
 
 EXPECTED SERVER HELLO
 
-"legacy_version=x0303",
-"supported_versions={TLS_1_3}",
-"legacy_compression_methods=0",
-"pre_shared_key={}",
-"signature_algorithms={rsa_pss_rsae_sha512}",
-"supported_groups={X448}",
-"cipher_suites={TLS_AES_128_GCM_SHA256}"
+  "legacy_session_id_echo= "
+  "legacy_version=x0303",
+  "supported_versions: '{TLS_1_3}'"
+  "legacy_compression_methods=0",
+  "key_share= ",
+  "cipher_suites={TLS_AES_128_GCM_SHA256}"
 
 FOUND SERVER HELLO
   legacy_session_id_echo: c1 0b 4b c3 8b fb 68 10 41 e3 e9 a8 1f 98 5c 5e fe a5 3f
@@ -281,22 +273,21 @@ FOUND SERVER HELLO
 TEST 9 :
 ========
 MODEL CLIENT HELLO
-"x0303",
-"{TLS_1_3}",
-"0",
-"{}",
-"{rsa_pss_rsae_sha384}",
-"{X448}",
-"{TLS_AES_128_GCM_SHA256}"
+
+  legacy_version: x0303
+  supported_versions: '{TLS_1_3}'
+  legacy_compression_methods: '0'
+  supported_groups: '{X448}'
+  signature_algorithms: '{rsa_pss_rsae_sha384}'
+  cipher_suites: '{TLS_AES_128_GCM_SHA256}'
 
 EXPECTED SERVER HELLO
-"legacy_version=x0303",
-"supported_versions={TLS_1_3}",
-"legacy_compression_methods=0",
-"pre_shared_key={}",
-"signature_algorithms={rsa_pss_rsae_sha384}",
-"supported_groups={X448}",
-"cipher_suites={TLS_AES_128_GCM_SHA256}"
+  "legacy_session_id_echo= "
+  "legacy_version=x0303",
+  "supported_versions: '{TLS_1_3}'"
+  "legacy_compression_methods=0",
+  "key_share= ",
+  "cipher_suites={TLS_AES_128_GCM_SHA256}"
 
 FOUND SERVER HELLO
   pre_shared_key: '17 f5 45 3d 6f aa 92 96 75 f4 5e 6b 8e dd 9e 07 a2 35 16 44 25
@@ -317,31 +308,209 @@ TEST 10 :
 ========
 MODEL CLIENT HELLO
 
-"x0303",
-"{TLS_1_3}",
-"0",
-"{}",
-"{ed25519}",
-"{X448}",
-"{TLS_AES_128_GCM_SHA256}"
+  legacy_version: x0303
+  supported_versions: '{TLS_1_3}'
+  legacy_compression_methods: '0'
+  supported_groups: '{X448}'
+  signature_algorithms: '{X448}'
+  cipher_suites: '{TLS_AES_128_GCM_SHA256}'
 
 EXPECTED SERVER HELLO
-"legacy_version=x0303",
-"supported_versions={TLS_1_3}",
-"legacy_compression_methods=0",
-"pre_shared_key={}",
-"signature_algorithms={ed25519}",
-"supported_groups={X448}",
-"cipher_suites={TLS_AES_128_GCM_SHA256}"
+  "legacy_session_id_echo= "
+  "legacy_version=x0303",
+  "supported_versions: '{TLS_1_3}'"
+  "legacy_compression_methods=0",
+  "key_share= ",
+  "cipher_suites={TLS_AES_128_GCM_SHA256}"
 
 FOUND SERVER HELLO
 
-legacy_session_id_echo: f4 ce 53 53 44 14 57 a5 41 15 83 9a 50 d9 18 9d 70 77 f3
-    09 6a 3d 8a 31 d3 e1 2d f5 cf 8e 3a 2f
-legacy_version: x0303
-supported_versions: '{TLS_1_3}'
-legacy_compression_methods: '0'
-key_share: '68 fb 8f 0f a3 2c a1 be e7 da cf 02 c3 b4 75 d6 41 bd b2 8a f7 62 1c
-    78 d9 0f 08 9a 77 bc 4d e9 bd ec e4 3e 3c 57 3e ac 08 cc 4e 9d a7 55 9d 56 17
-    84 f3 0b f2 9a a0 84 '
-cipher_suites: TLS_AES_128_GCM_SHA256
+    legacy_session_id_echo: f4 ce 53 53 44 14 57 a5 41 15 83 9a 50 d9 18 9d 70 77 f3
+        09 6a 3d 8a 31 d3 e1 2d f5 cf 8e 3a 2f
+    legacy_version: x0303
+    supported_versions: '{TLS_1_3}'
+    legacy_compression_methods: '0'
+    key_share: '68 fb 8f 0f a3 2c a1 be e7 da cf 02 c3 b4 75 d6 41 bd b2 8a f7 62 1c
+        78 d9 0f 08 9a 77 bc 4d e9 bd ec e4 3e 3c 57 3e ac 08 cc 4e 9d a7 55 9d 56 17
+        84 f3 0b f2 9a a0 84 '
+    cipher_suites: TLS_AES_128_GCM_SHA256
+
+========
+TEST 11 :
+========
+MODEL CLIENT HELLO
+
+  legacy_version: x0303
+  supported_versions: '{TLS_1_3}'
+  legacy_compression_methods: '0'
+  supported_groups: '{X448}'
+  signature_algorithms: '{X448}'
+  cipher_suites: '{TLS_AES_128_CCM_8_SHA256}'
+
+EXPECTED SERVER HELLO
+  "legacy_session_id_echo= "
+  "legacy_version=x0303",
+  "supported_versions: '{TLS_1_3}'"
+  "legacy_compression_methods=0",
+  "key_share= ",
+  "cipher_suites={TLS_AES_128_CCM_8_SHA256}"
+
+FOUND SERVER HELLO
+
+    legacy_session_id_echo: f4 ce 53 53 44 14 57 a5 41 15 83 9a 50 d9 18 9d 70 77 f3
+        09 6a 3d 8a 31 d3 e1 2d f5 cf 8e 3a 2f
+    legacy_version: x0303
+    supported_versions: '{TLS_1_3}'
+    legacy_compression_methods: '0'
+    key_share: '68 fb 8f 0f a3 2c a1 be e7 da cf 02 c3 b4 75 d6 41 bd b2 8a f7 62 1c
+        78 d9 0f 08 9a 77 bc 4d e9 bd ec e4 3e 3c 57 3e ac 08 cc 4e 9d a7 55 9d 56 17
+        84 f3 0b f2 9a a0 84 '
+    cipher_suites: TLS_AES_128_CCM_8_SHA256
+
+========
+TEST 12 :
+========
+MODEL CLIENT HELLO
+
+  legacy_version: x0303
+  supported_versions: '{TLS_1_3}'
+  legacy_compression_methods: '0'
+  supported_groups: '{X448}'
+  signature_algorithms: '{X448}'
+  cipher_suites: '{TLS_AES_128_CCM_SHA256}'
+
+EXPECTED SERVER HELLO
+  "legacy_session_id_echo= "
+  "legacy_version=x0303",
+  "supported_versions: '{TLS_1_3}'"
+  "legacy_compression_methods=0",
+  "key_share= ",
+  "cipher_suites={TLS_AES_128_CCM_SHA256}"
+
+FOUND SERVER HELLO
+
+    legacy_session_id_echo: f4 ce 53 53 44 14 57 a5 41 15 83 9a 50 d9 18 9d 70 77 f3
+        09 6a 3d 8a 31 d3 e1 2d f5 cf 8e 3a 2f
+    legacy_version: x0303
+    supported_versions: '{TLS_1_3}'
+    legacy_compression_methods: '0'
+    key_share: '68 fb 8f 0f a3 2c a1 be e7 da cf 02 c3 b4 75 d6 41 bd b2 8a f7 62 1c
+        78 d9 0f 08 9a 77 bc 4d e9 bd ec e4 3e 3c 57 3e ac 08 cc 4e 9d a7 55 9d 56 17
+        84 f3 0b f2 9a a0 84 '
+    cipher_suites: TLS_AES_128_CCM_SHA256
+
+========
+TEST 13 :
+========
+MODEL CLIENT HELLO
+
+  legacy_version: x0303
+  supported_versions: '{TLS_1_3}'
+  legacy_compression_methods: '0'
+  supported_groups: '{X448}'
+  signature_algorithms: '{rsa_pss_pss_sha384}'
+  cipher_suites: '{TLS_AES_128_CCM_SHA256}'
+
+EXPECTED SERVER HELLO
+  "legacy_session_id_echo= "
+  "legacy_version=x0303",
+  "supported_versions: '{TLS_1_3}'"
+  "legacy_compression_methods=0",
+  "key_share= ",
+  "cipher_suites={TLS_AES_128_CCM_SHA256}"
+
+FOUND SERVER HELLO
+
+    legacy_session_id_echo: f4 ce 53 53 44 14 57 a5 41 15 83 9a 50 d9 18 9d 70 77 f3
+        09 6a 3d 8a 31 d3 e1 2d f5 cf 8e 3a 2f
+    legacy_version: x0303
+    supported_versions: '{TLS_1_3}'
+    legacy_compression_methods: '0'
+    key_share: '68 fb 8f 0f a3 2c a1 be e7 da cf 02 c3 b4 75 d6 41 bd b2 8a f7 62 1c
+        78 d9 0f 08 9a 77 bc 4d e9 bd ec e4 3e 3c 57 3e ac 08 cc 4e 9d a7 55 9d 56 17
+        84 f3 0b f2 9a a0 84 '
+    cipher_suites: TLS_AES_128_CCM_SHA256
+
+========
+TEST 14 :
+========
+MODEL CLIENT HELLO
+
+  legacy_version: x0303
+  supported_versions: '{TLS_1_3}'
+  legacy_compression_methods: '0'
+  supported_groups: '{X448}'
+  signature_algorithms: '{rsa_pss_pss_sha256}'
+  cipher_suites: '{TLS_AES_128_CCM_SHA256}'
+
+EXPECTED SERVER HELLO
+  "legacy_session_id_echo= "
+  "legacy_version=x0303",
+  "supported_versions: '{TLS_1_3}'"
+  "legacy_compression_methods=0",
+  "key_share= ",
+  "cipher_suites={TLS_AES_128_CCM_SHA256}"
+
+FOUND SERVER HELLO
+
+    legacy_session_id_echo: f4 ce 53 53 44 14 57 a5 41 15 83 9a 50 d9 18 9d 70 77 f3
+        09 6a 3d 8a 31 d3 e1 2d f5 cf 8e 3a 2f
+    legacy_version: x0303
+    supported_versions: '{TLS_1_3}'
+    legacy_compression_methods: '0'
+    key_share: '68 fb 8f 0f a3 2c a1 be e7 da cf 02 c3 b4 75 d6 41 bd b2 8a f7 62 1c
+        78 d9 0f 08 9a 77 bc 4d e9 bd ec e4 3e 3c 57 3e ac 08 cc 4e 9d a7 55 9d 56 17
+        84 f3 0b f2 9a a0 84 '
+    cipher_suites: TLS_AES_128_CCM_SHA256
+
+========
+TEST 15 :
+========
+MODEL CLIENT HELLO
+
+  legacy_version: x0303
+  supported_versions: '{TLS_1_3}'
+  legacy_compression_methods: '0'
+  supported_groups: '{X448}'
+  signature_algorithms: '{rsa_pss_pss_sha256}'
+  cipher_suites: '{TLS_AES_128_CCM_SHA256}'
+
+EXPECTED SERVER HELLO
+  "legacy_session_id_echo= "
+  "legacy_version=x0303",
+  "supported_versions: '{TLS_1_3}'"
+  "legacy_compression_methods=0",
+  "key_share= ",
+  "cipher_suites={TLS_AES_128_CCM_SHA256}"
+
+FOUND SERVER HELLO
+
+    legacy_session_id_echo: f4 ce 53 53 44 14 57 a5 41 15 83 9a 50 d9 18 9d 70 77 f3
+        09 6a 3d 8a 31 d3 e1 2d f5 cf 8e 3a 2f
+    legacy_version: x0303
+    supported_versions: '{TLS_1_3}'
+    legacy_compression_methods: '0'
+    key_share: '68 fb 8f 0f a3 2c a1 be e7 da cf 02 c3 b4 75 d6 41 bd b2 8a f7 62 1c
+        78 d9 0f 08 9a 77 bc 4d e9 bd ec e4 3e 3c 57 3e ac 08 cc 4e 9d a7 55 9d 56 17
+        84 f3 0b f2 9a a0 84 '
+    cipher_suites: TLS_AES_128_CCM_SHA256
+
+========
+TEST 16 :
+========
+MODEL CLIENT HELLO
+
+  legacy_version: x0303
+  supported_versions: '{TLS_1_3}'
+  legacy_compression_methods: '1'
+  supported_groups: '{X448}'
+  signature_algorithms: '{rsa_pss_pss_sha256}'
+  cipher_suites: '{TLS_AES_128_CCM_SHA256}'
+
+EXPECTED SERVER HELLO
+
+  TLS 1.3 is closed
+
+FOUND SERVER HELLO
+
+  No server response: TLS 1.3 handshake is considered closed
