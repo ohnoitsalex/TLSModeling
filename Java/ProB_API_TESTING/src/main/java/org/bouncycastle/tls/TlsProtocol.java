@@ -51,7 +51,7 @@ public abstract class TlsProtocol
     protected static final short CS_SERVER_SESSION_TICKET = 19;
     protected static final short CS_SERVER_FINISHED = 20;
     protected static final short CS_END = 21;
-    //protected static final short CS_WAITING_SEND_SERVER_HELLO = 21;
+    protected static final short CS_WAITING_SEND_SERVER_HELLO = 22;
 
 
     protected boolean isLegacyConnectionState()
@@ -61,6 +61,7 @@ public abstract class TlsProtocol
         case CS_START:
         case CS_CLIENT_HELLO:
         case CS_SERVER_HELLO:
+        case CS_WAITING_SEND_SERVER_HELLO:
         case CS_SERVER_SUPPLEMENTAL_DATA:
         case CS_SERVER_CERTIFICATE:
         case CS_SERVER_CERTIFICATE_STATUS:
@@ -96,6 +97,7 @@ public abstract class TlsProtocol
         case CS_SERVER_HELLO_RETRY_REQUEST:
         case CS_CLIENT_HELLO_RETRY:
         case CS_SERVER_HELLO:
+        case CS_WAITING_SEND_SERVER_HELLO:
         case CS_SERVER_ENCRYPTED_EXTENSIONS:
         case CS_SERVER_CERTIFICATE_REQUEST:
         case CS_SERVER_CERTIFICATE:
@@ -118,6 +120,10 @@ public abstract class TlsProtocol
         default:
             return false;
         }
+    }
+
+    public boolean isReadyForServerHello() {
+        return this.connection_state == CS_WAITING_SEND_SERVER_HELLO;
     }
 
     /*

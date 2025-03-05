@@ -26,7 +26,7 @@ public class TlsServerProtocol
     protected TlsKeyExchange keyExchange = null;
     protected CertificateRequest certificateRequest = null;
 
-    public ServerHello serverHello;
+    protected ServerHello serverHello;
     /**
      * Constructor for non-blocking mode.<br>
      * <br>
@@ -947,8 +947,17 @@ public class TlsServerProtocol
                 ClientHello clientHelloRetry = receiveClientHelloMessage(buf);
                 this.connection_state = CS_CLIENT_HELLO_RETRY;
 
-                ServerHello serverHello = generate13ServerHello(clientHelloRetry, buf, true);
+                this.serverHello = generate13ServerHello(clientHelloRetry, buf, true);
                 sendServerHelloMessage(serverHello);
+//                this.connection_state = CS_WAITING_SEND_SERVER_HELLO;
+//
+//                try {
+//                    wait();
+//                } catch (InterruptedException e) {
+//                    Thread.currentThread().interrupt();
+//                    System.err.println("Thread Interrupted");
+//                }
+
                 this.connection_state = CS_SERVER_HELLO;
 
                 send13ServerHelloCoda(serverHello, true);
@@ -1018,7 +1027,12 @@ public class TlsServerProtocol
         }
     }
 
-    public void handleHandshakeMessage(short type, HandshakeMessageInput buf)
+    public void sendServerHello() throws IOException {
+        sendServerHelloMessage(this.serverHello);
+        notifyAll();
+    }
+
+    protected void handleHandshakeMessage(short type, HandshakeMessageInput buf)
         throws IOException
     {
         final SecurityParameters securityParameters = tlsServerContext.getSecurityParameters();
@@ -1090,8 +1104,17 @@ public class TlsServerProtocol
                     {
                         TlsUtils.adjustTranscriptForRetry(handshakeHash);
 
-                        //this.connection_state = CS_WAITING_SEND_SERVER_HELLO;
                         sendServerHelloMessage(serverHello);
+
+//                        this.connection_state = CS_WAITING_SEND_SERVER_HELLO;
+//
+//                        try {
+//                            wait();
+//                        } catch (InterruptedException e) {
+//                            Thread.currentThread().interrupt();
+//                            System.err.println("Thread Interrupted");
+//                        }
+
                         this.connection_state = CS_SERVER_HELLO_RETRY_REQUEST;
 
                         // See RFC 8446 D.4.
@@ -1099,6 +1122,16 @@ public class TlsServerProtocol
                     }
                     else
                     {
+//                        this.connection_state = CS_WAITING_SEND_SERVER_HELLO;
+//                        try {
+//                            wait();
+//                        } catch (InterruptedException e) {
+//                            Thread.currentThread().interrupt();
+//                            System.err.println("Thread Interrupted");
+//                        }
+//                        this.connection_state = CS_SERVER_HELLO;
+//
+
                         sendServerHelloMessage(serverHello);
                         this.connection_state = CS_SERVER_HELLO;
 
@@ -1106,6 +1139,7 @@ public class TlsServerProtocol
                         sendChangeCipherSpecMessage();
 
                         send13ServerHelloCoda(serverHello, false);
+
                     }
                     break;
                 }
@@ -1114,6 +1148,17 @@ public class TlsServerProtocol
                 buf.updateHash(handshakeHash);
 
                 sendServerHelloMessage(serverHello);
+//
+//                this.connection_state = CS_WAITING_SEND_SERVER_HELLO;
+//
+//                // wait for call of sendServerHelloMessage
+//                try {
+//                    wait();
+//                } catch (InterruptedException e) {
+//                    Thread.currentThread().interrupt();
+//                    System.err.println("Thread Interrupted");
+//                }
+
                 this.connection_state = CS_SERVER_HELLO;
 
                 if (securityParameters.isResumedSession())
