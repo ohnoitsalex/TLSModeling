@@ -26,6 +26,7 @@ public class TlsServerProtocol
     protected TlsKeyExchange keyExchange = null;
     protected CertificateRequest certificateRequest = null;
 
+    public ServerHello serverHello;
     /**
      * Constructor for non-blocking mode.<br>
      * <br>
@@ -1017,7 +1018,7 @@ public class TlsServerProtocol
         }
     }
 
-    protected void handleHandshakeMessage(short type, HandshakeMessageInput buf)
+    public void handleHandshakeMessage(short type, HandshakeMessageInput buf)
         throws IOException
     {
         final SecurityParameters securityParameters = tlsServerContext.getSecurityParameters();
@@ -1078,7 +1079,7 @@ public class TlsServerProtocol
                 ClientHello clientHello = receiveClientHelloMessage(buf);
                 this.connection_state = CS_CLIENT_HELLO;
 
-                ServerHello serverHello = generateServerHello(clientHello, buf);
+                this.serverHello = generateServerHello(clientHello, buf);
                 handshakeHash.notifyPRFDetermined();
 
                 if (TlsUtils.isTLSv13(securityParameters.getNegotiatedVersion()))
@@ -1089,6 +1090,7 @@ public class TlsServerProtocol
                     {
                         TlsUtils.adjustTranscriptForRetry(handshakeHash);
 
+                        //this.connection_state = CS_WAITING_SEND_SERVER_HELLO;
                         sendServerHelloMessage(serverHello);
                         this.connection_state = CS_SERVER_HELLO_RETRY_REQUEST;
 
@@ -1708,7 +1710,7 @@ public class TlsServerProtocol
         HandshakeMessageOutput.send(this, HandshakeType.server_hello_done, TlsUtils.EMPTY_BYTES);
     }
 
-    protected void sendServerHelloMessage(ServerHello serverHello)
+    public void sendServerHelloMessage(ServerHello serverHello)
         throws IOException
     {
         HandshakeMessageOutput message = new HandshakeMessageOutput(HandshakeType.server_hello);

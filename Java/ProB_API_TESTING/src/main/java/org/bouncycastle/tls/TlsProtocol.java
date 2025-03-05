@@ -51,6 +51,8 @@ public abstract class TlsProtocol
     protected static final short CS_SERVER_SESSION_TICKET = 19;
     protected static final short CS_SERVER_FINISHED = 20;
     protected static final short CS_END = 21;
+    //protected static final short CS_WAITING_SEND_SERVER_HELLO = 21;
+
 
     protected boolean isLegacyConnectionState()
     {

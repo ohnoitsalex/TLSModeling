@@ -115,6 +115,8 @@ public class BCServer {
         try {
             protocol.accept(server);
 
+            //protocol.sendServerHelloMessage(protocol.serverHello);
+
             // Read the HTTP request sent by the client over the TLS connection
             InputStream inputStream = protocol.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
