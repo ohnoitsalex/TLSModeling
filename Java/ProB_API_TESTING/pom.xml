@@ -116,6 +116,13 @@
             <artifactId>utils</artifactId>
             <version>6.3.4</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/de.rub.nds.tlsattacker/TLS-Attacker -->
+        <dependency>
+            <groupId>de.rub.nds.tlsattacker</groupId>
+            <artifactId>TLS-Attacker</artifactId>
+            <version>3.8.1</version>
+            <type>pom</type>
+        </dependency>
 
     </dependencies>
     <build>
