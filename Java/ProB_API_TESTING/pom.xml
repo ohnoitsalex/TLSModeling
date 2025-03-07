@@ -91,6 +91,32 @@
             <artifactId>guava</artifactId>
             <version>32.0.1-jre</version>  <!-- Ensure to use the latest version -->
         </dependency>
+        <!-- https://mvnrepository.com/artifact/de.rub.nds.tls.attacker/tls-attacker -->
+        <dependency>
+            <groupId>de.rub.nds.tls.attacker</groupId>
+            <artifactId>tls-attacker</artifactId>
+            <version>6.3.4</version>
+            <type>pom</type>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/de.rub.nds.tls.attacker/tls-core -->
+        <dependency>
+            <groupId>de.rub.nds.tls.attacker</groupId>
+            <artifactId>tls-core</artifactId>
+            <version>6.3.4</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/de.rub.nds.tls.attacker/transport -->
+        <dependency>
+            <groupId>de.rub.nds.tls.attacker</groupId>
+            <artifactId>transport</artifactId>
+            <version>6.3.4</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/de.rub.nds.tls.attacker/utils -->
+        <dependency>
+            <groupId>de.rub.nds.tls.attacker</groupId>
+            <artifactId>utils</artifactId>
+            <version>6.3.4</version>
+        </dependency>
+
     </dependencies>
     <build>
         <!--
