@@ -9,8 +9,8 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
@@ -91,37 +91,10 @@
             <artifactId>guava</artifactId>
             <version>32.0.1-jre</version>  <!-- Ensure to use the latest version -->
         </dependency>
-        <!-- https://mvnrepository.com/artifact/de.rub.nds.tls.attacker/tls-attacker -->
-        <dependency>
-            <groupId>de.rub.nds.tls.attacker</groupId>
-            <artifactId>tls-attacker</artifactId>
-            <version>6.3.4</version>
-            <type>pom</type>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/de.rub.nds.tls.attacker/tls-core -->
         <dependency>
             <groupId>de.rub.nds.tls.attacker</groupId>
             <artifactId>tls-core</artifactId>
             <version>6.3.4</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/de.rub.nds.tls.attacker/transport -->
-        <dependency>
-            <groupId>de.rub.nds.tls.attacker</groupId>
-            <artifactId>transport</artifactId>
-            <version>6.3.4</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/de.rub.nds.tls.attacker/utils -->
-        <dependency>
-            <groupId>de.rub.nds.tls.attacker</groupId>
-            <artifactId>utils</artifactId>
-            <version>6.3.4</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/de.rub.nds.tlsattacker/TLS-Attacker -->
-        <dependency>
-            <groupId>de.rub.nds.tlsattacker</groupId>
-            <artifactId>TLS-Attacker</artifactId>
-            <version>3.8.1</version>
-            <type>pom</type>
         </dependency>
 
     </dependencies>
