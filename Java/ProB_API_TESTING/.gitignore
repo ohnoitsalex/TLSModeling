@@ -37,4 +37,8 @@ build/
 ### Mac OS ###
 .DS_Store
 
+### Generated files ###
 tls_handshake_data.txt
+doc/
+classpath.txt
+
