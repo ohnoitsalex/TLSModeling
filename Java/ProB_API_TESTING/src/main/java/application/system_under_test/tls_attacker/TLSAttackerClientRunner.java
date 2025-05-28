@@ -57,28 +57,10 @@ public class TLSAttackerClientRunner extends SystemUnderTest {
 
         // Apply extensions from YAML
         ClientHelloMessage clientHello = new ClientHelloMessage(config);
+
+        // Build clientHelloMessage
         TlsMessageBuilder.buildClientHello(clientHelloMap, clientHello, config);
-
-        // Build and add Supported Versions extension
-        SupportedVersionsExtensionMessage versions = TlsMessageBuilder.buildSupportedVersions(clientHelloMap);
-        clientHello.addExtension(versions);
-
-        // Build and add Signature Algorithms extension
-        SignatureAndHashAlgorithmsExtensionMessage sigHash = TlsMessageBuilder.buildSignatureAlgorithms(clientHelloMap);
-        clientHello.addExtension(sigHash);
-
-        // Build and add Key Share extension
-        KeyShareExtensionMessage keyShare = TlsMessageBuilder.buildKeyShare(clientHelloMap);
-        clientHello.addExtension(keyShare);
-
-        // Build and set Cipher Suites
-        List<CipherSuite> suites = TlsMessageBuilder.buildCipherSuites(clientHelloMap);
-        config.setDefaultClientSupportedCipherSuites(suites);
-
-        // Build and set Supported Groups
-        List<NamedGroup> groups = TlsMessageBuilder.buildNamedGroups(clientHelloMap);
-        config.setDefaultClientNamedGroups(groups);
-
+        
         // Build workflow
         WorkflowTrace trace = new WorkflowTrace();
         trace.addTlsAction(new SendAction(clientHello));
