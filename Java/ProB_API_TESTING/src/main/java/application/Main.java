@@ -3,17 +3,12 @@ package application;
 import application.test_examiner.TestExaminer;
 
 public class Main {
-    private static final TestExaminer tlsTestExaminer = new TestExaminer("tls");
-
     public static void main(String[] args) {
+        // Exemple : on teste un serveur réel avec un client TLS-Attacker
+        String type = "tls";       // Choix du modèle
+        String mode = "server";    // Ce que tu veux tester (client ou serveur)
 
-        tlsTestExaminer.loadModel();
-        tlsTestExaminer.testServerHello();
-        tlsTestExaminer.createSUT();
-    }
-
-    public void testServerHello(){
-        tlsTestExaminer.loadModel();
-        tlsTestExaminer.testServerHello();
+        TestExaminer examiner = new TestExaminer(type, mode);
+        examiner.runTest();
     }
 }
