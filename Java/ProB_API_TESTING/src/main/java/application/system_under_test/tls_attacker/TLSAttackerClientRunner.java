@@ -60,7 +60,7 @@ public class TLSAttackerClientRunner extends SystemUnderTest {
 
         // Build clientHelloMessage
         TlsMessageBuilder.buildClientHello(clientHelloMap, clientHello, config);
-        
+
         // Build workflow
         WorkflowTrace trace = new WorkflowTrace();
         trace.addTlsAction(new SendAction(clientHello));
@@ -75,10 +75,10 @@ public class TLSAttackerClientRunner extends SystemUnderTest {
         ReceiveAction receiveAction = (ReceiveAction) state.getWorkflowTrace().getTlsActions().get(1);
         ServerHelloMessage response = (ServerHelloMessage) receiveAction.getReceivedMessages().get(0);
 
-    Map<String, String> parsedResponse = TlsMessageParser.parseServerHello(response);
-    TlsYamlParser.writeYaml(parsedResponse, "src/main/resources/data/SUTServerHello.yaml");
+        Map<String, String> parsedResponse = TlsMessageParser.parseServerHello(response);
+        TlsYamlParser.writeYaml(parsedResponse, "src/main/resources/data/SUTServerHello.yaml");
 
-    System.out.println("ServerHello received and saved.");
+        System.out.println("ServerHello received and saved.");
     }
 
     /**
