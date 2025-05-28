@@ -1,18 +1,18 @@
 package application.system_under_test.tls_system_under_test;
 
 import application.config.Config;
-import application.information_capture.InformationCapture;
-import application.information_capture.tls_information_capture.TLSInformationCapture;
+// import application.information_capture.InformationCapture;
+// import application.information_capture.tls_information_capture.TLSInformationCapture;
 import application.system_under_test.SystemUnderTest;
 
 import java.io.IOException;
 
 public class TLSSystemUnderTest extends SystemUnderTest {
     private Process serverProcess, clientProcess;
-    private final InformationCapture informationCapture;
+    // private final InformationCapture informationCapture;
 
     public TLSSystemUnderTest() {
-        informationCapture = new TLSInformationCapture();
+        // informationCapture = new TLSInformationCapture();
     }
 
     @Override
@@ -36,7 +36,7 @@ public class TLSSystemUnderTest extends SystemUnderTest {
         Runnable information_capture = new Runnable() {
             @Override
             public void run() {
-                informationCapture.startCapture();
+                // informationCapture.startCapture();
             }
         };
 
