@@ -21,6 +21,7 @@ import de.rub.nds.tlsattacker.core.workflow.WorkflowTrace;
 import de.rub.nds.tlsattacker.core.workflow.action.ReceiveAction;
 import de.rub.nds.tlsattacker.core.workflow.action.SendAction;
 
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -49,13 +50,14 @@ public class TLSAttackerClientRunner extends SystemUnderTest {
         Map<String, String> clientHelloMap = TlsYamlParser.readYaml("src/main/resources/data/ModelClientHello.yaml");
 
         // Create TLS-Attacker configuration
-        Config config = Config.createConfig();
+        Config config = new Config();
         config.setDefaultRunningMode(RunningModeType.CLIENT);
         config.setDefaultClientConnection(new OutboundConnection(PORT, HOST));
         config.setWorkflowExecutorShouldClose(true);
 
         // Apply extensions from YAML
         ClientHelloMessage clientHello = new ClientHelloMessage(config);
+        TlsMessageBuilder.buildClientHello(clientHelloMap, clientHello, config);
 
         // Build and add Supported Versions extension
         SupportedVersionsExtensionMessage versions = TlsMessageBuilder.buildSupportedVersions(clientHelloMap);
@@ -91,10 +93,10 @@ public class TLSAttackerClientRunner extends SystemUnderTest {
         ReceiveAction receiveAction = (ReceiveAction) state.getWorkflowTrace().getTlsActions().get(1);
         ServerHelloMessage response = (ServerHelloMessage) receiveAction.getReceivedMessages().get(0);
 
-        Map<String, String> parsedResponse = TlsMessageParser.parseServerHello(response);
-        TlsYamlParser.writeYaml(parsedResponse, "src/main/resources/data/SUTServerHello.yaml");
+    Map<String, String> parsedResponse = TlsMessageParser.parseServerHello(response);
+    TlsYamlParser.writeYaml(parsedResponse, "src/main/resources/data/SUTServerHello.yaml");
 
-        System.out.println("ServerHello received and saved.");
+    System.out.println("ServerHello received and saved.");
     }
 
     /**
