@@ -1,6 +1,7 @@
 package application.system_under_test.tls_attacker.utils;
 
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.DumperOptions;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -26,13 +27,32 @@ public class TlsYamlParser {
     }
 
     /**
+     * Reads a YAML file and returns its contents as a generic Map.
+     * Used when the YAML has nested structures.
+     */
+    public static Map<String, Object> readYamlAsObject(String filename) {
+        try (FileReader reader = new FileReader(filename)) {
+            Yaml yaml = new Yaml();
+            return yaml.load(reader);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read YAML file: " + filename, e);
+        }
+    }
+
+
+    /**
      * Writes data to a YAML file.
      * @param data The data to write
      * @param filename The path where to write the YAML file
      */
-    public static void writeYaml(Map<String, String> data, String filename) {
+    public static void writeYaml(Map<String, ?> data, String filename){
         try (FileWriter writer = new FileWriter(filename)) {
-            Yaml yaml = new Yaml();
+            DumperOptions options = new DumperOptions();
+                options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK); //key here
+                options.setIndent(2); // indentation level
+                options.setPrettyFlow(true);
+
+            Yaml yaml = new Yaml(options);
             yaml.dump(data, writer);
         } catch (IOException e) {
             throw new RuntimeException("Failed to write YAML file: " + filename, e);

@@ -1,8 +1,11 @@
 package application.system_under_test.tls_attacker.utils;
 
+import static application.system_under_test.tls_attacker.utils.ByteUtils.bytesToHex;
+
 import de.rub.nds.tlsattacker.core.protocol.message.ServerHelloMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.ClientHelloMessage;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -19,11 +22,11 @@ public class TlsMessageParser {
         Map<String, String> data = new HashMap<>();
         
         // Parse basic fields
-        data.put("protocol_version", message.getProtocolVersion().getValue().toString());
-        data.put("random", message.getRandom().getValue().toString());
-        data.put("session_id", message.getSessionId().getValue().toString());
-        data.put("selected_cipher_suite", message.getSelectedCipherSuite().getValue().toString());
-        data.put("selected_compression_method", message.getSelectedCompressionMethod().getValue().toString());
+        data.put("protocol_version", bytesToHex(message.getProtocolVersion().getValue()));
+        data.put("random", bytesToHex(message.getRandom().getValue()));
+        data.put("session_id", bytesToHex(message.getSessionId().getValue()));
+        data.put("selected_cipher_suite", bytesToHex(message.getSelectedCipherSuite().getValue()));
+        data.put("selected_compression_method", bytesToHex(new byte[] { message.getSelectedCompressionMethod().getValue() }));
         
         return data;
     }
@@ -34,15 +37,16 @@ public class TlsMessageParser {
      * @return Map containing the parsed data
      */
     public static Map<String, String> parseClientHello(ClientHelloMessage message) {
-        Map<String, String> data = new HashMap<>();
-        
-        // Parse basic fields
-        data.put("protocol_version", message.getProtocolVersion().getValue().toString());
-        data.put("random", message.getRandom().getValue().toString());
-        data.put("session_id", message.getSessionId().getValue().toString());
-        data.put("cipher_suites", message.getCipherSuites().getValue().toString());
-        data.put("compression_methods", message.getCompressions().getValue().toString());
-        
-        return data;
-    }
+    Map<String, String> map = new LinkedHashMap<>();
+
+        map.put("random", bytesToHex(message.getRandom().getValue()));
+        map.put("protocol_version", bytesToHex(message.getProtocolVersion().getValue()));
+        map.put("session_id", bytesToHex(message.getSessionId().getValue()));
+        map.put("cipher_suites", bytesToHex(message.getCipherSuites().getValue()));
+        map.put("compression_methods", bytesToHex(message.getCompressions().getValue()));
+
+
+        return map;
+}
+
 }
