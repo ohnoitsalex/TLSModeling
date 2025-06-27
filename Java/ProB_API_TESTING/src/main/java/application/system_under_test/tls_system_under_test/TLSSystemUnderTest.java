@@ -42,7 +42,7 @@ public class TLSSystemUnderTest extends SystemUnderTest {
                 throw new IllegalArgumentException("Unknown mode: " + mode);
             }
 
-            this.sutProcess.waitFor(); // waiting for process to end.
+            // this.sutProcess.waitFor(); // waiting for process to end.
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
