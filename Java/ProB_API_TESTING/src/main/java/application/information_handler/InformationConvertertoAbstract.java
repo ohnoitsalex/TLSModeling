@@ -4,7 +4,6 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
 
-import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,57 +15,78 @@ import java.util.stream.Collectors;
 
 public class InformationConvertertoAbstract {
 
-    // Configure YAML options
-    private static DumperOptions options;
+    // Configuration YAML initialisée une seule fois
+    private static final DumperOptions options;
+    private static final Yaml yaml;
 
-    //Yaml Instance
-    private static Yaml yaml;
-
-    public static void removeGlobalTagsYaml(String filePath){
-        try {
-            // Step 1: Read the file and skip the first line
-            Path path = Paths.get(filePath);
-            String updatedContent = Files.lines(path)
-                    .skip(1) // Skip the first line
-                    .collect(Collectors.joining(System.lineSeparator()));
-
-            // Step 2: Write the updated content back to the same file
-            Files.write(path, updatedContent.getBytes());
-
-            System.out.println("First line removed successfully from " + filePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void configureYAML(){
+    static {
         options = new DumperOptions();
-        //Configure DumperOptions to suppress global tags
-        DumperOptions options = new DumperOptions();
-        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK); // Use block style (readable)
-        options.setPrettyFlow(true); // Make it pretty
-        options.setExplicitStart(false); // Avoid "---" at the start
-
+        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        options.setPrettyFlow(true);
+        options.setExplicitStart(false);
         yaml = new Yaml(new Representer(options), options);
     }
 
-    public static void serializeToYAML(Object obj, String name) {
-        // Serialize to YAML string
-        String yamlString = yaml.dump(obj);
+    public static void removeGlobalTagsYaml(String filePath) {
+        try {
+            Path path = Paths.get(filePath).toAbsolutePath();
+            if (!Files.exists(path)) {
+                System.err.println("File not found: " + path);
+                return;
+            }
 
-        // Optionally, write to a file
-        try (FileWriter writer = new FileWriter(name+".yaml")) {
-            writer.write(yamlString);
-            System.out.println( name +".yaml file created successfully.");
+            String updatedContent = Files.lines(path)
+                    .skip(1)
+                    .collect(Collectors.joining(System.lineSeparator()));
+
+            Files.write(path, updatedContent.getBytes());
+            System.out.println("First line removed successfully from " + filePath);
         } catch (IOException e) {
+            System.err.println("Error processing file " + filePath);
             e.printStackTrace();
         }
     }
 
-    public static Map<String, Object> retreiveYamlInformation(String yamlFilePath){
-        InputStream inputStream = InformationConvertertoAbstract.class.getClassLoader().getResourceAsStream(yamlFilePath);
-        if (inputStream != null)
-            return yaml.load(inputStream);
-        return null;
+    public static void serializeToYAML(Object obj, String filePath) {
+        try {
+            Path path = Paths.get(filePath).toAbsolutePath();
+            Files.createDirectories(path.getParent());
+            
+            try (FileWriter writer = new FileWriter(filePath)) {
+                yaml.dump(obj, writer);
+                System.out.println("YAML file created: " + path);
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to write YAML to " + filePath);
+            e.printStackTrace();
+        }
+    }
+
+    public static void configureYAML() {
+        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        options.setPrettyFlow(true);
+        options.setExplicitStart(false);
+    }
+
+    public static Map<String, Object> retreiveYamlInformation(String yamlFilePath) {
+        try {
+            Path path = Paths.get(yamlFilePath).toAbsolutePath();
+            if (!Files.exists(path)) {
+                System.err.println("YAML file not found: " + path);
+                return null;
+            }
+
+            try (InputStream input = Files.newInputStream(path)) {
+                Map<String, Object> result = yaml.load(input);
+                if (result == null) {
+                    System.err.println("Loaded YAML is null from: " + path);
+                }
+                return result;
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading YAML from " + yamlFilePath);
+            e.printStackTrace();
+            return null;
+        }
     }
 }
