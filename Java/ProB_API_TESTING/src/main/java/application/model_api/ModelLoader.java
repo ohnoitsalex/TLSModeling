@@ -70,4 +70,12 @@ public class ModelLoader {
         modelExecuter.createSubscription("session_machine");
         modelExecuter.generateClientAndServerHello();
     }
+
+    public boolean validateServerHelloFromSUT(String yamlPath) {
+    modelExecuter.createSubscription("session_machine"); 
+        return modelExecuter.validateServerHelloFromYaml(yamlPath);
+    }
 }
+
+
+

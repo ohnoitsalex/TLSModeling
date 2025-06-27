@@ -1,18 +1,20 @@
 package application.model_api;
 
-import application.information_handler.InformationConvertertoAbstract;
-import application.information_holder.tls_information_holder.TLSClientInformationHolder;
-import application.information_holder.tls_information_holder.TLSServerInformationHolder;
-import com.google.inject.Inject;
-import de.prob.animator.domainobjects.ClassicalB;
-import de.prob.statespace.StateSpace;
-import de.prob.statespace.Trace;
-import de.prob.statespace.Transition;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.inject.Inject;
+
+import application.information_handler.InformationConvertertoAbstract;
+import application.information_holder.tls_information_holder.TLSClientInformationHolder;
+import application.information_holder.tls_information_holder.TLSServerInformationHolder;
+import application.system_under_test.tls_attacker.utils.TlsYamlParser;
+import de.prob.animator.domainobjects.ClassicalB;
+import de.prob.statespace.StateSpace;
+import de.prob.statespace.Trace;
+import de.prob.statespace.Transition;
 
 public class ModelExecuter {
 
@@ -234,4 +236,75 @@ public class ModelExecuter {
     public void setTrace(Trace trace) {
         this.trace = trace;
     }
+
+
+    private void printAvailableTransitions(String step) {
+    System.out.println("\n--- Available transitions after: " + step + " ---");
+    for (Transition t : trace.getCurrentState().getOutTransitions()) {
+        System.out.println(t.getName() + " " + t.getParameterValues());
+    }
+    System.out.println("--------------------------------------------\n");
+}
+
+
+    public boolean validateServerHelloFromYaml(String yamlPath) {
+        try {
+            Map<String, Object> root = TlsYamlParser.readYamlAsObject(yamlPath);
+            @SuppressWarnings("unchecked")
+            Map<String, String> info = (Map<String, String>) root.get("serverHelloInformation");
+
+            List<String> params = List.of(
+                info.get("legacy_version"),
+                // info.get("legacy_session_id_echo"),
+                "x0303",
+                info.get("legacy_compression_methods"),
+                info.get("supported_versions"),
+                info.get("cipher_suites"),
+                info.get("key_share"),
+                info.get("pre_shared_key"),
+                // info.get("random")
+                "A1"
+            );
+            // List<String> params = List.of(
+            //     "x0303", // legacy_version
+            //     "x0303", // legacy_session_id_echo
+            //     "0", // legacy_compression_methods
+            //     "{TLS_1_2}", // supported_versions
+            //     "TLS_AES_128_GCM_SHA256", // cipher_suites
+            //     "{}", // key_share
+            //     "{}", // pre_shared_key
+            //     "A1" // random
+            // );
+
+            
+
+
+            initaliseMachine();
+            printAvailableTransitions("init");
+
+            trace.getCurrentState().findTransitions("SendClientHello", paramsFindSendClientHello, 1000);
+            trace = trace.addTransitionWith("SendClientHello", paramsSendClientHello);
+            printAvailableTransitions("SendClientHello");
+
+            trace = trace.addTransitionWith("ReceiveClientHello", List.of());
+            printAvailableTransitions("ReceiveClientHello");
+
+            trace.getCurrentState().findTransitions("SendServerHello", paramsFindSendServerHello, 1000);
+            trace = trace.addTransitionWith("SendServerHello", params);
+
+
+            // trace = trace.addTransitionWith("ReceiveServerHello", paramsSendServerHello);
+            // getOutTransitionInformations();
+            // generateClientAndServerHello();
+
+            
+            // System.out.println("ServerHello accepted by model.");
+            return true;
+
+        } catch (Exception e) {
+            System.err.println("ServerHello rejected by model: " + e.getMessage());
+            return false;
+        }
+    }
+
 }
