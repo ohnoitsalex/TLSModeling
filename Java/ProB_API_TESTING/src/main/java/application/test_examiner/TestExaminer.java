@@ -66,6 +66,11 @@ public class TestExaminer {
         // Load model
         loadModel();
 
+        //Generate ClientHello
+        System.out.println("Generating and testing ClientHello");
+        modelLoader.generateClientHello();
+
+
         // Launch real SUT (System Under Test)
         if (systemUnderTest != null) {
             System.out.println("Starting SUT ...");
