@@ -123,11 +123,11 @@ public class TLSAttackerFakeClient extends SystemUnderTest {
         // Écrit au format YAML
         TlsYamlParser.writeYaml(wrapped, "src/main/resources/data/SUTServerHello.yaml");
 
-        // System.out.println(response.toString());
+        System.out.println(response.toString());
         System.out.println("ServerHello saved in YAML for ProB validation.");
 
         ProtocolVersion version = ProtocolVersion.fromString("TLS13");
-        System.out.println("Protocol Version: " + version);
+        // System.out.println("Protocol Version: " + version);
         
     }
 
