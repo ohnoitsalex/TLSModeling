@@ -28,8 +28,8 @@ public class ModelExecuter {
             "{TLS_1_3}",
             "0",
             "{}",
-            "{ed25519}",
-            "{X448}",
+            "{rsa_pkcs1_sha25}",
+            "{X25519}",
             "{TLS_AES_128_GCM_SHA256}"
     );
 
@@ -38,8 +38,8 @@ public class ModelExecuter {
             "supported_versions={TLS_1_3}",
             "legacy_compression_methods=0",
             "pre_shared_key={}",
-            "signature_algorithms={ed25519}",
-            "supported_groups={X448}",
+            "signature_algorithms={rsa_pkcs1_sha25}",
+            "supported_groups={X25519}",
             "cipher_suites={TLS_AES_128_GCM_SHA256}"
     );
 
@@ -136,9 +136,11 @@ public class ModelExecuter {
     }
 
     public void generateClientHelloMessages() {
+        initaliseMachine();
         trace.getCurrentState().findTransitions("SendClientHello", paramsFindSendClientHello, 1000);
         trace = trace.addTransitionWith("SendClientHello", paramsSendClientHello);
         trace = trace.addTransitionWith("ReceiveClientHello", List.of());
+        getOutTransitionInformations();
     }
 
     public void generateServerHelloMessages() {
@@ -191,8 +193,8 @@ public class ModelExecuter {
                 clientHelloInformation.put("cipher_suites",transition.getParameterValues().get(6));
                 tlsClientInformationHolder.setClientHelloInformation(clientHelloInformation);
 
-                InformationConvertertoAbstract.serializeToYAML(tlsClientInformationHolder, "src/main/resources/data/ModelClientHello");
-                InformationConvertertoAbstract.removeGlobalTagsYaml("src/main/resources/data/ModelClientHello.yaml");
+                InformationConvertertoAbstract.serializeToYAML(tlsClientInformationHolder, "src/main/resources/data/ModelClientHello.yaml2");
+                InformationConvertertoAbstract.removeGlobalTagsYaml("src/main/resources/data/ModelClientHello.yaml2");
             }
             if (trace.getCurrent().toString() == "SendServerHello"){
                 System.out.println("SendServerHello");
@@ -212,7 +214,7 @@ public class ModelExecuter {
                 tlsServerInformationHolder.setServerHelloInformation(serverHelloInformation);
 
                 //InformationConvertertoAbstract.configureYAML();
-                InformationConvertertoAbstract.serializeToYAML(tlsServerInformationHolder, "src/main/resources/data/ModelServerHello");
+                InformationConvertertoAbstract.serializeToYAML(tlsServerInformationHolder, "src/main/resources/data/ModelServerHello.yaml");
                 InformationConvertertoAbstract.removeGlobalTagsYaml("src/main/resources/data/ModelServerHello.yaml");
             }
 
@@ -299,6 +301,7 @@ public class ModelExecuter {
 
             
             // System.out.println("ServerHello accepted by model.");
+            System.out.println("ServerHello accepted by model with parameters: " + params);
             return true;
 
         } catch (Exception e) {
