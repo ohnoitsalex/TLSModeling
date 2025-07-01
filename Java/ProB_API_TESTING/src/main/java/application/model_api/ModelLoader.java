@@ -66,6 +66,11 @@ public class ModelLoader {
         modelExecuter.generateClientAndServerHello();
     }
 
+    public void generateClientHello() {
+        modelExecuter.createSubscription("session_machine");
+        modelExecuter.generateClientHelloMessages();
+    }
+
     public void generateClientAndServerHello(){
         modelExecuter.createSubscription("session_machine");
         modelExecuter.generateClientAndServerHello();
@@ -75,6 +80,8 @@ public class ModelLoader {
     modelExecuter.createSubscription("session_machine"); 
         return modelExecuter.validateServerHelloFromYaml(yamlPath);
     }
+
+
 }
 
 
