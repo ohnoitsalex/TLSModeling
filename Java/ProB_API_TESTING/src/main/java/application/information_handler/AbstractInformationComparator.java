@@ -12,8 +12,28 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Comparator for abstract information extracted from TLS messages.
+ * This class provides utilities to compare YAML-formatted data from model executions
+ * and System Under Test outputs, identifying differences and inconsistencies for
+ * Model-Based Testing validation.
+ * 
+ * <p>The comparator performs deep comparison of nested YAML structures and outputs
+ * detailed difference reports to both console and file for analysis.
+ */
 public class AbstractInformationComparator {
 
+    /**
+     * Compares two YAML data structures recursively and reports differences.
+     * This method performs deep comparison of nested maps, identifying missing keys
+     * and value mismatches between model and SUT outputs. Results are written to
+     * both console and a differences file for later analysis.
+     * 
+     * @param yaml1 the first YAML data structure (typically from the model)
+     * @param yaml2 the second YAML data structure (typically from the SUT)
+     * @param path the current path in the nested structure for error reporting
+     * @return true if differences were found, false if the structures match
+     */
     public static boolean compareAbstractYaml(
             Map<String, Object> yaml1, Map<String, Object> yaml2, String path) {
         boolean differencesFound = false;
@@ -60,6 +80,14 @@ public class AbstractInformationComparator {
         return differencesFound;
     }
 
+    /**
+     * Main method for standalone YAML comparison testing.
+     * This method demonstrates the comparison functionality by loading two YAML files
+     * from the resources directory and comparing their contents. Primarily used for
+     * testing and validation of the comparison logic.
+     * 
+     * @param args command line arguments (not used)
+     */
     public static void main(String[] args) {
         Yaml yaml = new Yaml();
 

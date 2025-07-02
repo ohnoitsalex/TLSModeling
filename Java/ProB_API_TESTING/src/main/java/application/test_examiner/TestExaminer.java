@@ -18,6 +18,23 @@ import com.google.inject.Injector;
 import de.prob.MainModule;
 import de.prob.scripting.Api;
 
+/**
+ * Central coordinator for Model-Based Testing of TLS implementations.
+ * This class orchestrates the entire testing process by managing both the formal model
+ * execution and the System Under Test (SUT) operations, then comparing their behaviors.
+ * 
+ * <p>The TestExaminer handles:
+ * <ul>
+ *   <li>Loading and executing B-method formal models of TLS protocols</li>
+ *   <li>Initializing and running TLS implementations as Systems Under Test</li>
+ *   <li>Coordinating message exchanges between model and SUT</li>
+ *   <li>Validating SUT behavior against model specifications</li>
+ * </ul>
+ * 
+ * @author TLSModeling Team
+ * @version 1.0
+ * @since 1.0
+ */
 public class TestExaminer {
 
     /* Type of the test examiner */
@@ -30,6 +47,14 @@ public class TestExaminer {
     /* Client or server SUT */
     private String mode;
 
+    /**
+     * Constructs a TestExaminer with the specified test type.
+     * Initializes the ProB API, loads the appropriate formal model, and sets up
+     * the corresponding System Under Test implementations based on the test type.
+     * 
+     * @param type the type of test to perform ("tls" for TLS 1.3 testing, "tlsTesting" for alternative model)
+     * @throws IllegalArgumentException if an invalid test type is provided
+     */
     public TestExaminer(String type) {
 
         // Initialize Guice injector to load the ProB API
@@ -60,6 +85,12 @@ public class TestExaminer {
         }
     }
 
+    /**
+     * Executes the complete Model-Based Testing workflow.
+     * This method orchestrates the entire testing process including model loading,
+     * ClientHello generation, SUT initialization, fake client execution, and
+     * ServerHello validation against the formal model.
+     */
     public void runTest() {
         System.out.println("-- Starting TLS Test --");
 
@@ -98,6 +129,11 @@ public class TestExaminer {
         
     }
 
+    /**
+     * Loads and initializes the formal B-method model.
+     * This method loads the model specification, executes initial setup,
+     * and prints model information for verification.
+     */
     public void loadModel() {
         System.out.println("Testing TLS Model...");
         this.modelLoader.loadAndExecuteAPI();
@@ -108,8 +144,16 @@ public class TestExaminer {
     //     systemUnderTest.startSUT();
     // }
 
+    /**
+     * Creates a System Under Test specifically configured for ServerHello testing.
+     * This method is reserved for future implementations of specialized SUT configurations.
+     */
     public void createSUTForServerHello() {}
 
+    /**
+     * Executes a specific operation on the System Under Test.
+     * This method is reserved for future implementations of targeted SUT operations.
+     */
     public void executeSUTOperation() {}
 
     //    KEEPING FOR FURTHER IMPLEMENTATIONS
@@ -117,10 +161,23 @@ public class TestExaminer {
     //        this.modelLoader.executeSpecificTrace();
     //    }
 
+    /**
+     * Tests ServerHello message generation and validation.
+     * This method generates both ClientHello and ServerHello messages using the model
+     * to validate the complete handshake sequence.
+     */
     public void testServerHello() {
         this.modelLoader.generateClientAndServerHello();
     }
 
+    /**
+     * Compares results between the model and System Under Test.
+     * This method performs YAML-based comparison of handshake messages to detect
+     * discrepancies between expected model behavior and actual SUT implementation.
+     * The comparison mode (client/server) determines which messages are compared.
+     * 
+     * @throws IllegalArgumentException if an unknown SUT mode is specified
+     */
     public void compareResults() {
         System.out.println("Comparing YAML result");
         boolean match;
