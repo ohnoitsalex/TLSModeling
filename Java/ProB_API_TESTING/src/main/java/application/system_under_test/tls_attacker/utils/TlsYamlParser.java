@@ -16,6 +16,7 @@ public class TlsYamlParser {
      * Reads a YAML file and returns its contents as a Map.
      * @param filename The path to the YAML file
      * @return Map containing the YAML data
+     * @throws RuntimeException if the file cannot be read
      */
     public static Map<String, String> readYaml(String filename) {
         try (FileReader reader = new FileReader(filename)) {
@@ -29,6 +30,9 @@ public class TlsYamlParser {
     /**
      * Reads a YAML file and returns its contents as a generic Map.
      * Used when the YAML has nested structures.
+     * @return Map containing the YAML data
+     * @param filename The path to the YAML file
+     * @throws RuntimeException if the file cannot be read
      */
     public static Map<String, Object> readYamlAsObject(String filename) {
         try (FileReader reader = new FileReader(filename)) {
@@ -44,6 +48,7 @@ public class TlsYamlParser {
      * Writes data to a YAML file.
      * @param data The data to write
      * @param filename The path where to write the YAML file
+     * @throws RuntimeException if the file cannot be written
      */
     public static void writeYaml(Map<String, ?> data, String filename){
         try (FileWriter writer = new FileWriter(filename)) {

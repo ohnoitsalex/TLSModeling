@@ -3,15 +3,14 @@ package application.test_examiner;
 import application.config.Config;
 import application.information_handler.AbstractInformationComparator;
 import application.information_handler.InformationConvertertoAbstract;
-import application.model_api.ModelExecuter;
 import application.model_api.ModelLoader;
 import application.system_under_test.SystemUnderTest;
 import application.system_under_test.tls_attacker.TLSAttackerFakeClient;
 import application.system_under_test.tls_attacker.TLSAttackerSUTServer;
-import application.system_under_test.tls_attacker.utils.TlsYamlParser;
-import application.system_under_test.tls_system_under_test.TLSSystemUnderTest;
+// import application.system_under_test.tls_attacker.utils.TlsYamlParser;
+// import application.system_under_test.tls_system_under_test.TLSSystemUnderTest;
 
-import java.util.Map;
+// import java.util.Map;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -30,10 +29,6 @@ import de.prob.scripting.Api;
  *   <li>Coordinating message exchanges between model and SUT</li>
  *   <li>Validating SUT behavior against model specifications</li>
  * </ul>
- * 
- * @author TLSModeling Team
- * @version 1.0
- * @since 1.0
  */
 public class TestExaminer {
 

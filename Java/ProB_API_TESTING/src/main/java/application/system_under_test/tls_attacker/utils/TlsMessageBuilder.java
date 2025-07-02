@@ -8,10 +8,10 @@ import de.rub.nds.tlsattacker.core.protocol.message.extension.KeyShareExtensionM
 import de.rub.nds.tlsattacker.core.protocol.message.extension.SignatureAndHashAlgorithmsExtensionMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.extension.SupportedVersionsExtensionMessage;
 import de.rub.nds.tlsattacker.core.constants.ProtocolVersion;
-import de.rub.nds.tlsattacker.core.constants.NamedGroup;
-import de.rub.nds.tlsattacker.core.protocol.message.extension.KeyShareExtensionMessage;
+// import de.rub.nds.tlsattacker.core.constants.NamedGroup;
+// import de.rub.nds.tlsattacker.core.protocol.message.extension.KeyShareExtensionMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.extension.keyshare.KeyShareEntry;
-import de.rub.nds.tlsattacker.core.protocol.message.extension.SignatureAndHashAlgorithmsExtensionMessage;
+// import de.rub.nds.tlsattacker.core.protocol.message.extension.SignatureAndHashAlgorithmsExtensionMessage;
 import de.rub.nds.tlsattacker.core.config.Config;
 import de.rub.nds.tlsattacker.core.constants.SignatureAndHashAlgorithm;
 

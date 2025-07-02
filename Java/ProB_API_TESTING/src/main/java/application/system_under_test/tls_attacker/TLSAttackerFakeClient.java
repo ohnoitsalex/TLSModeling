@@ -3,22 +3,21 @@ package application.system_under_test.tls_attacker;
 import application.system_under_test.SystemUnderTest;
 import application.system_under_test.tls_attacker.utils.ByteUtils;
 import application.system_under_test.tls_attacker.utils.TlsMessageBuilder;
-import application.system_under_test.tls_attacker.utils.TlsMessageParser;
 import application.system_under_test.tls_attacker.utils.TlsYamlParser;
-import application.information_handler.InformationConvertertoAbstract;
+// import application.information_handler.InformationConvertertoAbstract;
 
 import de.rub.nds.tlsattacker.core.config.Config;
 import de.rub.nds.tlsattacker.core.connection.OutboundConnection;
 import de.rub.nds.tlsattacker.core.constants.CipherSuite;
-import de.rub.nds.tlsattacker.core.constants.NamedGroup;
-import de.rub.nds.tlsattacker.core.constants.ProtocolVersion;
+// import de.rub.nds.tlsattacker.core.constants.NamedGroup;
+// import de.rub.nds.tlsattacker.core.constants.ProtocolVersion;
 import de.rub.nds.tlsattacker.core.constants.RunningModeType;
-import de.rub.nds.tlsattacker.core.protocol.handler.extension.PreSharedKeyExtensionHandler;
+// import de.rub.nds.tlsattacker.core.protocol.handler.extension.PreSharedKeyExtensionHandler;
 import de.rub.nds.tlsattacker.core.protocol.message.extension.PreSharedKeyExtensionMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.ClientHelloMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.ServerHelloMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.extension.KeyShareExtensionMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.extension.SignatureAndHashAlgorithmsExtensionMessage;
+// import de.rub.nds.tlsattacker.core.protocol.message.extension.SignatureAndHashAlgorithmsExtensionMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.extension.SupportedVersionsExtensionMessage;
 import de.rub.nds.tlsattacker.core.state.State;
 import de.rub.nds.tlsattacker.core.workflow.DefaultWorkflowExecutor;
@@ -26,15 +25,15 @@ import de.rub.nds.tlsattacker.core.workflow.WorkflowTrace;
 import de.rub.nds.tlsattacker.core.workflow.action.ReceiveAction;
 import de.rub.nds.tlsattacker.core.workflow.action.SendAction;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
+// import java.io.IOException;
+// import java.nio.charset.StandardCharsets;
+// import java.nio.file.Files;
+// import java.nio.file.Path;
+// import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
+// import java.util.List;
 import java.util.Map;
-import java.util.LinkedHashMap;
+// import java.util.LinkedHashMap;
 
 
 /**
@@ -126,7 +125,7 @@ public class TLSAttackerFakeClient extends SystemUnderTest {
         System.out.println(response.toString());
         System.out.println("ServerHello saved in YAML for ProB validation.");
 
-        ProtocolVersion version = ProtocolVersion.fromString("TLS13");
+        // ProtocolVersion version = ProtocolVersion.fromString("TLS13");
         // System.out.println("Protocol Version: " + version);
         
     }
