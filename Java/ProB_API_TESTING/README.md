@@ -63,21 +63,21 @@ Before building, ensure you have:
 
 1. **Clone the repository**
 
-```
+```bash
 git clone https://github.com/ohnoitsalex/TLSModeling.git
-cd TLSModeling
+cd TLSModeling/Java/ProB_API_TESTING
 ```
 
 2. **Build the project**
 
-```
+```bash
 mvn install
 mvn compile
 ```
 
 3. **Ensure that the B-model specification files** (`TLS_specification.mch`, `TLS_specificationTesting.mch`) are located in:
 
-```
+```bash
 src/main/resources/models/
 ```
 
@@ -85,7 +85,7 @@ src/main/resources/models/
 
 To start the test process:
 
-```
+```bash
 mvn exec:java -Dexec.mainClass="application.Main"
 ```
 
@@ -110,7 +110,7 @@ A comparator analyzes both versions and prints any detected inconsistencies.
 
 Edit `application/config/Config.java` to select the client and server classes to use:
 
-```
+```Java
 public static final String CLIENTCLASSNAME =
     "application.system_under_test.tls_attacker.TLSAttackerFakeClient";
 
@@ -120,13 +120,50 @@ public static final String SERVERCLASSNAME =
 
 Alternative implementations using Bouncy Castle are available and can be switched in similarly.
 
+## Generating Documentation
+
+This project includes comprehensive JavaDoc documentation for all classes and methods. To generate the API documentation:
+
+### Using Maven (Recommended)
+
+```bash
+# Generate Javadoc documentation
+mvn javadoc:javadoc
+
+# Documentation will be generated in target/site/apidocs/
+# Open target/site/apidocs/index.html in your browser to view
+```
+
+### Using Command Line
+
+```bash
+# Generate documentation for all packages
+javadoc -d docs -sourcepath src/main/java -subpackages application
+
+# Generate with classpath dependencies
+javadoc -d docs -cp "target/dependency/*" -sourcepath src/main/java application
+```
+
+### Viewing Documentation
+
+After generation, open the documentation in your browser:
+
+```bash
+open target/site/apidocs/index.html
+
+# Or navigate to file:///path/to/project/target/site/apidocs/index.html
+```
+
+The generated documentation includes:
+- **Class hierarchies** and package structures
+- **Method signatures** with parameter descriptions
+- **Return value** documentation
+- **Usage examples** and implementation notes
+- **Cross-references** between related classes
+
 ## Why Model-Based Testing?
 
 Model-Based Testing allows for a scalable and formalized way to test critical protocol behavior. Instead of writing manual test cases, we define the correct behavior in a specification and systematically generate tests that exercise both common and edge cases. This is particularly valuable in security protocols like TLS, where subtle errors can have major consequences.
 
-## Author
 
-Developed by **@ohnoitsalex**  
-Uses formal methods, symbolic execution, and TLS fuzzing technologies to validate protocol compliance.
-
-
+  
