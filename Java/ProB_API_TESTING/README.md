@@ -161,9 +161,6 @@ The generated documentation includes:
 - **Usage examples** and implementation notes
 - **Cross-references** between related classes
 
-## Why Model-Based Testing?
-
-Model-Based Testing allows for a scalable and formalized way to test critical protocol behavior. Instead of writing manual test cases, we define the correct behavior in a specification and systematically generate tests that exercise both common and edge cases. This is particularly valuable in security protocols like TLS, where subtle errors can have major consequences.
 
 
   
