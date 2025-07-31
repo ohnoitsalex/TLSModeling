@@ -11,7 +11,7 @@ SPECIFIC INFORMATION:
 
 - [x] TLS-Attacker's Bouncy Castle
 - [ ] Bouncy Castle
-- [ ] Openssl
+- [x] Openssl
 
 The goal of this project is to assess whether the System Under Test (SUT) behaves in accordance with the model—particularly during the TLS 1.3 handshake phase—by comparing the abstracted outputs of both model and SUT using serialized YAML representations.
 
@@ -73,6 +73,7 @@ cd TLSModeling/Java/ProB_API_TESTING
 ```bash
 mvn install
 mvn compile
+mvn dependency:copy-dependencies
 ```
 
 3. **Ensure that the B-model specification files** (`TLS_specification.mch`, `TLS_specificationTesting.mch`) are located in:
@@ -164,3 +165,22 @@ The generated documentation includes:
 
 
   
+## How to use openssl
+
+Generate pair of key and cert : 
+```bash
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 365   
+```
+
+
+Run openssl server in background : 
+
+```bash
+openssl s_server -cert cert.pem -key key.pem -tls1_3 -port 8443 -msg -ciphersuites "TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384"
+```
+ou
+```bash
+openssl s_server -cert cert.pem -key key.pem -tls1_3 -port 8443 -msg
+```
+
+Run java project.
