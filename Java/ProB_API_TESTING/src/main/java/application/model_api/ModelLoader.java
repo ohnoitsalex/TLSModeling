@@ -1,10 +1,10 @@
 package application.model_api;
 
-import application.config.Config;
-import com.google.inject.Guice;
+// import application.config.Config;
+// import com.google.inject.Guice;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.google.inject.Stage;
+// import com.google.inject.Injector;
+// import com.google.inject.Stage;
 import de.prob.scripting.Api;
 import de.prob.statespace.StateSpace;
 
@@ -149,6 +149,18 @@ public class ModelLoader {
     modelExecuter.createSubscription("session_machine"); 
         return modelExecuter.validateServerHelloFromYaml(yamlPath);
     }
+
+    /**
+     * Generates a valid ClientHello message with transitions.
+     * This method creates a subscription to the session machine and generates a valid ClientHello message
+     * with transitions, which can be used for further testing or validation.
+     * @param yamlFilePath the path to the YAML file where the generated ClientHello message will be saved
+     * @return true if the ClientHello message is valid, false otherwise
+    //  */
+    // public boolean generateValidClientHelloWithFindTransitions(String yamlFilePath) {
+    //     modelExecuter.createSubscription("session_machine");
+    //     return modelExecuter.generateValidClientHelloWithFindTransitions(yamlFilePath);
+    // }
 
 
 }
