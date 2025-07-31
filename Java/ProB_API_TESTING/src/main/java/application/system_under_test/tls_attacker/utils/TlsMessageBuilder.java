@@ -7,6 +7,7 @@ import de.rub.nds.tlsattacker.core.protocol.message.ServerHelloMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.extension.KeyShareExtensionMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.extension.SignatureAndHashAlgorithmsExtensionMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.extension.SupportedVersionsExtensionMessage;
+import de.rub.nds.tlsattacker.core.protocol.message.extension.EllipticCurvesExtensionMessage;
 import de.rub.nds.tlsattacker.core.constants.ProtocolVersion;
 // import de.rub.nds.tlsattacker.core.constants.NamedGroup;
 // import de.rub.nds.tlsattacker.core.protocol.message.extension.KeyShareExtensionMessage;
@@ -91,21 +92,43 @@ public class TlsMessageBuilder {
             String[] algoArray = algoStr.split(",");
 
             for (String algo : algoArray) {
-                SignatureAndHashAlgorithm scheme = switch (algo.trim()) {
-                    case "rsa_pss_rsae_sha512"     -> SignatureAndHashAlgorithm.RSA_PSS_RSAE_SHA512;
-                    case "rsa_pss_rsae_sha256"     -> SignatureAndHashAlgorithm.RSA_PSS_RSAE_SHA256;
-                    case "ecdsa_secp256r1_sha256"  -> SignatureAndHashAlgorithm.ECDSA_SHA256;
-                    case "ecdsa_secp384r1_sha384"  -> SignatureAndHashAlgorithm.ECDSA_SHA384;
-                    case "ed25519"                 -> SignatureAndHashAlgorithm.ED25519;
-                    default -> {
-                        System.err.println("Signature algorithm not recognized: " + algo.trim());
-                        yield null;
+                String trimmedAlgo = algo.trim();
+                SignatureAndHashAlgorithm scheme = null;
+                
+                // Handle hex format (e.g., x0403)
+                if (trimmedAlgo.startsWith("x") && trimmedAlgo.length() == 5) {
+                    try {
+                        int value = Integer.parseInt(trimmedAlgo.substring(1), 16);
+                        scheme = switch (value) {
+                            case 0x0403 -> SignatureAndHashAlgorithm.ECDSA_SHA256;
+                            case 0x0804 -> SignatureAndHashAlgorithm.RSA_PSS_RSAE_SHA256;
+                            case 0x0805 -> SignatureAndHashAlgorithm.RSA_PSS_RSAE_SHA384;
+                            case 0x0806 -> SignatureAndHashAlgorithm.RSA_PSS_RSAE_SHA512;
+                            case 0x0401 -> SignatureAndHashAlgorithm.RSA_SHA256;
+                            case 0x0501 -> SignatureAndHashAlgorithm.RSA_SHA384;
+                            case 0x0601 -> SignatureAndHashAlgorithm.RSA_SHA512;
+                            default -> null;
+                        };
+                    } catch (NumberFormatException e) {
+                        System.err.println("Invalid hex signature algorithm: " + trimmedAlgo);
                     }
-                };
+                } else {
+                    // Handle string format
+                    scheme = switch (trimmedAlgo) {
+                        case "rsa_pss_rsae_sha512"     -> SignatureAndHashAlgorithm.RSA_PSS_RSAE_SHA512;
+                        case "rsa_pss_rsae_sha256"     -> SignatureAndHashAlgorithm.RSA_PSS_RSAE_SHA256;
+                        case "ecdsa_secp256r1_sha256"  -> SignatureAndHashAlgorithm.ECDSA_SHA256;
+                        case "ecdsa_secp384r1_sha384"  -> SignatureAndHashAlgorithm.ECDSA_SHA384;
+                        case "ed25519"                 -> SignatureAndHashAlgorithm.ED25519;
+                        default -> null;
+                    };
+                }
 
                 if (scheme != null) {
                     sigBytes.add((byte)scheme.getSignatureAlgorithm().ordinal());
                     sigBytes.add((byte)scheme.getHashAlgorithm().ordinal());
+                } else {
+                    System.err.println("Signature algorithm not recognized: " + trimmedAlgo);
                 }
             }
         }
@@ -180,11 +203,68 @@ public class TlsMessageBuilder {
     public static List<CipherSuite> buildCipherSuites(Map<String, String> data) {
         List<CipherSuite> suites = new ArrayList<>();
         String cipherSuitesStr = data.get("cipher_suites");
+        
+        System.out.println("DEBUG: cipher_suites from YAML: " + cipherSuitesStr);
+        
         if (cipherSuitesStr != null && !cipherSuitesStr.isEmpty()) {
-            // Parse and add cipher suites
+            // Remove brackets and split by comma
+            cipherSuitesStr = cipherSuitesStr.replaceAll("[{}\\[\\]]", "");
+            String[] suiteArray = cipherSuitesStr.split(",");
+            
+            for (String suite : suiteArray) {
+                String trimmedSuite = suite.trim();
+                CipherSuite cs = switch (trimmedSuite) {
+                    case "TLS_AES_128_GCM_SHA256" -> CipherSuite.TLS_AES_128_GCM_SHA256;
+                    case "TLS_AES_256_GCM_SHA384" -> CipherSuite.TLS_AES_256_GCM_SHA384;
+                    case "TLS_CHACHA20_POLY1305_SHA256" -> CipherSuite.TLS_CHACHA20_POLY1305_SHA256;
+                    case "TLS_AES_128_CCM_SHA256" -> CipherSuite.TLS_AES_128_CCM_SHA256;
+                    case "TLS_AES_128_CCM_8_SHA256" -> CipherSuite.TLS_AES_128_CCM_8_SHA256;
+                    default -> {
+                        System.err.println("Cipher suite not recognized: " + trimmedSuite);
+                        yield null;
+                    }
+                };
+                if (cs != null) {
+                    suites.add(cs);
+                    System.out.println("DEBUG: Added cipher suite: " + cs.name());
+                }
+            }
+        }
+        
+        // Fallback to default if no valid suites found
+        if (suites.isEmpty()) {
+            System.out.println("DEBUG: No cipher suites parsed, adding default");
             suites.add(CipherSuite.TLS_AES_128_GCM_SHA256);
         }
+        
+        System.out.println("DEBUG: Total cipher suites: " + suites.size());
         return suites;
+    }
+
+    /**
+     * Builds an EllipticCurvesExtensionMessage (supported groups) from YAML data.
+     * @param data The YAML data
+     * @return The built extension message
+     */
+    public static EllipticCurvesExtensionMessage buildSupportedGroupsExtension(Map<String, String> data) {
+        EllipticCurvesExtensionMessage groupsExt = new EllipticCurvesExtensionMessage();
+        List<NamedGroup> groups = buildNamedGroups(data);
+        
+        // Convert NamedGroup list to byte array
+        List<Byte> groupBytes = new ArrayList<>();
+        for (NamedGroup group : groups) {
+            byte[] groupValue = group.getValue();
+            groupBytes.add(groupValue[0]);
+            groupBytes.add(groupValue[1]);
+        }
+        
+        byte[] result = new byte[groupBytes.size()];
+        for (int i = 0; i < groupBytes.size(); i++) {
+            result[i] = groupBytes.get(i);
+        }
+        
+        groupsExt.setSupportedGroups(result);
+        return groupsExt;
     }
 
     /**
@@ -195,11 +275,104 @@ public class TlsMessageBuilder {
     public static List<NamedGroup> buildNamedGroups(Map<String, String> data) {
         List<NamedGroup> groups = new ArrayList<>();
         String groupsStr = data.get("supported_groups");
+        
+        System.out.println("DEBUG: supported_groups from YAML: " + groupsStr);
+        
         if (groupsStr != null && !groupsStr.isEmpty()) {
-            // Parse and add named groups
+            // Remove brackets and split by comma
+            groupsStr = groupsStr.replaceAll("[{}\\[\\]]", "");
+            String[] groupArray = groupsStr.split(",");
+            
+            for (String group : groupArray) {
+                String trimmedGroup = group.trim();
+                NamedGroup ng = switch (trimmedGroup) {
+                    case "x001d" -> NamedGroup.ECDH_X25519;
+                    case "x0017" -> NamedGroup.SECP256R1;
+                    case "x0018" -> NamedGroup.SECP384R1;
+                    case "x0019" -> NamedGroup.SECP521R1;
+                    case "x001e" -> NamedGroup.ECDH_X448;
+                    case "x0100" -> NamedGroup.FFDHE2048;
+                    case "x0101" -> NamedGroup.FFDHE3072;
+                    case "X25519" -> NamedGroup.ECDH_X25519;
+                    case "secp256r1" -> NamedGroup.SECP256R1;
+                    case "secp384r1" -> NamedGroup.SECP384R1;
+                    case "secp521r1" -> NamedGroup.SECP521R1;
+                    default -> {
+                        System.err.println("Named group not recognized: " + trimmedGroup);
+                        yield null;
+                    }
+                };
+                if (ng != null) {
+                    groups.add(ng);
+                    System.out.println("DEBUG: Added named group: " + ng.name());
+                }
+            }
+        }
+        
+        // Fallback to default if no valid groups found
+        if (groups.isEmpty()) {
+            System.out.println("DEBUG: No named groups parsed, adding default");
+            groups.add(NamedGroup.ECDH_X25519);
             groups.add(NamedGroup.SECP256R1);
         }
+        
+        System.out.println("DEBUG: Total named groups: " + groups.size());
         return groups;
+    }
+
+    /**
+     * Configures TLS-Attacker Config from YAML data BEFORE creating ClientHello.
+     * This ensures cipher suites and other settings are applied correctly.
+     * 
+     * @param clientHelloMap The YAML data containing client hello fields
+     * @param config The TLS configuration to update
+     */
+    public static void configureFromYaml(Map<String, String> clientHelloMap, Config config) {
+        // Build and set Cipher Suites FIRST
+        List<CipherSuite> suites = buildCipherSuites(clientHelloMap);
+        config.setDefaultClientSupportedCipherSuites(suites);
+        
+        // Build and set Supported Groups
+        List<NamedGroup> groups = buildNamedGroups(clientHelloMap);
+        config.setDefaultClientNamedGroups(groups);
+        
+        System.out.println("Pre-configured " + suites.size() + " cipher suites in Config:");
+        for (CipherSuite suite : suites) {
+            System.out.println("  - " + suite.name() + " (0x" + 
+                String.format("%04X", (suite.getByteValue()[0] & 0xFF) << 8 | (suite.getByteValue()[1] & 0xFF)) + ")");
+        }
+    }
+
+    /**
+     * Adds extensions to an already created ClientHello message.
+     * 
+     * @param clientHelloMap The YAML data containing client hello fields
+     * @param clientHello The ClientHelloMessage to add extensions to
+     */
+    public static void addExtensionsToClientHello(Map<String, String> clientHelloMap, ClientHelloMessage clientHello) {
+        // Clear any existing extensions to avoid duplicates
+        clientHello.getExtensions().clear();
+        
+        // Build and add Supported Versions extension
+        SupportedVersionsExtensionMessage versions = buildSupportedVersions(clientHelloMap);
+        clientHello.addExtension(versions);
+
+        // Build and add Signature Algorithms extension
+        SignatureAndHashAlgorithmsExtensionMessage sigHash = buildSignatureAlgorithms(clientHelloMap);
+        clientHello.addExtension(sigHash);
+
+        // Build and add Supported Groups extension (REQUIRED for TLS 1.3)
+        EllipticCurvesExtensionMessage supportedGroups = buildSupportedGroupsExtension(clientHelloMap);
+        clientHello.addExtension(supportedGroups);
+
+        // Build and add Key Share extension
+        KeyShareExtensionMessage keyShare = buildKeyShare(clientHelloMap);
+        clientHello.addExtension(keyShare);
+
+        System.out.println("Added " + clientHello.getExtensions().size() + " extensions to ClientHello");
+        for (int i = 0; i < clientHello.getExtensions().size(); i++) {
+            System.out.println("  Extension " + i + ": " + clientHello.getExtensions().get(i).getClass().getSimpleName());
+        }
     }
 
 
@@ -210,6 +383,9 @@ public class TlsMessageBuilder {
      * @param config The TLS configuration
      */
     public static void buildClientHello(Map<String, String> clientHelloMap ,ClientHelloMessage clientHello, Config config) {
+        // Clear any existing extensions to avoid duplicates
+        clientHello.getExtensions().clear();
+        
         // Build and add Supported Versions extension
         SupportedVersionsExtensionMessage versions = buildSupportedVersions(clientHelloMap);
         clientHello.addExtension(versions);
@@ -218,6 +394,10 @@ public class TlsMessageBuilder {
         SignatureAndHashAlgorithmsExtensionMessage sigHash = buildSignatureAlgorithms(clientHelloMap);
         clientHello.addExtension(sigHash);
 
+        // Build and add Supported Groups extension (REQUIRED for TLS 1.3)
+        EllipticCurvesExtensionMessage supportedGroups = buildSupportedGroupsExtension(clientHelloMap);
+        clientHello.addExtension(supportedGroups);
+
         // Build and add Key Share extension
         KeyShareExtensionMessage keyShare = buildKeyShare(clientHelloMap);
         clientHello.addExtension(keyShare);
@@ -225,11 +405,24 @@ public class TlsMessageBuilder {
         // Build and set Cipher Suites
         List<CipherSuite> suites = buildCipherSuites(clientHelloMap);
         config.setDefaultClientSupportedCipherSuites(suites);
+        
+        // IMPORTANT: Set cipher suites in the config BEFORE creating the ClientHello
+        // TLS-Attacker will use the config to populate the message
+        
+        System.out.println("Configured " + suites.size() + " cipher suites:");
+        for (CipherSuite suite : suites) {
+            System.out.println("  - " + suite.name() + " (0x" + 
+                String.format("%04X", (suite.getByteValue()[0] & 0xFF) << 8 | (suite.getByteValue()[1] & 0xFF)) + ")");
+        }
 
         // Build and set Supported Groups
         List<NamedGroup> groups = buildNamedGroups(clientHelloMap);
         config.setDefaultClientNamedGroups(groups);
 
+        System.out.println("ClientHello built with " + clientHello.getExtensions().size() + " extensions");
+        for (int i = 0; i < clientHello.getExtensions().size(); i++) {
+            System.out.println("  Extension " + i + ": " + clientHello.getExtensions().get(i).getClass().getSimpleName());
+        }
     }
 
 
