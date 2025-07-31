@@ -98,10 +98,22 @@ public class TestExaminer {
 
 
         // Launch real SUT (System Under Test)
-        if (systemUnderTest != null) {
-            System.out.println("Starting SUT ...");
-            systemUnderTest.createSUT();
-            systemUnderTest.startSUT();
+        // DISABLED: Using external OpenSSL server instead of TLS-Attacker server
+        // if (systemUnderTest != null) {
+        //     System.out.println("Starting SUT ...");
+        //     systemUnderTest.createSUT();
+        //     systemUnderTest.startSUT();
+        // }
+
+        System.out.println("Using external OpenSSL server on port 8443");
+        System.out.println("Make sure your OpenSSL server is running:");
+        System.out.println("  openssl s_server -cert cert.pem -key key.pem -accept 8443");
+        System.out.println("Waiting 2 seconds for server to be ready...");
+        
+        try {
+            Thread.sleep(2000); // Wait 2 seconds
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
 
         // Create and execute the fake client with tls attacker as a client
@@ -120,6 +132,7 @@ public class TestExaminer {
         } else {
             System.out.println("ServerHello is invalid according to the model.");
         }
+        
 
         
     }
