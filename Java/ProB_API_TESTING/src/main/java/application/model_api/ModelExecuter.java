@@ -53,13 +53,13 @@ public class ModelExecuter {
      * These parameters represent standard TLS 1.3 ClientHello values used in model traces.
      */
     private final List<String> paramsSendClientHello = Arrays.asList(
-            "x0303",
-            "{TLS_1_3}",
-            "0",
-            "{}",
-            "{rsa_pkcs1_sha25}",
-            "{X25519}",
-            "{TLS_AES_128_GCM_SHA256}"
+        "x0303",
+        "{TLS_1_3}",
+        "0",
+        "{}",
+        "{rsa_pkcs1_sha256}",
+        "{X25519}",
+        "{TLS_AES_128_GCM_SHA256}"
     );
 
     /** 
@@ -71,7 +71,7 @@ public class ModelExecuter {
             "supported_versions={TLS_1_3}",
             "legacy_compression_methods=0",
             "pre_shared_key={}",
-            "signature_algorithms={rsa_pkcs1_sha25}",
+            "signature_algorithms={rsa_pkcs1_sha256}",
             "supported_groups={X25519}",
             "cipher_suites={TLS_AES_128_GCM_SHA256}"
     );
@@ -317,8 +317,8 @@ public class ModelExecuter {
                 clientHelloInformation.put("cipher_suites",transition.getParameterValues().get(6));
                 tlsClientInformationHolder.setClientHelloInformation(clientHelloInformation);
 
-                InformationConvertertoAbstract.serializeToYAML(tlsClientInformationHolder, "src/main/resources/data/ModelClientHello.yaml2");
-                InformationConvertertoAbstract.removeGlobalTagsYaml("src/main/resources/data/ModelClientHello.yaml2");
+                InformationConvertertoAbstract.serializeToYAML(tlsClientInformationHolder, "src/main/resources/data/ModelClientHello.yaml");
+                InformationConvertertoAbstract.removeGlobalTagsYaml("src/main/resources/data/ModelClientHello.yaml");
             }
             if (trace.getCurrent().toString() == "SendServerHello"){
                 System.out.println("SendServerHello");
@@ -447,6 +447,7 @@ public class ModelExecuter {
             trace.getCurrentState().findTransitions("SendClientHello", paramsFindSendClientHello, 1000);
             trace = trace.addTransitionWith("SendClientHello", paramsSendClientHello);
             printAvailableTransitions("SendClientHello");
+            System.out.println(trace.getCurrentState().getStateRep());
 
             trace = trace.addTransitionWith("ReceiveClientHello", List.of());
             printAvailableTransitions("ReceiveClientHello");
