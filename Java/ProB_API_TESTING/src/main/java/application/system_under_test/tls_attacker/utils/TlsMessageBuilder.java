@@ -16,10 +16,15 @@ import de.rub.nds.tlsattacker.core.protocol.message.extension.keyshare.KeyShareE
 import de.rub.nds.tlsattacker.core.config.Config;
 import de.rub.nds.tlsattacker.core.constants.SignatureAndHashAlgorithm;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import java.security.*;
+import java.security.spec.*;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
 
 /**
  * Utility class for building TLS message components.
@@ -149,44 +154,118 @@ public class TlsMessageBuilder {
     }
 
 
+
+
+    private static byte[] encodePublicKey(NamedGroup group, PublicKey pubKey) {
+        // Pour X25519 / X448 : getEncoded() renvoie déjà les octets bruts
+        if (group == NamedGroup.ECDH_X25519 || group == NamedGroup.ECDH_X448) {
+            return pubKey.getEncoded();
+        }
+
+        // Pour SECP256R1 / SECP384R1 : il faut extraire le point EC non compressé
+        if (pubKey instanceof java.security.interfaces.ECPublicKey ecPub) {
+            java.security.spec.ECPoint w = ecPub.getW();
+            int fieldSize = ecPub.getParams().getCurve().getField().getFieldSize();
+            int byteLen = (fieldSize + 7) / 8;
+
+            byte[] xb = toFixedLength(w.getAffineX().toByteArray(), byteLen);
+            byte[] yb = toFixedLength(w.getAffineY().toByteArray(), byteLen);
+
+            byte[] uncompressed = new byte[1 + xb.length + yb.length];
+            uncompressed[0] = 0x04; // format uncompressed
+            System.arraycopy(xb, 0, uncompressed, 1, xb.length);
+            System.arraycopy(yb, 0, uncompressed, 1 + xb.length, yb.length);
+
+            return uncompressed;
+        }
+
+        throw new IllegalArgumentException("Unsupported public key encoding for group: " + group);
+    }
+
+    private static byte[] toFixedLength(byte[] src, int len) {
+        if (src.length == len) return src;
+        byte[] dst = new byte[len];
+        if (src.length > len) {
+            System.arraycopy(src, src.length - len, dst, 0, len);
+        } else {
+            System.arraycopy(src, 0, dst, len - src.length, src.length);
+        }
+        return dst;
+    }
+
+    /**
+     * Allows you to retrieve the private key associated with a group for calculating the shared secret.
+     */
+    public static PrivateKey getPrivateKey(NamedGroup group) {
+        return ephemeralPrivateKeys.get(group);
+    }
+
+
+    public static KeyPair generateKeyPair(NamedGroup group) throws Exception {
+        Security.addProvider(new BouncyCastleProvider());
+
+        KeyPairGenerator kpg;
+        switch (group) {
+            case ECDH_X25519:
+                kpg = KeyPairGenerator.getInstance("X25519", "BC");
+                break;
+            case ECDH_X448:
+                kpg = KeyPairGenerator.getInstance("X448", "BC");
+                break;
+            case SECP256R1:
+                kpg = KeyPairGenerator.getInstance("EC", "BC");
+                kpg.initialize(new ECGenParameterSpec("secp256r1"));
+                break;
+            case SECP384R1:
+                kpg = KeyPairGenerator.getInstance("EC", "BC");
+                kpg.initialize(new ECGenParameterSpec("secp384r1"));
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported group: " + group);
+        }
+        return kpg.generateKeyPair();
+    }
+
+
+    private static final Map<NamedGroup, PrivateKey> ephemeralPrivateKeys = new HashMap<>();
+    
+    static {
+        Security.addProvider(new BouncyCastleProvider());
+    }
     /**
      * Builds a KeyShareExtensionMessage from YAML data.
      * @param data The YAML data
      * @return The built extension message
      */
-    public static KeyShareExtensionMessage buildKeyShare(Map<String, String> data) {
+    public static KeyShareExtensionMessage buildKeyShare(Map<String, String> data) throws Exception {
         KeyShareExtensionMessage keyShare = new KeyShareExtensionMessage();
         List<KeyShareEntry> entries = new ArrayList<>();
 
-        String groupStr = data.getOrDefault("key_share_group", "x25519").trim();
+        // read group from yaml
+        String groupStr = data.getOrDefault("key_share_group", "x25519").trim().toLowerCase();
 
-        NamedGroup group = switch (groupStr.toLowerCase()) {
-            case "x25519"     -> NamedGroup.ECDH_X25519;
-            case "x448"       -> NamedGroup.ECDH_X448;
-            case "secp256r1"  -> NamedGroup.SECP256R1;
-            case "secp384r1"  -> NamedGroup.SECP384R1;
+        NamedGroup group = switch (groupStr) {
+            case "x25519"    -> NamedGroup.ECDH_X25519;
+            case "x448"      -> NamedGroup.ECDH_X448;
+            case "secp256r1" -> NamedGroup.SECP256R1;
+            case "secp384r1" -> NamedGroup.SECP384R1;
             default -> {
-                System.err.println("Unknown group : " + groupStr + " — fallback on x25519");
+                System.err.println("Unknown group: " + groupStr + " — fallback to X25519");
                 yield NamedGroup.ECDH_X25519;
             }
         };
 
-        int keyLength = switch (group) {
-            case ECDH_X25519 -> 32;
-            case ECDH_X448   -> 56;
-            case SECP256R1   -> 65; // Uncompressed EC point (0x04 + X + Y)
-            case SECP384R1   -> 97;
-            default          -> 32;
-        };
+        // Genrate ephemeral private/public key
+        KeyPair kp = generateKeyPair(group);
+        ephemeralPrivateKeys.put(group, kp.getPrivate());
 
-        // Generate a fake public key 
-        byte[] publicKey = new byte[keyLength];
-        new SecureRandom().nextBytes(publicKey);
+        // Encode the public key in the format expected by TLS
+        byte[] encodedPubKey = encodePublicKey(group, kp.getPublic());
 
-        // Create the typed KeyShareEntry
+        // Create KeyShare entry
         KeyShareEntry entry = new KeyShareEntry();
         entry.setGroupConfig(group);
-        entry.setPublicKey(publicKey);
+        entry.setPublicKey(encodedPubKey);
 
         entries.add(entry);
         keyShare.setKeyShareList(entries);
@@ -366,7 +445,12 @@ public class TlsMessageBuilder {
         clientHello.addExtension(supportedGroups);
 
         // Build and add Key Share extension
-        KeyShareExtensionMessage keyShare = buildKeyShare(clientHelloMap);
+        KeyShareExtensionMessage keyShare = null;
+        try {
+            keyShare = buildKeyShare(clientHelloMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         clientHello.addExtension(keyShare);
 
         System.out.println("Added " + clientHello.getExtensions().size() + " extensions to ClientHello");
@@ -399,7 +483,12 @@ public class TlsMessageBuilder {
         clientHello.addExtension(supportedGroups);
 
         // Build and add Key Share extension
-        KeyShareExtensionMessage keyShare = buildKeyShare(clientHelloMap);
+        KeyShareExtensionMessage keyShare = null;
+        try {
+            keyShare = buildKeyShare(clientHelloMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         clientHello.addExtension(keyShare);
 
         // Build and set Cipher Suites
