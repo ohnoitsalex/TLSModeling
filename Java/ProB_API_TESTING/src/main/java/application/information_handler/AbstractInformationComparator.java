@@ -62,7 +62,12 @@ public class AbstractInformationComparator {
                     Object val2 = yaml2.get(key);
 
                     if (val1 instanceof Map && val2 instanceof Map) {
-                        compareAbstractYaml((Map<String, Object>) val1, (Map<String, Object>) val2, currentPath);
+                        @SuppressWarnings("unchecked")
+                        Map<String, Object> map1 = (Map<String, Object>) val1;
+                        @SuppressWarnings("unchecked")
+                        Map<String, Object> map2 = (Map<String, Object>) val2;
+                        boolean nestedDifferences = compareAbstractYaml(map1, map2, currentPath);
+                        differencesFound = differencesFound || nestedDifferences;
                     } else if (!val1.equals(val2)) {
                         System.out.println("Difference at " + currentPath + " -> " + val1 + " vs " + val2);
                         differencesFound = true;
