@@ -61,7 +61,7 @@ public class InformationConvertertoAbstract {
                     .collect(Collectors.joining(System.lineSeparator()));
 
             Files.write(path, updatedContent.getBytes());
-            System.out.println("First line removed successfully from " + filePath);
+            // System.out.println("First line removed successfully from " + filePath);
         } catch (IOException e) {
             System.err.println("Error processing file " + filePath);
             e.printStackTrace();
