@@ -447,7 +447,7 @@ public class ModelExecuter {
             trace.getCurrentState().findTransitions("SendClientHello", paramsFindSendClientHello, 1000);
             trace = trace.addTransitionWith("SendClientHello", paramsSendClientHello);
             printAvailableTransitions("SendClientHello");
-            System.out.println(trace.getCurrentState().getStateRep());
+            // System.out.println(trace.getCurrentState().getStateRep());
 
             trace = trace.addTransitionWith("ReceiveClientHello", List.of());
             printAvailableTransitions("ReceiveClientHello");
