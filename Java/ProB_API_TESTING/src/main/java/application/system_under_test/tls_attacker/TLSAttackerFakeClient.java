@@ -144,14 +144,14 @@ public class TLSAttackerFakeClient extends SystemUnderTest {
         // Check if we received an alert message instead of ServerHello
         if (receivedMessage instanceof AlertMessage) {
             AlertMessage alert = (AlertMessage) receivedMessage;
-            System.err.println("ERROR: Server sent alert message instead of ServerHello:");
+            // System.err.println("ERROR: Server sent alert message instead of ServerHello:");
             System.err.println("Alert Level: " + alert.getLevel().getValue());
             System.err.println("Alert Description: " + alert.getDescription().getValue());
-            System.err.println("\nThis indicates a problem with the ClientHello message:");
-            System.err.println("- Check TLS version compatibility");
-            System.err.println("- Verify cipher suite support");
-            System.err.println("- Ensure extensions are properly formatted");
-            System.err.println("- Consider using a simpler ClientHello configuration");
+            // System.err.println("\nThis indicates a problem with the ClientHello message:");
+            // System.err.println("- Check TLS version compatibility");
+            // System.err.println("- Verify cipher suite support");
+            // System.err.println("- Ensure extensions are properly formatted");
+            // System.err.println("- Consider using a simpler ClientHello configuration");
             return;
         }
         
