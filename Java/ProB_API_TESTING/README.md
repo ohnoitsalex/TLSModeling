@@ -58,6 +58,7 @@ Before building, ensure you have:
 - ProB 2.0 Java API (download separately and configure if needed)
 - Bouncy Castle provider
 - SnakeYAML and Guice (added as Maven dependencies)
+- Openssl (installed on machine)
 
 ## Setup and Compilation
 

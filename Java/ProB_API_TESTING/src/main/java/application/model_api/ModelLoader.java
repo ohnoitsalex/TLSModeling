@@ -9,6 +9,8 @@ import de.prob.scripting.Api;
 import de.prob.statespace.StateSpace;
 
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Loader and manager for B-method formal models in TLS Model-Based Testing.
@@ -67,7 +69,9 @@ public class ModelLoader {
     public void loadAndExecuteAPI() {
         try {
             System.out.println("LOADING B MACHINE (.mch file)");
-            model = api.load(Paths.get(this.modelFilePath).toAbsolutePath().toString());
+            Map<String, String> prefs = new HashMap<>();
+            prefs.put("MAX_OPERATIONS","1000");
+            model = api.b_load(Paths.get(this.modelFilePath).toAbsolutePath().toString(), prefs);
             model.execute();
             model.performExtendedStaticChecks();
             modelExecuter = new ModelExecuter(model);

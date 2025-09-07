@@ -442,15 +442,17 @@ public class ModelExecuter {
 
 
             initaliseMachine();
-            printAvailableTransitions("init");
+            // printAvailableTransitions("init");
+
+            findStateSatisfyingPredicate(new ClassicalB("session_machine'State = SENDCLIENTHELLO & session_machine'Status = SUCCEEDED"));
 
             trace.getCurrentState().findTransitions("SendClientHello", paramsFindSendClientHello, 1000);
             trace = trace.addTransitionWith("SendClientHello", paramsSendClientHello);
-            printAvailableTransitions("SendClientHello");
+            // printAvailableTransitions("SendClientHello");
             // System.out.println(trace.getCurrentState().getStateRep());
 
             trace = trace.addTransitionWith("ReceiveClientHello", List.of());
-            printAvailableTransitions("ReceiveClientHello");
+            // printAvailableTransitions("ReceiveClientHello");
 
             trace.getCurrentState().findTransitions("SendServerHello", paramsFindSendServerHello, 1000);
             trace = trace.addTransitionWith("SendServerHello", params);

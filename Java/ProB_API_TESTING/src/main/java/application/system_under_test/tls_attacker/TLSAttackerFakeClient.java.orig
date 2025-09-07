@@ -19,7 +19,6 @@ import de.rub.nds.tlsattacker.core.constants.RunningModeType;
 import de.rub.nds.tlsattacker.core.protocol.message.ClientHelloMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.ServerHelloMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.AlertMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.FinishedMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.extension.KeyShareExtensionMessage;
 // import de.rub.nds.tlsattacker.core.protocol.message.extension.SignatureAndHashAlgorithmsExtensionMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.extension.SupportedVersionsExtensionMessage;
@@ -102,26 +101,11 @@ public class TLSAttackerFakeClient extends SystemUnderTest {
             System.out.println("  " + key + ": " + value)
         );
 
-        // Create TLS-Attacker configuration with proper layer setup
+        // Create TLS-Attacker configuration
         Config config = new Config();
         config.setDefaultRunningMode(RunningModeType.CLIENT);
-        
-        config.setDefaultClientConnection(new OutboundConnection(HOST, PORT));
-
+        config.setDefaultClientConnection(new OutboundConnection(PORT, HOST));
         config.setWorkflowExecutorShouldClose(true);
-        
-        // IMPORTANT: Enable all necessary layers
-        config.setAddECPointFormatExtension(true);
-        config.setAddEllipticCurveExtension(true);
-        config.setAddSignatureAndHashAlgorithmsExtension(true);
-        config.setAddSupportedVersionsExtension(true);
-        config.setAddKeyShareExtension(true);
-        
-        // Configure protocol version
-        config.setHighestProtocolVersion(de.rub.nds.tlsattacker.core.constants.ProtocolVersion.TLS13);
-        config.setSupportedVersions(de.rub.nds.tlsattacker.core.constants.ProtocolVersion.TLS13);
-
-
 
         // IMPORTANT: Configure cipher suites and other settings BEFORE creating ClientHello
         TlsMessageBuilder.configureFromYaml(clientHelloMap, config);
@@ -132,34 +116,15 @@ public class TLSAttackerFakeClient extends SystemUnderTest {
         // Add extensions from YAML
         TlsMessageBuilder.addExtensionsToClientHello(clientHelloMap, clientHello);
 
-        // Build workflow with proper layer configuration
+        // Build workflow
         WorkflowTrace trace = new WorkflowTrace();
-        
-        // Use specific send action for TLS messages
-        SendAction sendAction = new SendAction(clientHello);
-        trace.addTlsAction(sendAction);
-        
-        // Use specific receive action for ServerHello
-        ReceiveAction receiveServerHello = new ReceiveAction(new ServerHelloMessage());
-        trace.addTlsAction(receiveServerHello);
-
+        trace.addTlsAction(new SendAction(clientHello));
+        trace.addTlsAction(new ReceiveAction(new ServerHelloMessage()));
 
         // Execute workflow
         State state = new State(config, trace);
-
-        // IMPORTANT: Initialize the state properly with the connection
-        // state.getTlsContext().setConnection(connection);
-        
         DefaultWorkflowExecutor executor = new DefaultWorkflowExecutor(state);
-        
-        try {
-            executor.executeWorkflow();
-        } catch (Exception e) {
-            System.err.println("Workflow execution failed: " + e.getMessage());
-            e.printStackTrace();
-            return;
-        }
-
+        executor.executeWorkflow();
 
         // Extract and save received ServerHello
         ReceiveAction receiveAction = (ReceiveAction) state
@@ -260,8 +225,6 @@ public class TLSAttackerFakeClient extends SystemUnderTest {
 
         // ProtocolVersion version = ProtocolVersion.fromString("TLS13");
         // System.out.println("Protocol Version: " + version);
-
-        
         
     }
 
